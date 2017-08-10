@@ -1,0 +1,2 @@
+[nextcloud-servers]
+<your-domain> ansible_host=<your-server's IP address> ansible_ssh_user=root

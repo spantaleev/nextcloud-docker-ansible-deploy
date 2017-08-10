@@ -1,0 +1,29 @@
+# This is where your data lives and what we set up here.
+hostname_nextcloud: "{{ host_specific_hostname }}"
+
+ssl_certs_path: /etc/pki/acmetool-certs
+ssl_support_email: "{{ host_specific_ssl_support_email }}"
+
+nextcloud_user_username: nextcloud
+nextcloud_user_uid: 991
+nextcloud_user_gid: 991
+
+nextcloud_postgres_connection_username: "nextcloud"
+nextcloud_postgres_connection_password: "nextcloud-password"
+nextcloud_postgres_db_name: "nextcloud"
+
+nextcloud_base_data_path: "/nextcloud"
+nextcloud_environment_variables_data_path: "{{ nextcloud_base_data_path }}/environment-variables"
+nextcloud_nextcloud_data_path: "{{ nextcloud_base_data_path }}/nextcloud-data"
+nextcloud_postgres_data_path: "{{ nextcloud_base_data_path }}/postgres"
+nextcloud_nginx_proxy_data_path: "{{ nextcloud_base_data_path }}/nginx-proxy"
+nextcloud_nginx_proxy_confd_path: "{{ nextcloud_nginx_proxy_data_path }}/conf.d"
+nextcloud_scratchpad_dir: "{{ nextcloud_base_data_path }}/scratchpad"
+
+docker_postgres_image: "postgres:9.6.3-alpine"
+docker_nextcloud_image: "nextcloud:12.0.1"
+docker_nginx_image: "nginx:1.13.3-alpine"
+
+# Specifies when to restart the Nextcloud services so that
+# a new SSL certificate could go into effect (UTC time).
+nextcloud_services_restart_cron_time_definition: "15 4 3 * *"

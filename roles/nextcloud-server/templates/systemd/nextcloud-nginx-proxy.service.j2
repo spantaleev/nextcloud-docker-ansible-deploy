@@ -1,0 +1,25 @@
+[Unit]
+Description=Nextcloud nginx proxy server
+After=docker.service
+Requires=docker.service
+Requires=nextcloud-apache.service
+After=nextcloud-apache.service
+
+[Service]
+Type=simple
+ExecStartPre=-/usr/bin/docker kill nextcloud-nginx-proxy
+ExecStartPre=-/usr/bin/docker rm nextcloud-nginx-proxy
+ExecStart=/usr/bin/docker run --rm --name nextcloud-nginx-proxy \
+			-p 80:80 \
+			-p 443:443 \
+			--link nextcloud-apache:nextcloud \
+			-v {{ nextcloud_nginx_proxy_confd_path }}:/etc/nginx/conf.d:ro \
+			-v {{ ssl_certs_path }}:/acmetool-certs:ro \
+			{{ docker_nginx_image }}
+ExecStop=-/usr/bin/docker kill nextcloud-nginx-proxy
+ExecStop=-/usr/bin/docker rm nextcloud-nginx-proxy
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,20 @@
+---
+
+- name: Ensure Nextcloud group is created
+  group:
+    name: "{{ nextcloud_user_username }}"
+    gid: "{{ nextcloud_user_gid }}"
+    state: present
+
+- name: Ensure Nextcloud user is created
+  user:
+    name: "{{ nextcloud_user_username }}"
+    uid: "{{ nextcloud_user_uid }}"
+    state: present
+    group: "{{ nextcloud_user_username }}"
+
+- name: Ensure environment variables data path exists
+  file:
+    path: "{{ nextcloud_environment_variables_data_path }}"
+    state: directory
+    mode: 0700

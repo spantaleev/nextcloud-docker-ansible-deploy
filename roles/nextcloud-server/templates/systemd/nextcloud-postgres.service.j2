@@ -1,0 +1,24 @@
+[Unit]
+Description=Nextcloud Postgres server
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=simple
+ExecStartPre=-/usr/bin/docker stop nextcloud-postgres
+ExecStartPre=-/usr/bin/docker rm nextcloud-postgres
+ExecStartPre=-/usr/bin/mkdir {{ nextcloud_postgres_data_path }}
+ExecStartPre=-/usr/bin/chown {{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} {{ nextcloud_postgres_data_path }}
+ExecStart=/usr/bin/docker run --rm --name nextcloud-postgres \
+			--user={{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} \
+			--env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-server-docker \
+			-v {{ nextcloud_postgres_data_path }}:/var/lib/postgresql/data \
+			-v /etc/passwd:/etc/passwd:ro \
+			{{ docker_postgres_image }}
+ExecStop=-/usr/bin/docker stop nextcloud-postgres
+ExecStop=-/usr/bin/docker rm nextcloud-postgres
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

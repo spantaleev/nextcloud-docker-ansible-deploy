@@ -1,0 +1,37 @@
+---
+
+- include: tasks/setup_base.yml
+  tags:
+    - setup-main
+
+- include: tasks/setup_main.yml
+  tags:
+    - setup-main
+
+- include: tasks/setup_ssl.yml
+  tags:
+    - setup-main
+    - setup-ssl
+
+- include: tasks/setup_postgres.yml
+  tags:
+    - setup-main
+    - setup-postgres
+
+- include: tasks/setup_nextcloud.yml
+  tags:
+    - setup-main
+    - setup-nextcloud
+
+- include: tasks/setup_nginx_proxy.yml
+  tags:
+    - setup-main
+    - setup-nginx-proxy
+
+- include: tasks/start.yml
+  tags:
+    - start
+
+- include: tasks/setup_adjust_config.yml
+  tags:
+    - setup-adjust-config

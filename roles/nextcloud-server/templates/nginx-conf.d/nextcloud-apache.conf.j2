@@ -1,0 +1,45 @@
+server {
+	listen 80;
+	server_name {{ hostname_nextcloud }};
+
+	server_tokens off;
+
+	location /.well-known/acme-challenge {
+		default_type "text/plain";
+		alias /acmetool-certs/run/acme-challenge;
+	}
+
+	location / {
+		return 301 https://$http_host$request_uri;
+	}
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+
+    server_name {{ hostname_nextcloud }};
+
+	server_tokens off;
+	root /dev/null;
+
+	ssl on;
+	ssl_certificate /acmetool-certs/live/{{ hostname_nextcloud }}/fullchain;
+	ssl_certificate_key /acmetool-certs/live/{{ hostname_nextcloud }}/privkey;
+	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+	ssl_prefer_server_ciphers on;
+	ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+
+	client_body_buffer_size 20M;
+	client_max_body_size 4G; # 0=unlimited - set max upload size
+	proxy_max_temp_file_size 0;
+
+	location / {
+		proxy_pass http://nextcloud:80;
+		proxy_set_header Host $host;
+		proxy_set_header X-Forwarded-Proto $scheme;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		add_header Front-End-Https on;
+	}
+}

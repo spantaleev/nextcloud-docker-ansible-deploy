@@ -1,0 +1,8 @@
+---
+
+- name: Ensure services autorun and are restarted
+  service: name="{{ item }}" enabled=yes state=restarted daemon_reload=yes
+  with_items:
+    - nextcloud-postgres
+    - nextcloud-apache
+    - nextcloud-nginx-proxy

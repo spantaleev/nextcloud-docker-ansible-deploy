@@ -1,0 +1,8 @@
+---
+
+- name: Adjust Nextcloud configuration (disable bruteforce protection)
+  lineinfile:
+    path: "{{ nextcloud_nextcloud_data_path }}/config/config.php"
+    line: "  'auth.bruteforce.protection.enabled' => false,"
+    insertafter: "\\$CONFIG\\s*=\\s*array\\s*\\("
+    regexp: "auth.bruteforce.protection.enabled"

@@ -1,0 +1,13 @@
+# This is something which is provided to Let's Encrypt
+# when retrieving the SSL certificates for `<your-domain>`.
+#
+# In case SSL renewal fails at some point, you'll also get
+# an email notification there.
+#
+# Example value: someone@example.com
+host_specific_ssl_support_email: YOUR_EMAIL_ADDRESS_HERE
+
+# This is your domain name (`<your-domain`).
+#
+# Example value: example.com
+host_specific_hostname: YOUR_DOMAIN_NAME_HERE
