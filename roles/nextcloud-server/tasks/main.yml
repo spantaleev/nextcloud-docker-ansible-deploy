@@ -22,6 +22,7 @@
   tags:
     - setup-main
     - setup-nextcloud
+    - update
 
 - include: tasks/setup_nginx_proxy.yml
   tags:
@@ -31,6 +32,7 @@
 - include: tasks/start.yml
   tags:
     - start
+    - update
 
 - include: tasks/setup_adjust_config.yml
   tags:
