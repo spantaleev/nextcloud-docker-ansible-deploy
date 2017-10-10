@@ -21,7 +21,7 @@ nextcloud_nginx_proxy_confd_path: "{{ nextcloud_nginx_proxy_data_path }}/conf.d"
 nextcloud_scratchpad_dir: "{{ nextcloud_base_data_path }}/scratchpad"
 
 docker_postgres_image: "postgres:9.6.3-alpine"
-docker_nextcloud_image: "nextcloud:12.0.2"
+docker_nextcloud_image: "nextcloud:12.0.3"
 docker_nginx_image: "nginx:1.13.3-alpine"
 
 # Specifies when to restart the Nextcloud services so that
