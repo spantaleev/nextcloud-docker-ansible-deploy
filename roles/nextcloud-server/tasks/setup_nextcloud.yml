@@ -23,3 +23,9 @@
     src: "{{ role_path }}/templates/cron.d/nextcloud-periodic-restarter.j2"
     dest: "/etc/cron.d/nextcloud-periodic-restarter"
     mode: 0600
+
+- name: Ensure Nextcloud cronjob configured
+  template:
+    src: "{{ role_path }}/templates/cron.d/nextcloud-cron.j2"
+    dest: "/etc/cron.d/nextcloud-cron"
+    mode: 0600

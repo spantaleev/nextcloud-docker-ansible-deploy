@@ -1,0 +1,3 @@
+MAILTO="{{ ssl_support_email }}"
+
+*/15 * * * * root /usr/bin/docker exec nextcloud-apache su - www-data -s /bin/bash -c 'php /var/www/html/cron.php'
