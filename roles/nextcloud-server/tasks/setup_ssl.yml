@@ -14,11 +14,18 @@
   docker_image:
     name: willwill/acme-docker
 
+# Granting +rx to others as well, because the `nginx` user from within
+# nextcloud-nginx-proxy needs to be able to read the acme-challenge files inside
+# for renewal purposes.
+#
+# This should not be causing security trouble outside of the container,
+# as the parent directory (/nextcloud) does not allow "others" to access it or any of its children.
+# Still, it works when the /ssl subtree is mounted in the container.
 - name: Ensure SSL certificates path exists
   file:
-    path: "{{ ssl_certs_path }}"
+    path: "{{ nextcloud_ssl_certs_path }}"
     state: directory
-    mode: 0770
+    mode: 0775
     owner: "{{ nextcloud_user_username }}"
     group: "{{ nextcloud_user_username }}"
 
@@ -33,8 +40,8 @@
 - name: Ensure SSL certificates are marked as wanted in acmetool
   shell: >-
     /usr/bin/docker run --rm --name acmetool-host-grab -p 80:80
-    -v {{ ssl_certs_path }}:/certs
-    -e ACME_EMAIL={{ ssl_support_email }}
+    -v {{ nextcloud_ssl_certs_path }}:/certs
+    -e ACME_EMAIL={{ nextcloud_ssl_support_email }}
     willwill/acme-docker
     acmetool want {{ hostname_nextcloud }} --xlog.severity=debug
 
@@ -44,6 +51,6 @@
 
 - name: Ensure periodic SSL renewal cronjob configured
   template:
-    src: "{{ role_path }}/templates/cron.d/ssl-certificate-renewal.j2"
-    dest: "/etc/cron.d/ssl-certificate-renewal"
+    src: "{{ role_path }}/templates/cron.d/nextcloud-ssl-certificate-renewal.j2"
+    dest: "/etc/cron.d/nextcloud-ssl-certificate-renewal"
     mode: 0600

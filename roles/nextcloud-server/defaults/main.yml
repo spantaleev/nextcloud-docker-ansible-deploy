@@ -1,5 +1,4 @@
-# This is where your data lives and what we set up here.
-hostname_nextcloud: "{{ host_specific_hostname }}"
+hostname_nextcloud: "{{ host_specific_nextcloud_hostname }}"
 
 nextcloud_user_username: nextcloud
 nextcloud_user_uid: 991
@@ -11,7 +10,7 @@ nextcloud_postgres_db_name: "nextcloud"
 
 nextcloud_base_data_path: "/nextcloud"
 nextcloud_ssl_certs_path: "{{ nextcloud_base_data_path }}/ssl"
-nextcloud_ssl_support_email: "{{ host_specific_ssl_support_email }}"
+nextcloud_ssl_support_email: "{{ host_specific_nextcloud_ssl_support_email }}"
 nextcloud_environment_variables_data_path: "{{ nextcloud_base_data_path }}/environment-variables"
 nextcloud_nextcloud_data_path: "{{ nextcloud_base_data_path }}/nextcloud-data"
 nextcloud_postgres_data_path: "{{ nextcloud_base_data_path }}/postgres"
