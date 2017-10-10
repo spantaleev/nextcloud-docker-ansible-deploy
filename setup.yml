@@ -3,8 +3,5 @@
   hosts: "{{ target if target is defined else 'nextcloud-servers' }}"
   become: true
 
-  vars_files:
-    - vars/vars.yml
-
   roles:
     - nextcloud-server
