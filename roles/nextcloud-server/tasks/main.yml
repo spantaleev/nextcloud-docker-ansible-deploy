@@ -18,6 +18,11 @@
     - setup-main
     - setup-postgres
 
+- include: tasks/setup_s3fs.yml
+  tags:
+    - setup-main
+    - setup-s3fs
+
 - include: tasks/setup_nextcloud.yml
   tags:
     - setup-main

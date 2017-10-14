@@ -1,5 +1,9 @@
 ---
 
+- name: Ensure nextcloud-s3fs autoruns and is restarted
+  service: name=nextcloud-s3fs enabled=yes state=restarted daemon_reload=yes
+  when: nextcloud_s3fs_external_storage_enabled
+
 - name: Ensure services autorun and are restarted
   service: name="{{ item }}" enabled=yes state=restarted daemon_reload=yes
   with_items:

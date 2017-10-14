@@ -1,0 +1,62 @@
+#
+# Tasks related to setting up s3fs
+#
+
+- name: Ensure S3fs Docker image is pulled
+  docker_image:
+    name: "{{ docker_s3fs_image }}"
+  when: nextcloud_s3fs_external_storage_enabled
+
+- name: Ensure Nextcloud S3fs external storage mountpoint exists
+  file:
+    path: "{{ nextcloud_s3fs_external_storage_path }}"
+    state: directory
+    mode: 0750
+    owner: "{{ nextcloud_user_username }}"
+    group: "{{ nextcloud_user_username }}"
+
+- name: Ensure s3fs-credentials file created
+  template:
+    src: "{{ role_path }}/templates/s3fs-credentials.j2"
+    dest: "{{ nextcloud_base_data_path }}/s3fs-credentials"
+    owner: root
+    mode: 0600
+  when: nextcloud_s3fs_external_storage_enabled
+
+- name: Ensure nextcloud-s3fs.service installed
+  template:
+    src: "{{ role_path }}/templates/systemd/nextcloud-s3fs.service.j2"
+    dest: "/etc/systemd/system/nextcloud-s3fs.service"
+    mode: 0644
+  when: nextcloud_s3fs_external_storage_enabled
+
+#
+# Tasks related to getting rid of s3fs (if it was previously enabled)
+#
+
+- name: Check existence of nextcloud-s3fs service
+  stat: path="/etc/systemd/system/nextcloud-s3fs.service"
+  register: nextcloud_s3fs_service_stat
+
+- name: Ensure nextcloud-s3fs is stopped
+  service: name=nextcloud-s3fs state=stopped daemon_reload=yes
+  register: stopping_result
+  when: "not nextcloud_s3fs_external_storage_enabled and nextcloud_s3fs_service_stat.stat.exists"
+
+- name: Ensure nextcloud-s3fs.service doesn't exist
+  file:
+    path: "/etc/systemd/system/nextcloud-s3fs.service"
+    state: absent
+  when: "not nextcloud_s3fs_external_storage_enabled and nextcloud_s3fs_service_stat.stat.exists"
+
+- name: Ensure s3fs-credentials doesn't exist
+  file:
+    path: "{{ nextcloud_base_data_path }}/s3fs-credentials"
+    state: absent
+  when: "not nextcloud_s3fs_external_storage_enabled"
+
+- name: Ensure S3fs Docker image doesn't exist
+  docker_image:
+    name: "{{ docker_s3fs_image }}"
+    state: absent
+  when: "not nextcloud_s3fs_external_storage_enabled"

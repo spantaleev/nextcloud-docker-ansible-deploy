@@ -4,6 +4,10 @@ After=docker.service
 Requires=docker.service
 Requires=nextcloud-postgres.service
 After=nextcloud-postgres.service
+{% if nextcloud_s3fs_external_storage_enabled %}
+After=nextcloud-s3fs.service
+Requires=nextcloud-s3fs.service
+{% endif %}
 
 [Service]
 Type=simple
@@ -15,6 +19,9 @@ ExecStart=/usr/bin/docker run --rm --name nextcloud-apache \
 			-v {{ nextcloud_nextcloud_data_path }}/custom_apps:/var/www/html/custom_apps \
 			-v {{ nextcloud_nextcloud_data_path }}/data:/var/www/html/data \
 			-v {{ nextcloud_nextcloud_data_path }}/themes:/var/www/html/themes \
+			{% if nextcloud_s3fs_external_storage_enabled %}
+			-v {{ nextcloud_s3fs_external_storage_path }}:{{ nextcloud_s3fs_external_storage_path }} \
+			{% endif %}
 			{{ docker_nextcloud_image }}
 ExecStop=-/usr/bin/docker kill nextcloud-apache
 ExecStop=-/usr/bin/docker rm nextcloud-apache
