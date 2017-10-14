@@ -22,6 +22,9 @@ ExecStart=/usr/bin/docker run --rm --name nextcloud-apache \
 			{% if nextcloud_s3fs_external_storage_enabled %}
 			-v {{ nextcloud_s3fs_external_storage_path }}:{{ nextcloud_s3fs_external_storage_path }} \
 			{% endif %}
+			{% if not nextcloud_nginx_proxy_enabled %}
+			-p 127.0.0.1:{{ nextcloud_apache_http_port_on_host }}:80 \
+			{% endif %}
 			{{ docker_nextcloud_image }}
 ExecStop=-/usr/bin/docker kill nextcloud-apache
 ExecStop=-/usr/bin/docker rm nextcloud-apache

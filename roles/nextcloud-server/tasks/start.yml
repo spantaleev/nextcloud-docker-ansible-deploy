@@ -9,4 +9,7 @@
   with_items:
     - nextcloud-postgres
     - nextcloud-apache
-    - nextcloud-nginx-proxy
+
+- name: Ensure nextcloud-nginx-proxy autoruns and is restarted
+  service: name=nextcloud-nginx-proxy enabled=yes state=restarted daemon_reload=yes
+  when: nextcloud_nginx_proxy_enabled

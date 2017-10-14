@@ -9,7 +9,6 @@
 - name: Ensure Nextcloud user is created
   user:
     name: "{{ nextcloud_user_username }}"
-    uid: "{{ nextcloud_user_uid }}"
     state: present
     group: "{{ nextcloud_user_username }}"
 

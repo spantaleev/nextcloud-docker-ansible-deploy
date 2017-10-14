@@ -35,7 +35,7 @@ server {
 	proxy_max_temp_file_size 0;
 
 	location / {
-		proxy_pass http://nextcloud:80;
+		proxy_pass http://{{ 'nextcloud:80' if nextcloud_nginx_proxy_enabled else 'localhost:' ~ nextcloud_apache_http_port_on_host }};
 		proxy_set_header Host $host;
 		proxy_set_header X-Forwarded-Proto $scheme;
 		proxy_set_header X-Real-IP $remote_addr;

@@ -19,7 +19,8 @@ Basically, this playbook aims to get you up-and-running with all the basic neces
 
 ## Prerequisites
 
-- **CentOS server** with no services running on port 80/443 (making this run on non-CentOS servers should be possible in the future)
+
+- **CentOS** (7.0+), **Debian** (9/Stretch+ -- untested) or **Ubuntu** (16.04+ -- untested) server. This playbook can take over your whole server or co-exist with other services that you have there.
 
 - the [Ansible](http://ansible.com/) program, which is used to run this playbook and configures everything for you
 
@@ -43,6 +44,33 @@ You can follow these steps:
 - copy the sample inventory hosts file (`cp examples/hosts inventory/hosts`)
 
 - edit the inventory hosts file (`inventory/hosts`) to your liking
+
+
+## Using your own webserver, instead of this playbook's nginx proxy (optional)
+
+By default, this playbook installs its own nginx webserver (in a Docker container) which listens on ports 80 and 443.
+If that's alright, you can skip ahead.
+
+If you don't want this playbook's nginx webserver to take over your server's 80/443 ports like that,
+and you'd like to use your own webserver (be it nginx, Apache, Varnish Cache, etc.), you can.
+
+All it takes is editing your configuration file (`inventory/<your-domain>/vars.yml`):
+
+```
+nextcloud_nginx_proxy_enabled: false
+```
+
+**Note**: even if you do this, in order [to install](#installing), this playbook still expects port 80 to be available. **Please manually stop your other webserver while installing**. You can start it back again afterwards.
+
+**If your own webserver is nginx**, you can most likely directly use the config files installed by this playbook at: `/nextcloud/nginx-proxy/conf.d`. Just include them in your `nginx.conf` like this: `include /nextcloud/nginx-proxy/conf.d/*.conf;`
+
+**If your own webserver is not nginx**, you can still take a look at the sample files in `/nextcloud/nginx-proxy/conf.d`, and:
+
+- ensure you set up a vhost that proxies to Nextcloud (`localhost:31750`)
+
+- ensure that the `/.well-known/acme-challenge` location for the "port=80 vhost" is an alias to the `/nextcloud/ssl/run/acme-challenge` directory (for automated SSL renewal to work)
+
+- ensure that you restart/reload your webserver once in a while, so that renewed SSL certificates would take effect (once a month should be enough)
 
 
 ## Installing

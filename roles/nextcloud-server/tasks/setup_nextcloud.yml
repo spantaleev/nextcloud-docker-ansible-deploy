@@ -18,12 +18,6 @@
     dest: "/etc/systemd/system/nextcloud-apache.service"
     mode: 0644
 
-- name: Ensure periodic restarting of Nextcloud is configured (for SSL renewal)
-  template:
-    src: "{{ role_path }}/templates/cron.d/nextcloud-periodic-restarter.j2"
-    dest: "/etc/cron.d/nextcloud-periodic-restarter"
-    mode: 0600
-
 - name: Ensure Nextcloud cronjob configured
   template:
     src: "{{ role_path }}/templates/cron.d/nextcloud-cron.j2"
