@@ -7,6 +7,11 @@
     name: "{{ docker_s3fs_image }}"
   when: nextcloud_s3fs_external_storage_enabled
 
+- name: Check Nextcloud S3fs external storage mountpoint path
+  stat: path="{{ nextcloud_s3fs_external_storage_path }}"
+  register: local_path_nextcloud_s3fs_external_storage_path_stat
+  when: nextcloud_s3fs_external_storage_enabled
+
 - name: Ensure Nextcloud S3fs external storage mountpoint exists
   file:
     path: "{{ nextcloud_s3fs_external_storage_path }}"
@@ -14,6 +19,7 @@
     mode: 0750
     owner: "{{ nextcloud_user_username }}"
     group: "{{ nextcloud_user_username }}"
+  when: "nextcloud_s3fs_external_storage_enabled and not local_path_nextcloud_s3fs_external_storage_path_stat.stat.exists"
 
 - name: Ensure s3fs-credentials file created
   template:
