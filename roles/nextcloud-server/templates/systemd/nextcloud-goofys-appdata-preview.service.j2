@@ -22,7 +22,7 @@ TimeoutStartSec=5min
 ExecStop=-/usr/bin/docker stop %n
 ExecStop=-/usr/bin/docker kill %n
 ExecStop=-/usr/bin/docker rm %n
-ExecStop=-/usr/bin/fusermount -u {{ nextcloud_appdata_preview_path }}
+ExecStop=-/bin/fusermount -u {{ nextcloud_appdata_preview_path }}
 Restart=always
 RestartSec=5
 
