@@ -8,19 +8,33 @@ After=nextcloud-postgres.service
 After=nextcloud-s3fs.service
 Requires=nextcloud-s3fs.service
 {% endif %}
+{% if nextcloud_goofys_external_storage_enabled %}
+After=nextcloud-goofys.service
+Requires=nextcloud-goofys.service
+{% endif %}
+{% if nextcloud_goofys_external_storage_enabled and nextcloud_goofys_external_storage_for_appdata_previews_enabled %}
+After=nextcloud-goofys-appdata-preview.service
+Requires=nextcloud-goofys-appdata-preview.service
+{% endif %}
 
 [Service]
 Type=simple
 ExecStartPre=-/usr/bin/docker kill nextcloud-apache
 ExecStartPre=-/usr/bin/docker rm nextcloud-apache
+{% if nextcloud_s3fs_external_storage_enabled or nextcloud_goofys_external_storage_enabled %}
+# Allow for some time before starting, so that external storage can mount.
+# Mounting can happen later too, but if we start writing,
+# we'd write files to the local filesystem and fusermount will complain.
+ExecStartPre=/bin/sleep 5
+{% endif %}
 ExecStart=/usr/bin/docker run --rm --name nextcloud-apache \
 			--link nextcloud-postgres:postgres \
 			-v {{ nextcloud_nextcloud_data_path }}/config:/var/www/html/config \
 			-v {{ nextcloud_nextcloud_data_path }}/custom_apps:/var/www/html/custom_apps \
-			-v {{ nextcloud_nextcloud_data_path }}/data:/var/www/html/data \
+			-v {{ nextcloud_nextcloud_data_path }}/data:/var/www/html/data:slave \
 			-v {{ nextcloud_nextcloud_data_path }}/themes:/var/www/html/themes \
-			{% if nextcloud_s3fs_external_storage_enabled %}
-			-v {{ nextcloud_s3fs_external_storage_path }}:{{ nextcloud_s3fs_external_storage_path }} \
+			{% if nextcloud_s3fs_external_storage_enabled or nextcloud_goofys_external_storage_enabled %}
+			-v {{ nextcloud_external_storage_path }}:{{ nextcloud_external_storage_path }}:slave \
 			{% endif %}
 			{% if not nextcloud_nginx_proxy_enabled %}
 			-p 127.0.0.1:{{ nextcloud_apache_http_port_on_host }}:80 \

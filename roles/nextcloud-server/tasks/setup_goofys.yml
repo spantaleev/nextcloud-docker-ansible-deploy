@@ -1,0 +1,113 @@
+#
+# Tasks related to setting up Goofys
+#
+
+- name: Ensure Goofys Docker image is pulled
+  docker_image:
+    name: "{{ docker_goofys_image }}"
+  when: nextcloud_goofys_external_storage_enabled
+
+# This will throw a Permission Denied error if already mounted
+- name: Check Nextcloud Goofys external storage mountpoint path
+  stat: path="{{ nextcloud_goofys_external_storage_path }}"
+  register: local_path_nextcloud_goofys_external_storage_path_stat
+  ignore_errors: yes
+  when: nextcloud_goofys_external_storage_enabled
+
+- name: Ensure Nextcloud Goofys external storage mountpoint exists
+  file:
+    path: "{{ nextcloud_goofys_external_storage_path }}"
+    state: directory
+    mode: 0750
+    owner: "{{ nextcloud_http_user_uid }}"
+    group: "{{ nextcloud_http_user_gid }}"
+  when: "nextcloud_goofys_external_storage_enabled and not local_path_nextcloud_goofys_external_storage_path_stat.failed and not local_path_nextcloud_goofys_external_storage_path_stat.stat.exists"
+
+- name: Ensure goofys environment variables file created
+  template:
+    src: "{{ role_path }}/templates/env/env-goofys.j2"
+    dest: "{{ nextcloud_environment_variables_data_path }}/goofys"
+    owner: root
+    mode: 0600
+  when: nextcloud_goofys_external_storage_enabled
+
+- name: Ensure nextcloud-goofys.service installed
+  template:
+    src: "{{ role_path }}/templates/systemd/nextcloud-goofys.service.j2"
+    dest: "/etc/systemd/system/nextcloud-goofys.service"
+    mode: 0644
+  when: nextcloud_goofys_external_storage_enabled
+
+- name: "Build appdata preview directory path"
+  set_fact:
+    nextcloud_appdata_preview_path: "{{ nextcloud_nextcloud_data_path }}/data/appdata_{{ nextcloud_goofys_external_storage_for_appdata_previews_instance_id }}/preview"
+  when: nextcloud_goofys_external_storage_for_appdata_previews_enabled
+
+# This will throw a Permission Denied error if already mounted
+- name: Check Nextcloud appdata preview mountpoint path
+  stat: path="{{ nextcloud_appdata_preview_path }}"
+  register: nextcloud_appdata_preview_path_stat
+  ignore_errors: yes
+  when: nextcloud_goofys_external_storage_for_appdata_previews_enabled
+
+- name: Ensure Nextcloud appdata preview mountpoint exists
+  file:
+    path: "{{ nextcloud_appdata_preview_path }}"
+    state: directory
+    mode: 0750
+    owner: "{{ nextcloud_http_user_uid }}"
+    group: "{{ nextcloud_http_user_gid }}"
+  when: "nextcloud_goofys_external_storage_for_appdata_previews_enabled and not nextcloud_appdata_preview_path_stat.failed and not nextcloud_appdata_preview_path_stat.stat.exists"
+
+- name: Ensure nextcloud-goofys-appdata-preview.service installed
+  template:
+    src: "{{ role_path }}/templates/systemd/nextcloud-goofys-appdata-preview.service.j2"
+    dest: "/etc/systemd/system/nextcloud-goofys-appdata-preview.service"
+    mode: 0644
+  when: nextcloud_goofys_external_storage_for_appdata_previews_enabled
+
+#
+# Tasks related to getting rid of goofys (if it was previously enabled)
+#
+
+- name: Check existence of nextcloud-goofys service
+  stat: path="/etc/systemd/system/nextcloud-goofys.service"
+  register: nextcloud_goofys_service_stat
+
+- name: Ensure nextcloud-goofys is stopped
+  service: name=nextcloud-goofys state=stopped daemon_reload=yes
+  register: stopping_result
+  when: "not nextcloud_goofys_external_storage_enabled and nextcloud_goofys_service_stat.stat.exists"
+
+- name: Ensure nextcloud-goofys.service doesn't exist
+  file:
+    path: "/etc/systemd/system/nextcloud-goofys.service"
+    state: absent
+  when: "not nextcloud_goofys_external_storage_enabled and nextcloud_goofys_service_stat.stat.exists"
+
+- name: Check existence of nextcloud-goofys-appdata-preview service
+  stat: path="/etc/systemd/system/nextcloud-goofys-appdata-preview.service"
+  register: nextcloud_goofys_appdata_preview_service_stat
+
+- name: Ensure nextcloud-goofys-appdata-preview is stopped
+  service: name=nextcloud-goofys-appdata-preview state=stopped daemon_reload=yes
+  register: stopping_result
+  when: "not nextcloud_goofys_external_storage_for_appdata_previews_enabled and nextcloud_goofys_appdata_preview_service_stat.stat.exists"
+
+- name: Ensure nextcloud-goofys-appdata-preview.service doesn't exist
+  file:
+    path: "/etc/systemd/system/nextcloud-goofys-appdata-preview.service"
+    state: absent
+  when: "not nextcloud_goofys_external_storage_for_appdata_previews_enabled and nextcloud_goofys_appdata_preview_service_stat.stat.exists"
+
+- name: Ensure goofys environment variables file doesn't exist
+  file:
+    path: "{{ nextcloud_environment_variables_data_path }}/goofys"
+    state: absent
+  when: "not nextcloud_goofys_external_storage_enabled"
+
+- name: Ensure Goofys Docker image doesn't exist
+  docker_image:
+    name: "{{ docker_goofys_image }}"
+    state: absent
+  when: "not nextcloud_goofys_external_storage_enabled"

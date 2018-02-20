@@ -8,7 +8,7 @@ Using this playbook, you can get the following services configured on your serve
 
 - a [Nextcloud](https://nextcloud.com/) server - storing your data
 
-- (optional) [Amazon S3](https://aws.amazon.com/s3/) remote storage for your Nextcloud data using [s3fs-fuse](https://github.com/s3fs-fuse/s3fs-fuse)
+- (optional) [Amazon S3](https://aws.amazon.com/s3/) remote storage for your Nextcloud data using [Goofys](https://github.com/kahing/goofys)
 
 - a [PostgreSQL](https://www.postgresql.org/) database for Nextcloud - providing better performance than the default [SQLite](https://sqlite.org/) database
 
@@ -132,13 +132,13 @@ its external storage support suffers from:
 - being unable to create folders on Amazon S3 external storage mountpoints
 - being unbearably slow
 
-To avoid this problem, what this playbook does is mount some Amazon S3 bucket as a local directory using [s3fs-fuse](https://github.com/s3fs-fuse/s3fs-fuse).
+To avoid this problem, what this playbook does is mount some Amazon S3 bucket as a local directory using [Goofys](https://github.com/kahing/goofys).
 
 It makes this bucket avaialble as a local directory
 
 You'll need an Amazon S3 bucket and some IAM user credentials (access key + secret key) with full write access to the bucket. Example security policy:
 
-```
+```json
 {
 	"Version": "2012-10-17",
 	"Statement": [
@@ -160,14 +160,22 @@ You'll need an Amazon S3 bucket and some IAM user credentials (access key + secr
 You then need to enable S3 support in your configuration file (`inventory/<your-domain>/vars.yml`).
 It would be something like this:
 
-```
-nextcloud_s3fs_external_storage_enabled: true
-nextcloud_s3fs_external_storage_bucket_name: "your-bucket-name"
-nextcloud_s3fs_external_storage_aws_access_key: "your-aws-access-key"
-nextcloud_s3fs_external_storage_aws_secret_key: "your-aws-secret-key"
+```yaml
+nextcloud_goofys_external_storage_enabled: true
+nextcloud_goofys_external_storage_bucket_name: "your-bucket-name"
+nextcloud_goofys_external_storage_aws_access_key: "your-aws-access-key"
+nextcloud_goofys_external_storage_aws_secret_key: "your-aws-secret-key"
+nextcloud_goofys_external_storage_region: eu-west-3
 ```
 
-This storage is available on both your server and within the Nextcloud container via the `/nextcloud/s3-external-storage` directory.
+To also store your appdata's `preview` directory there, you need to find your instance id (can happen when running `cat /nextcloud/nextcloud-data/config/config.php | grep instanceid` **after** installing) and add this additional configuration:
+
+```yaml
+nextcloud_goofys_external_storage_for_appdata_previews_enabled: true
+nextcloud_goofys_external_storage_for_appdata_previews_instance_id: "your-instance-id-goes-here"
+```
+
+This storage is available on both your server and within the Nextcloud container via the `/nextcloud/external-storage/goofys` directory.
 
 Once this common part is done, you can dedicate a separate sub-directory from it to each of your users.
 This way, all users would be sharing the same S3 bucket, but won't be able to see each other's files.
@@ -175,7 +183,7 @@ This way, all users would be sharing the same S3 bucket, but won't be able to se
 To prepare it for a new user:
 
 ```
-user_directory=/nextcloud/s3-external-storage/<username>
+user_directory=/nextcloud/external-storage/goofys/<username>
 mkdir $user_directory
 docker exec nextcloud-apache chown www-data:www-data $user_directory
 ```
@@ -186,10 +194,10 @@ Once the user-specific sub-directory is prepared, you can add (mount) it from (A
 
 - Folder name: a friendly name that the user would see (example: `s3-<username>`)
 - External storage type: Local
-- Configuration: the user-specific sub-directory you had prepared above (example: `/nextcloud/s3-external-storage/<username>`)
+- Configuration: the user-specific sub-directory you had prepared above (example: `/nextcloud/external-storage/goofys/<username>`)
 - Available for: select the user that the directory is for (otherwise it's availale to everyone)
 
-**Note**: if you add/remove remote S3 files manually from `/nextcloud/s3-external-storage/<username>` on the server or by some S3 tool, Nextcloud would not catch the change. You'd need to run `docker exec nextcloud-apache su - www-data -s /bin/bash -c 'php /var/www/html/occ files:scan <username>'` or go to (Admin -> External Storages) and delete & recreate the Folder definition.
+**Note**: if you add/remove remote S3 files manually from `/nextcloud/external-storage/goofys/<username>` on the server or by some S3 tool, Nextcloud would not catch the change. You'd need to run `docker exec nextcloud-apache su - www-data -s /bin/bash -c 'php /var/www/html/occ files:scan <username>'` or go to (Admin -> External Storages) and delete & recreate the Folder definition.
 
 
 ## Deficiencies

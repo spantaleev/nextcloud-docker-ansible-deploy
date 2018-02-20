@@ -4,6 +4,10 @@ nextcloud_user_username: nextcloud
 nextcloud_user_uid: 3991
 nextcloud_user_gid: 3991
 
+# uid/gid that the Nextcloud HTTP server runs with
+nextcloud_http_user_uid: 33
+nextcloud_http_user_gid: 33
+
 nextcloud_postgres_connection_username: "nextcloud"
 nextcloud_postgres_connection_password: "nextcloud-password"
 nextcloud_postgres_db_name: "nextcloud"
@@ -13,6 +17,7 @@ nextcloud_ssl_certs_path: "{{ nextcloud_base_data_path }}/ssl"
 nextcloud_ssl_support_email: "{{ host_specific_nextcloud_ssl_support_email }}"
 nextcloud_environment_variables_data_path: "{{ nextcloud_base_data_path }}/environment-variables"
 nextcloud_nextcloud_data_path: "{{ nextcloud_base_data_path }}/nextcloud-data"
+nextcloud_external_storage_path: "{{ nextcloud_base_data_path }}/external-storage"
 
 nextcloud_postgres_data_path: "{{ nextcloud_base_data_path }}/postgres"
 nextcloud_nginx_proxy_data_path: "{{ nextcloud_base_data_path }}/nginx-proxy"
@@ -23,16 +28,28 @@ docker_postgres_image: "postgres:9.6.7-alpine"
 docker_nextcloud_image: "nextcloud:13.0.0"
 docker_nginx_image: "nginx:1.13.8-alpine"
 docker_s3fs_image: "xueshanf/s3fs:latest"
+docker_goofys_image: "cloudproto/goofys:latest"
 
 # Specifies when to restart the Nextcloud services so that
 # a new SSL certificate could go into effect (UTC time).
 nextcloud_services_restart_cron_time_definition: "15 4 3 * *"
 
 nextcloud_s3fs_external_storage_enabled: false
-nextcloud_s3fs_external_storage_path: "{{ nextcloud_base_data_path }}/s3-external-storage"
+nextcloud_s3fs_external_storage_path: "{{ nextcloud_external_storage_path }}/s3fs"
 nextcloud_s3fs_external_storage_bucket_name: "your-bucket-name"
 nextcloud_s3fs_external_storage_aws_access_key: "your-aws-access-key"
 nextcloud_s3fs_external_storage_aws_secret_key: "your-aws-secret-key"
+
+nextcloud_goofys_external_storage_enabled: false
+nextcloud_goofys_external_storage_path: "{{ nextcloud_external_storage_path }}/goofys"
+nextcloud_goofys_external_storage_bucket_name: "your-bucket-name"
+nextcloud_goofys_external_storage_aws_access_key: "your-aws-access-key"
+nextcloud_goofys_external_storage_aws_secret_key: "your-aws-secret-key"
+nextcloud_goofys_external_storage_region: "eu-central-1"
+# Controls whether appdata previews are stored in Goofys as well.
+# For this to work, you need to specify a correct instance id.
+nextcloud_goofys_external_storage_for_appdata_previews_enabled: false
+nextcloud_goofys_external_storage_for_appdata_previews_instance_id: "ocdmh6gdl21v"
 
 # By default, this playbook sets up its own nginx proxy server on port 80/443.
 # This is fine if you're dedicating the whole server to Nextcloud.
