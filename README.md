@@ -184,8 +184,7 @@ To prepare it for a new user:
 
 ```
 user_directory=/nextcloud/external-storage/goofys/<username>
-mkdir $user_directory
-docker exec nextcloud-apache chown www-data:www-data $user_directory
+docker exec nextcloud-apache su -s /bin/sh -c "mkdir $user_directory" www-data
 ```
 
 Since the S3 bucket appears as a local directory on our filesystem, the **Local** type of External Storage must be used, which is only available through the "global External Storage" configuration (Admin -> External Storages).
