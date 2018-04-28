@@ -25,7 +25,7 @@ nextcloud_nginx_proxy_confd_path: "{{ nextcloud_nginx_proxy_data_path }}/conf.d"
 nextcloud_scratchpad_dir: "{{ nextcloud_base_data_path }}/scratchpad"
 
 docker_postgres_image: "postgres:9.6.8-alpine"
-docker_nextcloud_image: "nextcloud:13.0.1"
+docker_nextcloud_image: "nextcloud:13.0.2"
 docker_nginx_image: "nginx:1.13.9-alpine"
 docker_s3fs_image: "xueshanf/s3fs:latest"
 docker_goofys_image: "cloudproto/goofys:latest"
