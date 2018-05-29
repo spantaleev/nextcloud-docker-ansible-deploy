@@ -14,7 +14,7 @@ ExecStart=/usr/bin/docker run --rm --name nextcloud-postgres \
 			--env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-server-docker \
 			-v {{ nextcloud_postgres_data_path }}:/var/lib/postgresql/data \
 			-v /etc/passwd:/etc/passwd:ro \
-			{{ docker_postgres_image }}
+			{{ docker_postgres_image_to_use }}
 ExecStop=-/usr/bin/docker stop nextcloud-postgres
 ExecStop=-/usr/bin/docker rm nextcloud-postgres
 Restart=always

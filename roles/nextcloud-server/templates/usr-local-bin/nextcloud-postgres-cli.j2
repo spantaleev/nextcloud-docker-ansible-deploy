@@ -1,3 +1,9 @@
 #!/bin/bash
 
-docker run --env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-pgsql-docker -it --link=nextcloud-postgres:postgres {{ docker_postgres_image }} psql -h postgres
+docker run \
+	-it \
+	--rm \
+	--env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-pgsql-docker \
+	--link=nextcloud-postgres:postgres \
+	{{ docker_postgres_image_to_use }} \
+	psql -h postgres
