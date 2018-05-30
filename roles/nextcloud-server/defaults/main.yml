@@ -54,6 +54,21 @@ nextcloud_goofys_external_storage_region: "eu-central-1"
 nextcloud_goofys_external_storage_for_appdata_previews_enabled: false
 nextcloud_goofys_external_storage_for_appdata_previews_instance_id: "ocdmh6gdl21v"
 
+# Controls whether the nextcloud-apache container's memory usage
+# is limited and to what extent.
+#
+# When set, these options are passed to `docker run`
+# as `--memory=..` and `--memory-swap=..` respectively.
+#
+# Expected value format is `[integer][unit]`. E.g. 100M, 1G
+#
+# If `nextcloud_apache_container_memory_swap_limit` is set,
+# it represents the total memory that can be used (memory + swap),
+# so it must always be at least as large as `nextcloud_apache_container_memory_limit`.
+# To disable swapping, make it the same as `nextcloud_apache_container_memory_limit`.
+nextcloud_apache_container_memory_limit: ""
+nextcloud_apache_container_memory_swap_limit: ""
+
 # By default, this playbook sets up its own nginx proxy server on port 80/443.
 # This is fine if you're dedicating the whole server to Nextcloud.
 # But in case that's not the case, you may wish to prevent that
