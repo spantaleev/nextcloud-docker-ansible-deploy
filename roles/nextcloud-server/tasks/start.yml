@@ -8,6 +8,10 @@
   service: name=nextcloud-goofys enabled=yes state=restarted daemon_reload=yes
   when: nextcloud_goofys_external_storage_enabled
 
+- name: Ensure nextcloud-goofys-appdata-preview autoruns and is restarted
+  service: name=nextcloud-goofys-appdata-preview enabled=yes state=restarted daemon_reload=yes
+  when: nextcloud_goofys_external_storage_for_appdata_previews_enabled
+
 - name: Ensure services autorun and are restarted
   service: name="{{ item }}" enabled=yes state=restarted daemon_reload=yes
   with_items:
