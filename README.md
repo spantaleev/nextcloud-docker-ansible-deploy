@@ -221,6 +221,40 @@ To use a different directory, pass some extra flags to the command above, like t
 If you've created other databases in that database instance (something this playbook never does and never advises), data will be lost.
 
 
+## Uninstalling
+
+**Note**: If you have some trouble with your installation configuration, you can just re-run the playbook and it will try to set things up again. You don't need to uninstall and install fresh.
+
+However, if you've installed this on some server where you have other stuff you wish to preserve, and now want get rid of Nextcloud, it's enough to do these:
+
+- ensure all Nextcloud services are stopped (`systemctl stop 'nextcloud*'`)
+
+- delete the Nextcloud-related systemd .service files (`rm -f /etc/systemd/system/nextcloud*`) and reload systemd (`systemctl daemon-reload`)
+
+- delete all Nextcloud-related cronjobs (`rm -f /etc/cron.d/nextcloud*`)
+
+- delete some helper scripts (`rm -f /usr/local/bin/nextcloud*`)
+
+- delete some cached Docker images (or just delete them all: `docker rmi $(docker images -aq)`)
+
+- uninstall Docker itself, if necessary
+
+- delete the `/nextcloud` directory (`rm -rf /nextcloud`)
+
+
+## Docker images used by this playbook
+
+This playbook sets up your server using the following Docker images:
+
+- [nextcloud](https://hub.docker.com/r/_/nextcloud/) - the official [Nextcloud](https://github.com/nextcloud/server) server
+
+- [postgres](https://hub.docker.com/_/postgres/) - the [Postgres](https://www.postgresql.org/) database server (optional)
+
+- [cloudproto/goofys](https://hub.docker.com/r/cloudproto/goofys/) - the [Goofys](https://github.com/kahing/goofys) Amazon [S3](https://aws.amazon.com/s3/) file-system-mounting program (optional)
+
+- [nginx](https://hub.docker.com/_/nginx/) - the [nginx](http://nginx.org/) web server (optional)
+
+
 ## Deficiencies
 
 This Ansible playbook can be improved in the following ways:
