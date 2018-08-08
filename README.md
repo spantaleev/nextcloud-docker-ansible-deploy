@@ -108,7 +108,7 @@ In **Storage & database**, you should choose PostgreSQL, with the following sett
 - Database user: `nextcloud`
 - Database password: `nextcloud-password`
 - Database name: `nextcloud`
-- Database host: `postgres:5432`
+- Database host: `nextcloud-postgres:5432`
 
 The database is strictly local, so using the default username/password is OK.
 
