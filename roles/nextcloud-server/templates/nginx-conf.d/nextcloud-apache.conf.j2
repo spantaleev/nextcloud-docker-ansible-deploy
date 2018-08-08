@@ -45,7 +45,16 @@ server {
 	proxy_max_temp_file_size 0;
 
 	location / {
-		proxy_pass http://{{ 'nextcloud:80' if nextcloud_nginx_proxy_enabled else 'localhost:' ~ nextcloud_apache_http_port_on_host }};
+		{% if nextcloud_nginx_proxy_enabled %}
+			{# Use the embedded DNS resolver in Docker containers to discover the service #}
+			resolver 127.0.0.11 valid=5s;
+			set $backend "nextcloud-apache:80";
+			proxy_pass http://$backend;
+		{% else %}
+			{# Generic configuration for people to use outside of our container setup #}
+			proxy_pass http://localhost:{{ nextcloud_apache_http_port_on_host }};
+		{% endif %}
+
 		proxy_set_header Host $host;
 		proxy_set_header X-Forwarded-Proto $scheme;
 		proxy_set_header X-Real-IP $remote_addr;

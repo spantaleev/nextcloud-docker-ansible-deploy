@@ -8,6 +8,7 @@ nextcloud_user_gid: 3991
 nextcloud_http_user_uid: 33
 nextcloud_http_user_gid: 33
 
+nextcloud_postgres_connection_hostname: "nextcloud-postgres"
 nextcloud_postgres_connection_username: "nextcloud"
 nextcloud_postgres_connection_password: "nextcloud-password"
 nextcloud_postgres_db_name: "nextcloud"
@@ -32,6 +33,9 @@ nextcloud_docker_image_nextcloud: "nextcloud:13.0.5"
 nextcloud_docker_image_nginx: "nginx:1.15.2-alpine"
 nextcloud_docker_image_s3fs: "xueshanf/s3fs:latest"
 nextcloud_docker_image_goofys: "cloudproto/goofys:latest"
+
+# The Docker network that all services would be put into
+nextcloud_docker_network: "nextcloud"
 
 # Specifies when to restart the Nextcloud services so that
 # a new SSL certificate could go into effect (UTC time).

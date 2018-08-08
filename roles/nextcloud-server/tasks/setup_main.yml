@@ -25,3 +25,8 @@
     mode: 0750
     owner: "{{ nextcloud_user_username }}"
     group: "{{ nextcloud_user_username }}"
+
+- name: Ensure Nextcloud network is created in Docker
+  docker_network:
+    name: "{{ nextcloud_docker_network }}"
+    driver: bridge

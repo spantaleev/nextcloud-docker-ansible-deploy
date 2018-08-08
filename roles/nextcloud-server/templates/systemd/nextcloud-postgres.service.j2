@@ -11,6 +11,7 @@ ExecStartPre=-/usr/bin/mkdir {{ nextcloud_postgres_data_path }}
 ExecStartPre=-/usr/bin/chown {{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} {{ nextcloud_postgres_data_path }}
 ExecStart=/usr/bin/docker run --rm --name nextcloud-postgres \
 			--user={{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} \
+			--network={{ nextcloud_docker_network }} \
 			--env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-server-docker \
 			-v {{ nextcloud_postgres_data_path }}:/var/lib/postgresql/data \
 			-v /etc/passwd:/etc/passwd:ro \

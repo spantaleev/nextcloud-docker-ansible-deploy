@@ -2,17 +2,16 @@
 Description=Nextcloud nginx proxy server
 After=docker.service
 Requires=docker.service
-Requires=nextcloud-apache.service
-After=nextcloud-apache.service
+Wants=nextcloud-apache.service
 
 [Service]
 Type=simple
 ExecStartPre=-/usr/bin/docker kill nextcloud-nginx-proxy
 ExecStartPre=-/usr/bin/docker rm nextcloud-nginx-proxy
 ExecStart=/usr/bin/docker run --rm --name nextcloud-nginx-proxy \
+			--network={{ matrix_docker_network }} \
 			-p 80:80 \
 			-p 443:443 \
-			--link nextcloud-apache:nextcloud \
 			-v {{ nextcloud_nginx_proxy_confd_path }}:/etc/nginx/conf.d:ro \
 			-v {{ nextcloud_ssl_certs_path }}:{{ nextcloud_ssl_certs_path }}:ro \
 			{{ nextcloud_docker_image_nginx }}
