@@ -34,7 +34,7 @@
 #
 - name: Ensure nginx Docker image is pulled
   docker_image:
-    name: "{{ docker_nginx_image }}"
+    name: "{{ nextcloud_docker_image_nginx }}"
   when: nextcloud_nginx_proxy_enabled
 
 - name: Allow access to nginx proxy ports in firewalld

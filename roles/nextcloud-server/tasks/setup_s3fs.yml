@@ -4,7 +4,7 @@
 
 - name: Ensure S3fs Docker image is pulled
   docker_image:
-    name: "{{ docker_s3fs_image }}"
+    name: "{{ nextcloud_docker_image_s3fs }}"
   when: nextcloud_s3fs_external_storage_enabled
 
 - name: Check Nextcloud S3fs external storage mountpoint path
@@ -63,6 +63,6 @@
 
 - name: Ensure S3fs Docker image doesn't exist
   docker_image:
-    name: "{{ docker_s3fs_image }}"
+    name: "{{ nextcloud_docker_image_s3fs }}"
     state: absent
   when: "not nextcloud_s3fs_external_storage_enabled"

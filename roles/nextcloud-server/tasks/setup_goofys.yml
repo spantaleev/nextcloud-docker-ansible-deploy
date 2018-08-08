@@ -4,7 +4,7 @@
 
 - name: Ensure Goofys Docker image is pulled
   docker_image:
-    name: "{{ docker_goofys_image }}"
+    name: "{{ nextcloud_docker_image_goofys }}"
   when: nextcloud_goofys_external_storage_enabled
 
 # This will throw a Permission Denied error if already mounted
@@ -108,6 +108,6 @@
 
 - name: Ensure Goofys Docker image doesn't exist
   docker_image:
-    name: "{{ docker_goofys_image }}"
+    name: "{{ nextcloud_docker_image_goofys }}"
     state: absent
   when: "not nextcloud_goofys_external_storage_enabled"

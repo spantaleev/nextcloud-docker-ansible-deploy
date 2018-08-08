@@ -45,7 +45,7 @@ ExecStart=/usr/bin/docker run --rm --name nextcloud-apache \
 			{% if nextcloud_apache_container_memory_swap_limit != '' %}
 				--memory-swap={{ nextcloud_apache_container_memory_swap_limit }} \
 			{% endif %}
-			{{ docker_nextcloud_image }}
+			{{ nextcloud_docker_image_nextcloud }}
 ExecStop=-/usr/bin/docker kill nextcloud-apache
 ExecStop=-/usr/bin/docker rm nextcloud-apache
 Restart=always
