@@ -25,8 +25,8 @@ nextcloud_nginx_proxy_data_path: "{{ nextcloud_base_data_path }}/nginx-proxy"
 nextcloud_nginx_proxy_confd_path: "{{ nextcloud_nginx_proxy_data_path }}/conf.d"
 nextcloud_scratchpad_dir: "{{ nextcloud_base_data_path }}/scratchpad"
 
-nextcloud_docker_image_postgres_v9: "postgres:9.6.9-alpine"
-nextcloud_docker_image_postgres_v10: "postgres:10.4-alpine"
+nextcloud_docker_image_postgres_v9: "postgres:9.6.10-alpine"
+nextcloud_docker_image_postgres_v10: "postgres:10.5-alpine"
 nextcloud_docker_image_postgres_latest: "{{ nextcloud_docker_image_postgres_v10 }}"
 
 nextcloud_docker_image_nextcloud: "nextcloud:13.0.5"
