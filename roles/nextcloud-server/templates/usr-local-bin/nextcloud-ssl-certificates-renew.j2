@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# For renewal to work, nextcloud-nginx-proxy (or another webserver, if nextcloud-nginx-proxy is disabled)
+# need to forward requests for `/.well-known/acme-challenge` to the certbot container.
+#
+# This can happen inside the container network by proxying to `http://nextcloud-certbot:80`
+# or outside (on the host) by proxying to `http://localhost:{{ nextcloud_ssl_certbot_standalone_http_port }}`.
+
+docker run \
+	--rm \
+	--name=nextcloud-certbot \
+	--network="{{ nextcloud_docker_network }}" \
+	-p 127.0.0.1:{{ nextcloud_ssl_certbot_standalone_http_port }}:80 \
+	-v {{ nextcloud_ssl_config_dir_path }}:/etc/letsencrypt \
+	-v {{ nextcloud_ssl_log_dir_path }}:/var/log/letsencrypt \
+	{{ nextcloud_ssl_certbot_docker_image }} \
+	renew \
+		--non-interactive \
+		{% if nextcloud_ssl_use_staging %}
+			--staging \
+		{% endif %}
+		--quiet \
+		--standalone \
+		--preferred-challenges http \
+		--agree-tos \
+		--email={{ nextcloud_ssl_support_email }}
