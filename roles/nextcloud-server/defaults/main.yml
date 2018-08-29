@@ -29,7 +29,6 @@ nextcloud_docker_image_postgres_latest: "{{ nextcloud_docker_image_postgres_v10 
 
 nextcloud_docker_image_nextcloud: "nextcloud:13.0.5"
 nextcloud_docker_image_nginx: "nginx:1.15.2-alpine"
-nextcloud_docker_image_s3fs: "xueshanf/s3fs:latest"
 nextcloud_docker_image_goofys: "cloudproto/goofys:latest"
 
 # The Docker network that all services would be put into
@@ -38,12 +37,6 @@ nextcloud_docker_network: "nextcloud"
 # Specifies when to restart the Nextcloud services so that
 # a new SSL certificate could go into effect (UTC time).
 nextcloud_services_restart_cron_time_definition: "15 4 3 * *"
-
-nextcloud_s3fs_external_storage_enabled: false
-nextcloud_s3fs_external_storage_path: "{{ nextcloud_external_storage_path }}/s3fs"
-nextcloud_s3fs_external_storage_bucket_name: "your-bucket-name"
-nextcloud_s3fs_external_storage_aws_access_key: "your-aws-access-key"
-nextcloud_s3fs_external_storage_aws_secret_key: "your-aws-secret-key"
 
 nextcloud_goofys_external_storage_enabled: false
 nextcloud_goofys_external_storage_path: "{{ nextcloud_external_storage_path }}/goofys"

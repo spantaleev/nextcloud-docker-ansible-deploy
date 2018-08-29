@@ -1,9 +1,5 @@
 ---
 
-- name: Ensure nextcloud-s3fs autoruns and is restarted
-  service: name=nextcloud-s3fs enabled=yes state=restarted daemon_reload=yes
-  when: nextcloud_s3fs_external_storage_enabled
-
 - name: Ensure nextcloud-goofys autoruns and is restarted
   service: name=nextcloud-goofys enabled=yes state=restarted daemon_reload=yes
   when: nextcloud_goofys_external_storage_enabled
