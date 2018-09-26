@@ -9,6 +9,7 @@ Type=simple
 ExecStartPre=-/usr/bin/docker kill nextcloud-nginx-proxy
 ExecStartPre=-/usr/bin/docker rm nextcloud-nginx-proxy
 ExecStart=/usr/bin/docker run --rm --name nextcloud-nginx-proxy \
+			--log-driver=none \
 			--network={{ nextcloud_docker_network }} \
 			-p 80:80 \
 			-p 443:443 \

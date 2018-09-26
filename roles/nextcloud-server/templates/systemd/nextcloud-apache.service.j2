@@ -24,6 +24,7 @@ ExecStartPre=-/usr/bin/docker rm nextcloud-apache
 ExecStartPre=/bin/sleep 5
 {% endif %}
 ExecStart=/usr/bin/docker run --rm --name nextcloud-apache \
+			--log-driver=none \
 			--network={{ nextcloud_docker_network }} \
 			-v {{ nextcloud_nextcloud_data_path }}/config:/var/www/html/config \
 			-v {{ nextcloud_nextcloud_data_path }}/custom_apps:/var/www/html/custom_apps \
