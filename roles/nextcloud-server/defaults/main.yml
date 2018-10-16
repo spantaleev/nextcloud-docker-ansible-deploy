@@ -27,7 +27,7 @@ nextcloud_docker_image_postgres_v9: "postgres:9.6.10-alpine"
 nextcloud_docker_image_postgres_v10: "postgres:10.5-alpine"
 nextcloud_docker_image_postgres_latest: "{{ nextcloud_docker_image_postgres_v10 }}"
 
-nextcloud_docker_image_nextcloud: "nextcloud:14.0.2-apache"
+nextcloud_docker_image_nextcloud: "nextcloud:14.0.3-apache"
 nextcloud_docker_image_nginx: "nginx:1.15.5-alpine"
 nextcloud_docker_image_goofys: "cloudproto/goofys:latest"
 
