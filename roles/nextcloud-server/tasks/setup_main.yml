@@ -9,8 +9,9 @@
 - name: Ensure Nextcloud user is created
   user:
     name: "{{ nextcloud_user_username }}"
-    state: present
+    uid: "{{ nextcloud_user_gid }}"
     group: "{{ nextcloud_user_username }}"
+    state: present
 
 - name: Ensure environment variables data path exists
   file:
