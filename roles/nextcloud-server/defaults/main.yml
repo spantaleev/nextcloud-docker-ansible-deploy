@@ -86,5 +86,11 @@ nextcloud_ssl_use_staging: false
 # Specifies when to attempt to retrieve new SSL certificates from Let's Encrypt.
 nextcloud_ssl_renew_cron_time_definition: "15 5 */5 * *"
 
+
 nextcloud_onlyoffice_enabled: false
 nextcloud_onlyoffice_document_server_docker_image: "onlyoffice/documentserver:5.2.2.2"
+
+# If `nextcloud_nginx_proxy_enabled` is set to `true`,
+# nextcloud-onlyoffice-document-server's port 80 is exposed to the container host (127.0.0.1)
+# on this port by default.
+nextcloud_onlyoffice_document_server_http_port_on_host: 37180

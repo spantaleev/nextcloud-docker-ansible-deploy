@@ -16,7 +16,7 @@
 			proxy_pass http://$backend;
 		{% else %}
 			{# Generic configuration for people to use outside of our container setup #}
-			proxy_pass http://localhost:8280;
+			proxy_pass http://localhost:{{ nextcloud_onlyoffice_document_server_http_port_on_host }};
 		{% endif %}
 
 		proxy_set_header Host $host;

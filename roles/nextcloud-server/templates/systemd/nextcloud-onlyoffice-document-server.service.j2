@@ -11,7 +11,7 @@ ExecStart=/usr/bin/docker run --rm --name nextcloud-onlyoffice-document-server \
 			--log-driver=none \
 			--network={{ nextcloud_docker_network }} \
 			{% if not nextcloud_nginx_proxy_enabled %}
-			-p 127.0.0.1:8280:80 \
+			-p 127.0.0.1:{{ nextcloud_onlyoffice_document_server_http_port_on_host }}:80 \
 			{% endif %}
 			{{ nextcloud_onlyoffice_document_server_docker_image }}
 ExecStop=-/usr/bin/docker stop nextcloud-onlyoffice-document-server
