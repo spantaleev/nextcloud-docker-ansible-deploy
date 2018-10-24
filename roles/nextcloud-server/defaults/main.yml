@@ -85,3 +85,6 @@ nextcloud_ssl_use_staging: false
 
 # Specifies when to attempt to retrieve new SSL certificates from Let's Encrypt.
 nextcloud_ssl_renew_cron_time_definition: "15 5 */5 * *"
+
+nextcloud_onlyoffice_enabled: false
+nextcloud_onlyoffice_document_server_docker_image: "onlyoffice/documentserver:5.2.2.2"

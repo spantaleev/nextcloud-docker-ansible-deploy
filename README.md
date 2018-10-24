@@ -10,9 +10,11 @@ Using this playbook, you can get the following services configured on your serve
 
 - (optional) [Amazon S3](https://aws.amazon.com/s3/) remote storage for your Nextcloud data using [Goofys](https://github.com/kahing/goofys)
 
-- a [PostgreSQL](https://www.postgresql.org/) database for Nextcloud - providing better performance than the default [SQLite](https://sqlite.org/) database
+- a [PostgreSQL](https://www.postgresql.org/) database for Nextcloud
 
 - free [Let's Encrypt](https://letsencrypt.org/) SSL certificate, which secures the connection to the Nextcloud server
+
+- (optional) [OnlyOffice](https://www.onlyoffice.com/) integration - for online document editing/previewing
 
 Basically, this playbook aims to get you up-and-running with all the basic necessities around Nextcloud, without you having to do anything else.
 
@@ -42,6 +44,8 @@ This playbook sets up your server using the following Docker images:
 - [nginx](https://hub.docker.com/_/nginx/) - the [nginx](http://nginx.org/) web server (optional)
 
 - [certbot/certbot](https://hub.docker.com/r/certbot/certbot/) - the [certbot](https://certbot.eff.org/) tool for obtaining SSL certificates from [Let's Encrypt](https://letsencrypt.org/)
+
+- [onlyoffice/documentserver](https://hub.docker.com/r/onlyoffice/documentserver/) - the [OnlyOffice](https://www.onlyoffice.com/) Document Server, for online document editing/previewing (optional)
 
 
 ## Deficiencies

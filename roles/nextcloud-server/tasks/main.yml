@@ -33,6 +33,16 @@
     - setup-nextcloud
     - update
 
+- include: tasks/setup_onlyoffice.yml
+  tags:
+    - setup-all
+    - setup-onlyoffice
+
+# This is meant to be executed subsequently, after Nextcloud is fully setup
+- include: tasks/setup_onlyoffice_app.yml
+  tags:
+    - setup-onlyoffice-app
+
 - include: tasks/setup_nginx_proxy.yml
   tags:
     - setup-all

@@ -1,3 +1,10 @@
+# 2018-10-24
+
+## OnlyOffice integration
+
+The playbook can now [install and configure](docs/configuring-playbook-onlyoffice.md) an [OnlyOffice](https://www.onlyoffice.com/) Document Server and the [OnlyOffice app for Nextcloud](https://apps.nextcloud.com/apps/onlyoffice).
+
+
 # 2018-09-26
 
 ## Disabling Docker container logging

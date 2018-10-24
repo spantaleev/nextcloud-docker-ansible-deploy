@@ -1,0 +1,42 @@
+---
+
+#
+# Tasks related to setting up OnlyOffice
+#
+
+- name: Ensure OnlyOffice Docker image is pulled
+  docker_image:
+    name: "{{ nextcloud_onlyoffice_document_server_docker_image }}"
+  when: nextcloud_onlyoffice_enabled
+
+- name: Ensure nextcloud-onlyoffice-document-server.service installed
+  template:
+    src: "{{ role_path }}/templates/systemd/nextcloud-onlyoffice-document-server.service.j2"
+    dest: "/etc/systemd/system/nextcloud-onlyoffice-document-server.service"
+    mode: 0644
+  when: nextcloud_onlyoffice_enabled
+
+#
+# Tasks related to getting rid of OnlyOffice (if it was previously enabled)
+#
+
+- name: Check existence of nextcloud-onlyoffice-document-server service
+  stat: path="/etc/systemd/system/nextcloud-onlyoffice-document-server.service"
+  register: nextcloud_onlyoffice_service_stat
+
+- name: Ensure nextcloud-onlyoffice-document-server is stopped
+  service: name=nextcloud-onlyoffice state=stopped daemon_reload=yes
+  register: stopping_result
+  when: "not nextcloud_onlyoffice_enabled and nextcloud_onlyoffice_service_stat.stat.exists"
+
+- name: Ensure nextcloud-onlyoffice-document-server.service doesn't exist
+  file:
+    path: "/etc/systemd/system/nextcloud-onlyoffice-document-server.service"
+    state: absent
+  when: "not nextcloud_onlyoffice_enabled and nextcloud_onlyoffice_service_stat.stat.exists"
+
+- name: Ensure OnlyOffice Docker image doesn't exist
+  docker_image:
+    name: "{{ nextcloud_onlyoffice_document_server_docker_image }}"
+    state: absent
+  when: "not nextcloud_onlyoffice_enabled"

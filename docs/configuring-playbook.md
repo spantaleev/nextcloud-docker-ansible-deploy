@@ -28,3 +28,5 @@ When you're done with all the configuration you'd like to do, continue with [Ins
 - [Using an external PostgreSQL server](configuring-playbook-external-postgres.md) (optional)
 
 - [Using your own webserver, instead of this playbook's nginx proxy](configuring-playbook-own-webserver.md) (optional)
+
+- [Setting up OnlyOffice integration](configuring-playbook-onlyoffice.md) (optional)

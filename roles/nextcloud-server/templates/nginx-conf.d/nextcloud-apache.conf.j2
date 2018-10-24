@@ -1,3 +1,32 @@
+{% macro render_onlyoffice_locations(nextcloud_nginx_proxy_enabled) %}
+	location ~* ^/onlyoffice-document-server/ {
+		{% if nextcloud_nginx_proxy_enabled %}
+			{# Use the embedded DNS resolver in Docker containers to discover the service #}
+			{#
+				Defining this backend before `rewrite` (below),
+				otherwise it wouldn't error out as an undefined variable.
+			#}
+			resolver 127.0.0.11 valid=5s;
+			set $backend "nextcloud-onlyoffice-document-server:80";
+		{% endif %}
+
+		rewrite /onlyoffice-document-server/(.*) /$1 break;
+
+		{% if nextcloud_nginx_proxy_enabled %}
+			proxy_pass http://$backend;
+		{% else %}
+			{# Generic configuration for people to use outside of our container setup #}
+			proxy_pass http://localhost:8280;
+		{% endif %}
+
+		proxy_set_header Host $host;
+		proxy_set_header X-Forwarded-Proto $scheme;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Host $http_host/onlyoffice-document-server;
+	}
+{% endmacro %}
+
 server {
 	listen 80;
 	server_name {{ hostname_nextcloud }};
@@ -40,6 +69,10 @@ server {
 	client_body_buffer_size 20M;
 	client_max_body_size 4G; # 0=unlimited - set max upload size
 	proxy_max_temp_file_size 0;
+
+	{% if nextcloud_onlyoffice_enabled %}
+		{{ render_onlyoffice_locations(nextcloud_nginx_proxy_enabled) }}
+	{% endif %}
 
 	location / {
 		{% if nextcloud_nginx_proxy_enabled %}

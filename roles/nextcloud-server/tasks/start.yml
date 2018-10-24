@@ -14,6 +14,10 @@
     - nextcloud-postgres
     - nextcloud-apache
 
+- name: Ensure nextcloud-onlyoffice-document-server autoruns and is restarted
+  service: name=nextcloud-onlyoffice-document-server enabled=yes state=restarted daemon_reload=yes
+  when: nextcloud_onlyoffice_enabled
+
 - name: Ensure nextcloud-nginx-proxy autoruns and is restarted
   service: name=nextcloud-nginx-proxy enabled=yes state=restarted daemon_reload=yes
   when: nextcloud_nginx_proxy_enabled
