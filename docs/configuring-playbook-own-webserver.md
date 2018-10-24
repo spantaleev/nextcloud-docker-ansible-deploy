@@ -24,4 +24,6 @@ nextcloud_nginx_proxy_enabled: false
 
 - ensure you set up a vhost that proxies to Nextcloud (`localhost:37150`)
 
+- ensure that the `/.well-known/acme-challenge` location for the "port=80 vhost" gets proxied to `http://localhost:2403` (controlled by `nextcloud_ssl_certbot_standalone_http_port`) for automated SSL renewal to work
+
 - ensure that you restart/reload your webserver once in a while, so that renewed SSL certificates would take effect (once a month should be enough)
