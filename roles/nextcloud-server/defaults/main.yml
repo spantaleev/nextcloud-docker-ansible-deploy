@@ -8,37 +8,53 @@ nextcloud_user_gid: 3991
 nextcloud_http_user_uid: 33
 nextcloud_http_user_gid: 33
 
+# The Docker network that all services would be put into
+nextcloud_docker_network: "nextcloud"
+
+nextcloud_base_data_path: "/nextcloud"
+nextcloud_environment_variables_data_path: "{{ nextcloud_base_data_path }}/environment-variables"
+nextcloud_external_storage_path: "{{ nextcloud_base_data_path }}/external-storage"
+nextcloud_scratchpad_dir: "{{ nextcloud_base_data_path }}/scratchpad"
+
+
+nextcloud_nextcloud_data_path: "{{ nextcloud_base_data_path }}/nextcloud-data"
+nextcloud_nextcloud_docker_image: "nextcloud:14.0.3-apache"
+
+# Controls whether the nextcloud-apache container's memory usage
+# is limited and to what extent.
+#
+# When set, these options are passed to `docker run`
+# as `--memory=..` and `--memory-swap=..` respectively.
+#
+# Expected value format is `[integer][unit]`. E.g. 100M, 1G
+#
+# If `nextcloud_nextcloud_apache_container_memory_swap_limit` is set,
+# it represents the total memory that can be used (memory + swap),
+# so it must always be at least as large as `nextcloud_nextcloud_apache_container_memory_limit`.
+# To disable swapping, make it the same as `nextcloud_nextcloud_apache_container_memory_limit`.
+nextcloud_nextcloud_apache_container_memory_limit: ""
+nextcloud_nextcloud_apache_container_memory_swap_limit: ""
+
+
 nextcloud_postgres_connection_hostname: "nextcloud-postgres"
 nextcloud_postgres_connection_username: "nextcloud"
 nextcloud_postgres_connection_password: "nextcloud-password"
 nextcloud_postgres_db_name: "nextcloud"
 
-nextcloud_base_data_path: "/nextcloud"
-nextcloud_environment_variables_data_path: "{{ nextcloud_base_data_path }}/environment-variables"
-nextcloud_nextcloud_data_path: "{{ nextcloud_base_data_path }}/nextcloud-data"
-nextcloud_external_storage_path: "{{ nextcloud_base_data_path }}/external-storage"
+nextcloud_postgres_docker_image_v9: "postgres:9.6.10-alpine"
+nextcloud_postgres_docker_image_v10: "postgres:10.5-alpine"
+nextcloud_postgres_docker_image_latest: "{{ nextcloud_postgres_docker_image_v10 }}"
 
 nextcloud_postgres_data_path: "{{ nextcloud_base_data_path }}/postgres"
-nextcloud_nginx_proxy_data_path: "{{ nextcloud_base_data_path }}/nginx-proxy"
-nextcloud_nginx_proxy_confd_path: "{{ nextcloud_nginx_proxy_data_path }}/conf.d"
-nextcloud_scratchpad_dir: "{{ nextcloud_base_data_path }}/scratchpad"
 
-nextcloud_docker_image_postgres_v9: "postgres:9.6.10-alpine"
-nextcloud_docker_image_postgres_v10: "postgres:10.5-alpine"
-nextcloud_docker_image_postgres_latest: "{{ nextcloud_docker_image_postgres_v10 }}"
-
-nextcloud_docker_image_nextcloud: "nextcloud:14.0.3-apache"
-nextcloud_docker_image_nginx: "nginx:1.15.5-alpine"
-nextcloud_docker_image_goofys: "cloudproto/goofys:latest"
-
-# The Docker network that all services would be put into
-nextcloud_docker_network: "nextcloud"
 
 # Specifies when to restart the Nextcloud services so that
 # a new SSL certificate could go into effect (UTC time).
 nextcloud_services_restart_cron_time_definition: "15 4 3 * *"
 
+
 nextcloud_goofys_external_storage_enabled: false
+nextcloud_goofys_docker_image: "cloudproto/goofys:latest"
 nextcloud_goofys_external_storage_path: "{{ nextcloud_external_storage_path }}/goofys"
 nextcloud_goofys_external_storage_bucket_name: "your-bucket-name"
 nextcloud_goofys_external_storage_aws_access_key: "your-aws-access-key"
@@ -49,28 +65,20 @@ nextcloud_goofys_external_storage_region: "eu-central-1"
 nextcloud_goofys_external_storage_for_appdata_previews_enabled: false
 nextcloud_goofys_external_storage_for_appdata_previews_instance_id: "ocdmh6gdl21v"
 
-# Controls whether the nextcloud-apache container's memory usage
-# is limited and to what extent.
-#
-# When set, these options are passed to `docker run`
-# as `--memory=..` and `--memory-swap=..` respectively.
-#
-# Expected value format is `[integer][unit]`. E.g. 100M, 1G
-#
-# If `nextcloud_apache_container_memory_swap_limit` is set,
-# it represents the total memory that can be used (memory + swap),
-# so it must always be at least as large as `nextcloud_apache_container_memory_limit`.
-# To disable swapping, make it the same as `nextcloud_apache_container_memory_limit`.
-nextcloud_apache_container_memory_limit: ""
-nextcloud_apache_container_memory_swap_limit: ""
 
 # By default, this playbook sets up its own nginx proxy server on port 80/443.
 # This is fine if you're dedicating the whole server to Nextcloud.
 # But in case that's not the case, you may wish to prevent that
 # and take care of proxying by yourself.
 nextcloud_nginx_proxy_enabled: true
-# If `nextcloud_nginx_proxy_enabled` is set to `true`,
-# nextcloud-apache's port 80 is exposed to the container host (127.0.0.1)
+
+nextcloud_nginx_proxy_docker_image: "nginx:1.15.5-alpine"
+
+nextcloud_nginx_proxy_data_path: "{{ nextcloud_base_data_path }}/nginx-proxy"
+nextcloud_nginx_proxy_confd_path: "{{ nextcloud_nginx_proxy_data_path }}/conf.d"
+
+# If `nextcloud_nginx_proxy_enabled` is set to `false`,
+# nextcloud-apache's port 80 will be exposed to the container host (127.0.0.1)
 # on this port by default.
 nextcloud_apache_http_port_on_host: 37150
 

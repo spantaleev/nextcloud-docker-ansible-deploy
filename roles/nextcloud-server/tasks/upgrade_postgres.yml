@@ -54,16 +54,16 @@
 
 - name: Determine Postgres version to use (default to latest)
   set_fact:
-    nextcloud_docker_image_postgres_to_use: "{{ nextcloud_docker_image_postgres_latest }}"
+    nextcloud_postgres_docker_image_to_use: "{{ nextcloud_postgres_docker_image_latest }}"
 
 - name: Determine Postgres version to use (use 9.x, if detected)
   set_fact:
-    nextcloud_docker_image_postgres_to_use: "{{ nextcloud_docker_image_postgres_v9 }}"
+    nextcloud_postgres_docker_image_to_use: "{{ nextcloud_postgres_docker_image_v9 }}"
   when: "pg_version.startswith('9.')"
 
 - name: Abort, if already at latest Postgres version
   fail: msg="You are already running the latest Postgres version supported. Nothing to do"
-  when: "nextcloud_docker_image_postgres_to_use == nextcloud_docker_image_postgres_latest"
+  when: "nextcloud_postgres_docker_image_to_use == nextcloud_postgres_docker_image_latest"
 
 - name: Ensure nextcloud-apache is stopped
   service: name=nextcloud-apache state=stopped
@@ -83,7 +83,7 @@
     --network={{ nextcloud_docker_network }} \
     --env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-pgsql-docker \
     -v {{ postgres_dump_dir }}:/out \
-    {{ nextcloud_docker_image_postgres_to_use }} pg_dump -h postgres {{ nextcloud_postgres_db_name }} -f /out/{{ postgres_dump_name }}
+    {{ nextcloud_postgres_docker_image_to_use }} pg_dump -h postgres {{ nextcloud_postgres_db_name }} -f /out/{{ postgres_dump_name }}
 
 - name: Ensure nextcloud-postgres is stopped
   service: name=nextcloud-postgres state=stopped
@@ -111,7 +111,7 @@
     --network={{ nextcloud_docker_network }} \
     --env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-pgsql-docker \
     -v {{ postgres_dump_dir }}:/in:ro \
-    {{ nextcloud_docker_image_postgres_latest }} psql -h postgres -f /in/{{ postgres_dump_name }}
+    {{ nextcloud_postgres_docker_image_latest }} psql -h postgres -f /in/{{ postgres_dump_name }}
 
 - name: Delete Postgres database dump file
   file:

@@ -22,11 +22,11 @@
 
 - name: Determine Postgres version to use (default to latest)
   set_fact:
-    nextcloud_docker_image_postgres_to_use: "{{ nextcloud_docker_image_postgres_latest }}"
+    nextcloud_postgres_docker_image_to_use: "{{ nextcloud_postgres_docker_image_latest }}"
 
 - name: Determine Postgres version to use (use 9.x, if detected)
   set_fact:
-    nextcloud_docker_image_postgres_to_use: "{{ nextcloud_docker_image_postgres_v9 }}"
+    nextcloud_postgres_docker_image_to_use: "{{ nextcloud_postgres_docker_image_v9 }}"
   when: "pg_version.startswith('9.')"
 
 - name: Ensure postgres data path exists
@@ -39,7 +39,7 @@
 
 - name: Ensure postgres Docker image is pulled
   docker_image:
-    name: "{{ nextcloud_docker_image_postgres_to_use }}"
+    name: "{{ nextcloud_postgres_docker_image_to_use }}"
 
 - name: Ensure Postgres environment variables file created
   template:

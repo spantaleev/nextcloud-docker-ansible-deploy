@@ -1,3 +1,18 @@
+# 2018-11-01
+
+## (BC Break) Renaming playbook variables
+
+The following playbook variables were renamed:
+
+- from `nextcloud_docker_image_nextcloud` to `nextcloud_nextcloud_docker_image`
+- from `nextcloud_docker_image_nginx` to `nextcloud_nginx_proxy_docker_image`
+- from `nextcloud_docker_image_goofys` to `nextcloud_goofys_docker_image`
+- from `nextcloud_docker_image_postgres_v9` to `nextcloud_postgres_docker_image_v9`
+- from `nextcloud_docker_image_postgres_v10` to `nextcloud_postgres_docker_image_v10`
+- from `nextcloud_apache_container_memory_limit` to `nextcloud_nextcloud_apache_container_memory_limit`
+- from `nextcloud_apache_container_memory_swap_limit` to `nextcloud_nextcloud_apache_container_memory_swap_limit`
+
+
 # 2018-10-24
 
 ## OnlyOffice integration

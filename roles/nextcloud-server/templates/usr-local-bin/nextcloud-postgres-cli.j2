@@ -5,5 +5,5 @@ docker run \
 	--rm \
 	--network={{ nextcloud_docker_network }} \
 	--env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-pgsql-docker \
-	{{ nextcloud_docker_image_postgres_to_use }} \
+	{{ nextcloud_postgres_docker_image_to_use }} \
 	psql -h {{ nextcloud_postgres_connection_hostname }}

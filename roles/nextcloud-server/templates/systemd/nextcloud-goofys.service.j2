@@ -17,7 +17,7 @@ ExecStart=/usr/bin/docker run --rm --name %n \
 			-v {{ nextcloud_goofys_external_storage_path }}:/s3:shared \
 			--env-file={{ nextcloud_environment_variables_data_path }}/goofys \
 			--entrypoint /bin/sh \
-			{{ nextcloud_docker_image_goofys }} \
+			{{ nextcloud_goofys_docker_image }} \
 			-c 'goofys -f --storage-class=STANDARD_IA --region {{ nextcloud_goofys_external_storage_region }} --stat-cache-ttl 60m0s --type-cache-ttl 60m0s --dir-mode 0700 --file-mode 0700 {{ nextcloud_goofys_external_storage_bucket_name }} /s3'
 TimeoutStartSec=5min
 ExecStop=-/usr/bin/docker stop %n

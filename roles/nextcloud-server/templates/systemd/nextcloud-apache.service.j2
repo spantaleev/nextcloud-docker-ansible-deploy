@@ -36,13 +36,13 @@ ExecStart=/usr/bin/docker run --rm --name nextcloud-apache \
 			{% if not nextcloud_nginx_proxy_enabled %}
 			-p 127.0.0.1:{{ nextcloud_apache_http_port_on_host }}:80 \
 			{% endif %}
-			{% if nextcloud_apache_container_memory_limit != '' %}
-				--memory={{ nextcloud_apache_container_memory_limit }} \
+			{% if nextcloud_nextcloud_apache_container_memory_limit != '' %}
+				--memory={{ nextcloud_nextcloud_apache_container_memory_limit }} \
 			{% endif %}
-			{% if nextcloud_apache_container_memory_swap_limit != '' %}
-				--memory-swap={{ nextcloud_apache_container_memory_swap_limit }} \
+			{% if nextcloud_nextcloud_apache_container_memory_swap_limit != '' %}
+				--memory-swap={{ nextcloud_nextcloud_apache_container_memory_swap_limit }} \
 			{% endif %}
-			{{ nextcloud_docker_image_nextcloud }}
+			{{ nextcloud_nextcloud_docker_image }}
 ExecStop=-/usr/bin/docker kill nextcloud-apache
 ExecStop=-/usr/bin/docker rm nextcloud-apache
 Restart=always
