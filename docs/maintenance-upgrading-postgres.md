@@ -10,8 +10,10 @@ This playbook can upgrade your existing Postgres setup with the following comman
 
 	ansible-playbook -i inventory/hosts setup.yml --tags=upgrade-postgres
 
-**The old Postgres data directory is backed up** (by renaming to `/nextcloud/postgres-auto-upgrade-backup`).
-It stays around forever, until you **manually decide to delete it**.
+**The old Postgres data directory is backed up** by renaming to `/nextcloud/postgres-auto-upgrade-backup`), by default.
+To rename to a different path, pass some extra flags to the command above, like this: `--extra-vars="postgres_auto_upgrade_backup_data_path=/another/disk/nextcloud-postgres-before-upgrade"`
+
+The auto-upgrade-backup directory stays around forever, until you **manually decide to delete it**.
 
 As part of the upgrade, the database is dumped to `/tmp`, upgraded and then restored from that dump.
 To use a different directory, pass some extra flags to the command above, like this: `--extra-vars="postgres_dump_dir=/directory/to/dump/here"`

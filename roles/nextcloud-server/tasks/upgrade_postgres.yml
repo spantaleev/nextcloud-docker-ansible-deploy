@@ -10,8 +10,15 @@
     postgres_dump_name: "nextcloud-postgres.out"
   when: "postgres_dump_name|default('') == ''"
 
-- set_fact:
+- name: Set postgres_auto_upgrade_backup_data_path, if not provided
+  set_fact:
     postgres_auto_upgrade_backup_data_path: "{{ nextcloud_postgres_data_path }}-auto-upgrade-backup"
+  when: "postgres_auto_upgrade_backup_data_path|default('') == ''"
+
+- name: Set postgres_start_wait_time, if not provided
+  set_fact:
+    postgres_start_wait_time: 15
+  when: "postgres_start_wait_time|default('') == ''"
 
 - name: Check Postgres auto-upgrade backup data directory
   stat:
@@ -66,14 +73,14 @@
 
 - name: Wait a bit, so that Postgres can start
   wait_for:
-    timeout: 5
+    timeout: "{{ postgres_start_wait_time }}"
   delegate_to: 127.0.0.1
   become: false
 
 - name: Perform Postgres database dump
   command: |
     /usr/bin/docker run --rm --name nextcloud-postgres-dump \
-    --link nextcloud-postgres:postgres \
+    --network={{ nextcloud_docker_network }} \
     --env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-pgsql-docker \
     -v {{ postgres_dump_dir }}:/out \
     {{ nextcloud_docker_image_postgres_to_use }} pg_dump -h postgres {{ nextcloud_postgres_db_name }} -f /out/{{ postgres_dump_name }}
@@ -94,14 +101,14 @@
 
 - name: Wait a bit, so that Postgres can start
   wait_for:
-    timeout: 5
+    timeout: "{{ postgres_start_wait_time }}"
   delegate_to: 127.0.0.1
   become: false
 
 - name: Perform Postgres database import
   command: |
     /usr/bin/docker run --rm --name nextcloud-postgres-import \
-    --link nextcloud-postgres:postgres \
+    --network={{ nextcloud_docker_network }} \
     --env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-pgsql-docker \
     -v {{ postgres_dump_dir }}:/in:ro \
     {{ nextcloud_docker_image_postgres_latest }} psql -h postgres -f /in/{{ postgres_dump_name }}
