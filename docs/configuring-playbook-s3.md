@@ -9,7 +9,7 @@ its external storage support suffers from:
 
 To avoid this problem, what this playbook does is mount some Amazon S3 bucket as a local directory using [Goofys](https://github.com/kahing/goofys).
 
-It makes this bucket avaialble as a local directory
+It makes this bucket avaialable as a local directory
 
 You'll need an Amazon S3 bucket and some IAM user credentials (access key + secret key) with full write access to the bucket. Example security policy:
 

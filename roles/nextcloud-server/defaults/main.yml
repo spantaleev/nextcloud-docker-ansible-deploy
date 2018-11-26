@@ -97,7 +97,7 @@ nextcloud_ssl_renew_cron_time_definition: "15 5 */5 * *"
 
 
 nextcloud_onlyoffice_enabled: false
-nextcloud_onlyoffice_document_server_docker_image: "onlyoffice/documentserver:5.2.2.2"
+nextcloud_onlyoffice_document_server_docker_image: "onlyoffice/documentserver:5.2.3.64"
 
 # If `nextcloud_nginx_proxy_enabled` is set to `true`,
 # nextcloud-onlyoffice-document-server's port 80 is exposed to the container host (127.0.0.1)
