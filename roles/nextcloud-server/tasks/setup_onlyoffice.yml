@@ -25,7 +25,7 @@
   register: nextcloud_onlyoffice_service_stat
 
 - name: Ensure nextcloud-onlyoffice-document-server is stopped
-  service: name=nextcloud-onlyoffice state=stopped daemon_reload=yes
+  service: name=nextcloud-onlyoffice-document-server state=stopped daemon_reload=yes
   register: stopping_result
   when: "not nextcloud_onlyoffice_enabled and nextcloud_onlyoffice_service_stat.stat.exists"
 
