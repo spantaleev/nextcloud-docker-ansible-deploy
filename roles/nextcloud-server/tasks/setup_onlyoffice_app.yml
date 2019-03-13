@@ -38,3 +38,6 @@
     -
       key: DocumentServerInternalUrl
       value: http://nextcloud-onlyoffice-document-server/
+    -
+      key: StorageUrl
+      value: "https://{{ hostname_nextcloud }}/"
