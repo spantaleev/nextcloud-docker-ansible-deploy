@@ -1,8 +1,11 @@
 ---
 
 - name: Adjust Nextcloud configuration (disable bruteforce protection)
-  lineinfile:
-    path: "{{ nextcloud_nextcloud_data_path }}/config/config.php"
-    line: "  'auth.bruteforce.protection.enabled' => false,"
-    insertafter: "\\$CONFIG\\s*=\\s*array\\s*\\("
-    regexp: "auth.bruteforce.protection.enabled"
+  shell:
+    cmd: |-
+      docker exec -u www-data nextcloud-apache php occ --no-warnings config:system:set {{ item.key }} --type="{{ item.type }}" --value={{ item.value }}
+  with_items:
+    -
+      key: auth.bruteforce.protection.enabled
+      value: "false"
+      type: boolean
