@@ -48,6 +48,14 @@ nextcloud_postgres_docker_image_latest: "{{ nextcloud_postgres_docker_image_v11 
 
 nextcloud_postgres_data_path: "{{ nextcloud_base_data_path }}/postgres"
 
+# A list of parameters to put in the Nextcloud configuration.
+#
+# Example:
+# nextcloud_config_parameters:
+#   - key: mail_smtphost
+#     value: smtp.example.com
+#     type: string
+nextcloud_config_parameters: []
 
 # Specifies when to restart the Nextcloud services so that
 # a new SSL certificate could go into effect (UTC time).
