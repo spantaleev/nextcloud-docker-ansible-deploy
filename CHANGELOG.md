@@ -1,3 +1,11 @@
+# 2019-04-16
+
+## Nextcloud default parameters introduced
+
+`nextcloud_config_additional_parameters` was introduced to supersede the previously-existing `nextcloud_config_parameters` variable.
+You're supposed to put your own parameters in `nextcloud_config_additional_parameters` from now on.
+
+
 # 2018-11-01
 
 ## Postgres 11 support
