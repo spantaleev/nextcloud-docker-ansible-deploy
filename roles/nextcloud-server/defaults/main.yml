@@ -55,7 +55,10 @@ nextcloud_config_parameters: "{{ nextcloud_config_default_parameters + nextcloud
 # Default configuration parameters to apply to Nextcloud.
 # To add your own additional parameters, use `nextcloud_config_additional_parameters`.
 # To get rid of these defaults, redefine `nextcloud_config_default_parameters` or `nextcloud_config_parameters`.
-nextcloud_config_default_parameters: []
+nextcloud_config_default_parameters:
+  - key: overwriteprotocol
+    value: "https"
+    type: string
 
 # Add your custom Nextcloud configuration parameters here.
 #
