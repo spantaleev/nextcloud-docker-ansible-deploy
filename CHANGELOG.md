@@ -2,7 +2,7 @@
 
 ## Ansible 2.8 compatibility
 
-The playbook now [supports the new Ansible 2.8](https://github.com/spantaleev/matrix-docker-ansible-deploy/pull/187).
+The playbook now supports the new Ansible 2.8.
 
 A manual change is required to the `inventory/hosts` file, changing the group name from `nextcloud-servers` to `nextcloud_servers` (dash to underscore).
 
