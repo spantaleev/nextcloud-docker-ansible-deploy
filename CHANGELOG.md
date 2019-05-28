@@ -1,3 +1,16 @@
+# 2019-05-28
+
+## Ansible 2.8 compatibility
+
+The playbook now [supports the new Ansible 2.8](https://github.com/spantaleev/matrix-docker-ansible-deploy/pull/187).
+
+A manual change is required to the `inventory/hosts` file, changing the group name from `nextcloud-servers` to `nextcloud_servers` (dash to underscore).
+
+To avoid doing it manually, run this:
+- Linux: `sed -i 's/nextcloud-servers/nextcloud_servers/g' inventory/hosts`
+- Mac: `sed -i '' 's/nextcloud-servers/nextcloud_servers/g' inventory/hosts`
+
+
 # 2019-04-16
 
 ## Nextcloud default parameters introduced

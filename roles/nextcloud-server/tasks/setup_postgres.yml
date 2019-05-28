@@ -45,6 +45,7 @@
 - name: Ensure postgres Docker image is pulled
   docker_image:
     name: "{{ nextcloud_postgres_docker_image_to_use }}"
+    source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
 
 - name: Ensure Postgres environment variables file created
   template:

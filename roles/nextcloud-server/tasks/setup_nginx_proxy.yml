@@ -35,7 +35,8 @@
 - name: Ensure nginx Docker image is pulled
   docker_image:
     name: "{{ nextcloud_nginx_proxy_docker_image }}"
-  when: nextcloud_nginx_proxy_enabled
+    source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
+  when: nextcloud_nginx_proxy_enabled|bool
 
 - name: Allow access to nginx proxy ports in firewalld
   firewalld:
@@ -53,14 +54,14 @@
     src: "{{ role_path }}/templates/systemd/nextcloud-nginx-proxy.service.j2"
     dest: "/etc/systemd/system/nextcloud-nginx-proxy.service"
     mode: 0644
-  when: nextcloud_nginx_proxy_enabled
+  when: nextcloud_nginx_proxy_enabled|bool
 
 - name: Ensure periodic restarting of nextcloud-nginx-proxy is configured (for SSL renewal)
   template:
     src: "{{ role_path }}/templates/cron.d/nextcloud-nginx-proxy-periodic-restarter.j2"
     dest: "/etc/cron.d/nextcloud-nginx-proxy-periodic-restarter"
     mode: 0600
-  when: nextcloud_nginx_proxy_enabled
+  when: nextcloud_nginx_proxy_enabled|bool
 
 #
 # Tasks related to getting rid of nextcloud-nginx-proxy (if it was previously enabled)

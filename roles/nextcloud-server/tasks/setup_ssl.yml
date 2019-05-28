@@ -18,6 +18,7 @@
 - name: Ensure certbot Docker image is pulled
   docker_image:
     name: "{{ nextcloud_ssl_certbot_docker_image }}"
+    source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
 
 - name: Ensure SSL certificates path exists
   file:

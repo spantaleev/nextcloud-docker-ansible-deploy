@@ -7,14 +7,15 @@
 - name: Ensure OnlyOffice Docker image is pulled
   docker_image:
     name: "{{ nextcloud_onlyoffice_document_server_docker_image }}"
-  when: nextcloud_onlyoffice_enabled
+    source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
+  when: nextcloud_onlyoffice_enabled|bool
 
 - name: Ensure nextcloud-onlyoffice-document-server.service installed
   template:
     src: "{{ role_path }}/templates/systemd/nextcloud-onlyoffice-document-server.service.j2"
     dest: "/etc/systemd/system/nextcloud-onlyoffice-document-server.service"
     mode: 0644
-  when: nextcloud_onlyoffice_enabled
+  when: nextcloud_onlyoffice_enabled|bool
 
 #
 # Tasks related to getting rid of OnlyOffice (if it was previously enabled)
