@@ -18,7 +18,7 @@ nextcloud_scratchpad_dir: "{{ nextcloud_base_data_path }}/scratchpad"
 
 
 nextcloud_nextcloud_data_path: "{{ nextcloud_base_data_path }}/nextcloud-data"
-nextcloud_nextcloud_docker_image: "nextcloud:16.0.1-apache"
+nextcloud_nextcloud_docker_image: "nextcloud:16.0.3-apache"
 
 # Controls whether the nextcloud-apache container's memory usage
 # is limited and to what extent.
@@ -41,9 +41,9 @@ nextcloud_postgres_connection_username: "nextcloud"
 nextcloud_postgres_connection_password: "nextcloud-password"
 nextcloud_postgres_db_name: "nextcloud"
 
-nextcloud_postgres_docker_image_v9: "postgres:9.6.13-alpine"
-nextcloud_postgres_docker_image_v10: "postgres:10.8-alpine"
-nextcloud_postgres_docker_image_v11: "postgres:11.3-alpine"
+nextcloud_postgres_docker_image_v9: "postgres:9.6.14-alpine"
+nextcloud_postgres_docker_image_v10: "postgres:10.9-alpine"
+nextcloud_postgres_docker_image_v11: "postgres:11.4-alpine"
 nextcloud_postgres_docker_image_latest: "{{ nextcloud_postgres_docker_image_v11 }}"
 
 nextcloud_postgres_data_path: "{{ nextcloud_base_data_path }}/postgres"
@@ -93,7 +93,7 @@ nextcloud_goofys_external_storage_for_appdata_previews_instance_id: "ocdmh6gdl21
 # and take care of proxying by yourself.
 nextcloud_nginx_proxy_enabled: true
 
-nextcloud_nginx_proxy_docker_image: "nginx:1.16.0-alpine"
+nextcloud_nginx_proxy_docker_image: "nginx:1.17.0-alpine"
 
 nextcloud_nginx_proxy_data_path: "{{ nextcloud_base_data_path }}/nginx-proxy"
 nextcloud_nginx_proxy_confd_path: "{{ nextcloud_nginx_proxy_data_path }}/conf.d"
