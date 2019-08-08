@@ -85,6 +85,8 @@ server {
 			proxy_pass http://localhost:{{ nextcloud_apache_http_port_on_host }};
 		{% endif %}
 
+		proxy_read_timeout 120s;
+
 		proxy_set_header Host $host;
 		proxy_set_header X-Forwarded-Proto $scheme;
 		proxy_set_header X-Real-IP $remote_addr;
