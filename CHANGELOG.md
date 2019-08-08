@@ -1,3 +1,14 @@
+# 2019-08-08
+
+## Volume-mounting changes
+
+Instead of mounting individual directories for storage (`config`, `data`, `custom_apps`, etc.), we now directly mount `/nextcloud/nextcloud-data` at `/var/www/html`.
+
+What we were doing before is nice and clean, but not standard and was leading to various Nextcloud issues (pretty URLs not working, etc.).
+
+The only thing you need to do to migrate (besides re-running the playbook) is to fix pretty URLs support: `docker exec -u www-data nextcloud-apache php /var/www/html/occ maintenance:update:htaccess`
+
+
 # 2019-05-28
 
 ## Ansible 2.8 compatibility
