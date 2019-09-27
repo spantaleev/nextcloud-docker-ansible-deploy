@@ -85,6 +85,11 @@ server {
 			proxy_pass http://localhost:{{ nextcloud_apache_http_port_on_host }};
 		{% endif %}
 
+		# We disable request buffering in order to directly pass the request to the upstream server.
+		# Otheriwse, we need to buffer it all on our side (in memory) before we pass it along.
+		# Buffering GB of data in memory is not feasible, so we can't do that.
+		proxy_request_buffering off;
+
 		proxy_read_timeout 120s;
 
 		proxy_set_header Host $host;
