@@ -18,7 +18,7 @@ nextcloud_scratchpad_dir: "{{ nextcloud_base_data_path }}/scratchpad"
 
 
 nextcloud_nextcloud_data_path: "{{ nextcloud_base_data_path }}/nextcloud-data"
-nextcloud_nextcloud_docker_image: "nextcloud:16.0.4-apache"
+nextcloud_nextcloud_docker_image: "nextcloud:16.0.5-apache"
 
 # Controls whether the nextcloud-apache container's memory usage
 # is limited and to what extent.
@@ -93,7 +93,7 @@ nextcloud_goofys_external_storage_for_appdata_previews_instance_id: "ocdmh6gdl21
 # and take care of proxying by yourself.
 nextcloud_nginx_proxy_enabled: true
 
-nextcloud_nginx_proxy_docker_image: "nginx:1.17.3-alpine"
+nextcloud_nginx_proxy_docker_image: "nginx:1.17.4-alpine"
 
 nextcloud_nginx_proxy_data_path: "{{ nextcloud_base_data_path }}/nginx-proxy"
 nextcloud_nginx_proxy_confd_path: "{{ nextcloud_nginx_proxy_data_path }}/conf.d"
