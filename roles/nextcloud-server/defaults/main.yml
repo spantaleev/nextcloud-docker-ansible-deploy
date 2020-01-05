@@ -81,6 +81,8 @@ nextcloud_goofys_external_storage_bucket_name: "your-bucket-name"
 nextcloud_goofys_external_storage_aws_access_key: "your-aws-access-key"
 nextcloud_goofys_external_storage_aws_secret_key: "your-aws-secret-key"
 nextcloud_goofys_external_storage_region: "eu-central-1"
+# Custom endpoint for non AWS S3 storage
+nextcloud_goofys_external_storage_endpoint: ""
 # Controls whether appdata previews are stored in Goofys as well.
 # For this to work, you need to specify a correct instance id.
 nextcloud_goofys_external_storage_for_appdata_previews_enabled: false

@@ -43,6 +43,11 @@ nextcloud_goofys_external_storage_aws_secret_key: "your-aws-secret-key"
 nextcloud_goofys_external_storage_region: eu-west-3
 ```
 
+If you want to use another S3 compatible provider add the following config setting to set a custom endpoint:
+```yaml
+nextcloud_goofys_external_storage_endpoint: "https://custom.endpoint.here"
+```
+
 To also store your appdata's `preview` directory there, you need to find your instance id (can happen when running `cat /nextcloud/nextcloud-data/config/config.php | grep instanceid` **after** installing) and add this additional configuration:
 
 ```yaml
