@@ -34,6 +34,11 @@
     nextcloud_postgres_docker_image_to_use: "{{ nextcloud_postgres_docker_image_v10 }}"
   when: "pg_version == '10' or pg_version.startswith('10.')"
 
+- name: Determine Postgres version to use (use 11.x, if detected)
+  set_fact:
+    nextcloud_postgres_docker_image_to_use: "{{ nextcloud_postgres_docker_image_v11 }}"
+  when: "pg_version == '11' or pg_version.startswith('11.')"
+
 - name: Ensure postgres data path exists
   file:
     path: "{{ nextcloud_postgres_data_path }}"
