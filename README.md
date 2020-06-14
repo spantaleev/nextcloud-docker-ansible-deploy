@@ -53,3 +53,9 @@ This playbook sets up your server using the following Docker images:
 This Ansible playbook can be improved in the following ways:
 
 - setting up automatic backups to one or more storage providers
+
+## Support
+
+- Matrix room: [#nextcloud-docker-ansible-deploy:devture.com](https://matrix.to/#/#nextcloud-docker-ansible-deploy:devture.com)
+
+- Github issues: [spantaleev/nextcloud-docker-ansible-deploy/issues](https://github.com/spantaleev/nextcloud-docker-ansible-deploy/issues)
