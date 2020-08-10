@@ -36,7 +36,7 @@
       - ca-certificates
     state: present
     update_cache: yes
-  when: ansible_os_family == 'Debian'
+  when: (ansible_os_family == 'Debian') and (ansible_lsb.id != 'Raspbian') 
 
 - name: Ensure Docker's APT key is trusted (Debian)
   apt_key:
@@ -45,14 +45,30 @@
     state: present
   register: add_repository_key
   ignore_errors: true
-  when: ansible_os_family == 'Debian'
+  when: (ansible_os_family == 'Debian') and (ansible_lsb.id != 'Raspbian') 
+
+- name: Ensure Docker's APT key is trusted (Raspbian)
+  apt_key:
+    url: https://download.docker.com/linux/raspbian/gpg
+    id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+    state: present
+  register: add_repository_key
+  ignore_errors: true
+  when: (ansible_os_family == 'Debian') and (ansible_lsb.id == 'Raspbian') 
 
 - name: Ensure Docker repository is enabled (Debian)
   apt_repository:
     repo: "deb https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable"
     state: present
     update_cache: yes
-  when: ansible_os_family == 'Debian'
+  when: (ansible_os_family == 'Debian') and (ansible_lsb.id != 'Raspbian') 
+
+- name: Ensure Docker repository is enabled (Raspbian)
+  apt_repository:
+    repo: "deb [arch=armhf] https://download.docker.com/linux/raspbian {{ ansible_distribution_release }} stable"
+    state: present
+    update_cache: yes
+  when: (ansible_os_family == 'Debian') and (ansible_lsb.id == 'Raspbian') 
 
 - name: Ensure APT packages are installed (Debian)
   apt:
@@ -64,7 +80,7 @@
       - fuse
     state: latest
     update_cache: yes
-  when: ansible_os_family == 'Debian'
+  when: (ansible_os_family == 'Debian')
 
 - name: Ensure Docker is started and autoruns
   service: name=docker state=started enabled=yes
