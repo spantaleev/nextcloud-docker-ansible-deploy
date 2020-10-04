@@ -38,17 +38,6 @@
     source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
   when: nextcloud_nginx_proxy_enabled|bool
 
-- name: Allow access to nginx proxy ports in firewalld
-  firewalld:
-    service: "{{ item }}"
-    state: enabled
-    immediate: yes
-    permanent: yes
-  with_items:
-    - "http"
-    - "https"
-  when: "ansible_os_family == 'RedHat' and nextcloud_nginx_proxy_enabled"
-
 - name: Ensure nextcloud-nginx-proxy.service installed
   template:
     src: "{{ role_path }}/templates/systemd/nextcloud-nginx-proxy.service.j2"

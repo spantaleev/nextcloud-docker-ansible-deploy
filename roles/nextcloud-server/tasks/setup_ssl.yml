@@ -4,17 +4,6 @@
   set_fact:
     domains_to_obtain_certificate_for: "['{{ hostname_nextcloud }}']"
 
-- name: Allow access to HTTP/HTTPS in firewalld
-  firewalld:
-    service: "{{ item }}"
-    state: enabled
-    immediate: yes
-    permanent: yes
-  with_items:
-    - http
-    - https
-  when: ansible_os_family == 'RedHat'
-
 - name: Ensure certbot Docker image is pulled
   docker_image:
     name: "{{ nextcloud_ssl_certbot_docker_image }}"
