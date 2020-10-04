@@ -71,6 +71,11 @@
     nextcloud_postgres_docker_image_to_use: "{{ nextcloud_postgres_docker_image_v11 }}"
   when: "pg_version == '11' or pg_version.startswith('11.')"
 
+- name: Determine Postgres version to use (use 12.x, if detected)
+  set_fact:
+    nextcloud_postgres_docker_image_to_use: "{{ nextcloud_postgres_docker_image_v12 }}"
+  when: "pg_version == '12' or pg_version.startswith('12.')"
+
 - name: Abort, if already at latest Postgres version
   fail: msg="You are already running the latest Postgres version supported. Nothing to do"
   when: "nextcloud_postgres_docker_image_to_use == nextcloud_postgres_docker_image_latest"
