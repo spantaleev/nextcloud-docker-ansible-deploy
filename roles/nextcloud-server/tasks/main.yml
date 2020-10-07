@@ -12,6 +12,7 @@
   tags:
     - setup-all
     - setup-ssl
+  when: nextcloud_ssl_enabled|bool
 
 - include: tasks/upgrade_postgres.yml
   tags:

@@ -107,8 +107,10 @@ nextcloud_nginx_proxy_client_max_body_size: "4G"
 # If `nextcloud_nginx_proxy_enabled` is set to `false`,
 # nextcloud-apache's port 80 will be exposed to the container host (127.0.0.1)
 # on this port by default.
+nextcloud_apache_http_listen_address: 127.0.0.1
 nextcloud_apache_http_port_on_host: 37150
 
+nextcloud_ssl_enabled: true
 nextcloud_ssl_base_path: "{{ nextcloud_base_data_path }}/ssl"
 nextcloud_ssl_config_dir_path: "{{ nextcloud_ssl_base_path }}/config"
 nextcloud_ssl_log_dir_path: "{{ nextcloud_ssl_base_path }}/log"
