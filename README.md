@@ -1,3 +1,5 @@
+[![Support room on Matrix](https://img.shields.io/matrix/nextcloud-docker-ansible-deploy:devture.com.svg?label=%23nextcloud-docker-ansible-deploy%3Adevture.com&logo=matrix&style=for-the-badge&server_fqdn=matrix.devture.com)](https://matrix.to/#/#nextcloud-docker-ansible-deploy:devture.com) [![donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/s.pantaleev/donate)
+
 # Nextcloud (A safe home for all your data) server setup using Ansible and Docker
 
 ## Purpose
