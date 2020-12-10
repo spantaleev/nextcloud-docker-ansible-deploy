@@ -97,7 +97,7 @@ nextcloud_goofys_external_storage_for_appdata_previews_instance_id: "ocdmh6gdl21
 # and take care of proxying by yourself.
 nextcloud_nginx_proxy_enabled: true
 
-nextcloud_nginx_proxy_docker_image: "nginx:1.19.4-alpine"
+nextcloud_nginx_proxy_docker_image: "nginx:1.19.5-alpine"
 
 nextcloud_nginx_proxy_data_path: "{{ nextcloud_base_data_path }}/nginx-proxy"
 nextcloud_nginx_proxy_confd_path: "{{ nextcloud_nginx_proxy_data_path }}/conf.d"
@@ -113,7 +113,7 @@ nextcloud_ssl_base_path: "{{ nextcloud_base_data_path }}/ssl"
 nextcloud_ssl_config_dir_path: "{{ nextcloud_ssl_base_path }}/config"
 nextcloud_ssl_log_dir_path: "{{ nextcloud_ssl_base_path }}/log"
 nextcloud_ssl_support_email: "{{ host_specific_nextcloud_ssl_support_email }}"
-nextcloud_ssl_certbot_docker_image: "certbot/certbot:v1.9.0"
+nextcloud_ssl_certbot_docker_image: "certbot/certbot:v1.10.1"
 nextcloud_ssl_certbot_standalone_http_port: 2403
 nextcloud_ssl_use_staging: false
 
@@ -122,7 +122,7 @@ nextcloud_ssl_renew_cron_time_definition: "15 5 */5 * *"
 
 
 nextcloud_onlyoffice_enabled: false
-nextcloud_onlyoffice_document_server_docker_image: "onlyoffice/documentserver:6.0.2.5"
+nextcloud_onlyoffice_document_server_docker_image: "onlyoffice/documentserver:6.1.0.83"
 
 # If `nextcloud_nginx_proxy_enabled` is set to `true`,
 # nextcloud-onlyoffice-document-server's port 80 is exposed to the container host (127.0.0.1)
