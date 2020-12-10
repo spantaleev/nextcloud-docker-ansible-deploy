@@ -3,6 +3,7 @@ Description=Nextcloud nginx proxy server
 After=docker.service
 Requires=docker.service
 Wants=nextcloud-apache.service
+DefaultDependencies=no
 
 [Service]
 Type=simple
