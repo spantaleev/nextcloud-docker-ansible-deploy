@@ -6,6 +6,6 @@
 
 - [Installing](installing.md)
 
-- [Maintenance / upgrading PostgreSQL](maintenance-upgrading-postgres.md)
+- [Maintenance / upgrading PostgreSQL](maintenance-postgres.md)
 
 - [Uninstalling](uninstalling.md)

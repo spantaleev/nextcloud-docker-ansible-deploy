@@ -36,7 +36,7 @@ You're supposed to put your own parameters in `nextcloud_config_additional_param
 
 The playbook now installs [Postgres 11](https://www.postgresql.org/about/news/1894/) by default.
 
-If you have have an existing setup, it's likely running on an older Postgres version (9.x or 10.x). You can easily upgrade by following the [Maintenance / upgrading PostgreSQL](docs/maintenance-upgrading-postgres.md) guide.
+If you have have an existing setup, it's likely running on an older Postgres version (9.x or 10.x). You can easily upgrade by following the [Maintenance / upgrading PostgreSQL](docs/maintenance-postgres.md) guide.
 
 
 ## (BC Break) Renaming playbook variables
