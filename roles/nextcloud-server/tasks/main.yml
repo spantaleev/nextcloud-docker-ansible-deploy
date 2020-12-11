@@ -18,6 +18,10 @@
     - setup-all
     - setup-postgres
 
+- include: tasks/import_postgres.yml
+  tags:
+    - import-postgres
+
 - include: tasks/upgrade_postgres.yml
   tags:
     - upgrade-postgres
