@@ -20,6 +20,11 @@
     postgres_start_wait_time: 15
   when: "postgres_start_wait_time|default('') == ''"
 
+- name: Set postgres_force_upgrade, if not provided
+  set_fact:
+    postgres_force_upgrade: false
+  when: "postgres_force_upgrade|default('') == ''"
+
 - name: Check Postgres auto-upgrade backup data directory
   stat:
     path: "{{ postgres_auto_upgrade_backup_data_path }}"
@@ -30,55 +35,20 @@
     msg: "Detected that a left-over {{ postgres_auto_upgrade_backup_data_path }} exists. You should rename it to {{ nextcloud_postgres_data_path }} if the previous upgrade went wrong, or delete it if it went well."
   when: "result_auto_upgrade_path.stat.exists"
 
-- name: Determine existing Postgres version (check PG_VERSION file)
-  stat:
-    path: "{{ nextcloud_postgres_data_path }}/PG_VERSION"
-  register: result_pg_version_stat
+- import_tasks: tasks/util/detect_existing_postgres_version.yml
 
 - name: Abort, if no existing Postgres version detected
-  fail: msg="Could not find existing Postgres installation"
-  when: "not result_pg_version_stat.stat.exists"
-
-- name: Determine existing Postgres version (read PG_VERSION file)
-  slurp:
-    src: "{{ nextcloud_postgres_data_path }}/PG_VERSION"
-  register: result_pg_version
-
-- name: Determine existing Postgres version (default to empty)
-  set_fact:
-    pg_version: ""
-
-- name: Determine existing Postgres version (make sense of PG_VERSION file)
-  set_fact:
-    pg_version: "{{ result_pg_version['content']|b64decode|replace('\n', '') }}"
-
-- name: Determine Postgres version to use (default to latest)
-  set_fact:
-    nextcloud_postgres_docker_image_to_use: "{{ nextcloud_postgres_docker_image_latest }}"
-
-- name: Determine Postgres version to use (use 9.x, if detected)
-  set_fact:
-    nextcloud_postgres_docker_image_to_use: "{{ nextcloud_postgres_docker_image_v9 }}"
-  when: "pg_version.startswith('9.')"
-
-- name: Determine Postgres version to use (use 10.x, if detected)
-  set_fact:
-    nextcloud_postgres_docker_image_to_use: "{{ nextcloud_postgres_docker_image_v10 }}"
-  when: "pg_version == '10' or pg_version.startswith('10.')"
-
-- name: Determine Postgres version to use (use 11.x, if detected)
-  set_fact:
-    nextcloud_postgres_docker_image_to_use: "{{ nextcloud_postgres_docker_image_v11 }}"
-  when: "pg_version == '11' or pg_version.startswith('11.')"
-
-- name: Determine Postgres version to use (use 12.x, if detected)
-  set_fact:
-    nextcloud_postgres_docker_image_to_use: "{{ nextcloud_postgres_docker_image_v12 }}"
-  when: "pg_version == '12' or pg_version.startswith('12.')"
+  fail:
+    msg: "Could not find existing Postgres installation"
+  when: "not nextcloud_postgres_detected_existing|bool"
 
 - name: Abort, if already at latest Postgres version
-  fail: msg="You are already running the latest Postgres version supported. Nothing to do"
-  when: "nextcloud_postgres_docker_image_to_use == nextcloud_postgres_docker_image_latest"
+  fail:
+    msg: "You are already running the latest Postgres version supported ({{ nextcloud_postgres_docker_image_latest }}). Nothing to do"
+  when: "nextcloud_postgres_detected_version_corresponding_docker_image == nextcloud_postgres_docker_image_latest and not postgres_force_upgrade"
+
+- debug:
+    msg: "Upgrading database from {{ nextcloud_postgres_detected_version_corresponding_docker_image }} to {{ nextcloud_postgres_docker_image_latest }}"
 
 - name: Ensure nextcloud-apache is stopped
   service: name=nextcloud-apache state=stopped
@@ -93,12 +63,17 @@
   become: false
 
 - name: Perform Postgres database dump
-  command: |
-    /usr/bin/docker run --rm --name nextcloud-postgres-dump \
-    --network={{ nextcloud_docker_network }} \
-    --env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-pgsql-docker \
-    -v {{ postgres_dump_dir }}:/out \
-    {{ nextcloud_postgres_docker_image_to_use }} pg_dump -h nextcloud-postgres {{ nextcloud_postgres_db_name }} -f /out/{{ postgres_dump_name }}
+  command: >-
+    /usr/bin/env docker run --rm --name nextcloud-postgres-dump
+    --log-driver=none
+    --network={{ nextcloud_docker_network }}
+    --env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-pgsql-docker
+    --entrypoint=/bin/sh
+    --mount type=bind,src={{ postgres_dump_dir }},dst=/out
+    {{ nextcloud_postgres_detected_version_corresponding_docker_image }}
+    -c "pg_dumpall -h nextcloud-postgres
+    {{ '| gzip -c ' if postgres_dump_name.endswith('.gz') else '' }}
+    > /out/{{ postgres_dump_name }}"
 
 - name: Ensure nextcloud-postgres is stopped
   service: name=nextcloud-postgres state=stopped
@@ -120,13 +95,44 @@
   delegate_to: 127.0.0.1
   become: false
 
+# Starting the database container had automatically created the default
+# role (`nextcloud_postgres_connection_username`) and database (`nextcloud_postgres_db_name`).
+# The dump most likely contains those same entries and would try to re-create them, leading to errors.
+# We need to skip over those lines.
+- name: Generate Postgres database import command
+  set_fact:
+    nextcloud_postgres_import_command: >-
+      /usr/bin/env docker run --rm --name nextcloud-postgres-import
+      --log-driver=none
+      --cap-drop=ALL
+      --network={{ nextcloud_docker_network }}
+      --env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-pgsql-docker
+      --entrypoint=/bin/sh
+      --mount type=bind,src={{ postgres_dump_dir }},dst=/in,ro
+      {{ nextcloud_postgres_docker_image_latest }}
+      -c "cat /in/{{ postgres_dump_name }} |
+      {{ 'gunzip |' if postgres_dump_name.endswith('.gz') else '' }}
+      grep -vE '^CREATE ROLE {{ nextcloud_postgres_connection_username }}' |
+      grep -vE '^CREATE DATABASE {{ nextcloud_postgres_db_name }}' |
+      psql -v ON_ERROR_STOP=1 -h nextcloud-postgres"
+
+# This is a hack.
+# See: https://ansibledaily.com/print-to-standard-output-without-escaping/
+#
+# We want to run `debug: msg=".."`, but that dumps it as JSON and escapes double quotes within it,
+# which ruins the command (`nextcloud_postgres_import_command`)
+- name: Note about Postgres importing
+  set_fact:
+    dummy: true
+  with_items:
+    - >-
+        Importing Postgres database using the following command: `{{ nextcloud_postgres_import_command }}`.
+        If this crashes, you can stop Postgres (`systemctl stop nextcloud-postgres`),
+        delete the new database data (`rm -rf {{ nextcloud_postgres_data_path }}`)
+        and restore the automatically-made backup (`mv {{ postgres_auto_upgrade_backup_data_path }} {{ nextcloud_postgres_data_path }}`).
+
 - name: Perform Postgres database import
-  command: |
-    /usr/bin/docker run --rm --name nextcloud-postgres-import \
-    --network={{ nextcloud_docker_network }} \
-    --env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-pgsql-docker \
-    -v {{ postgres_dump_dir }}:/in:ro \
-    {{ nextcloud_postgres_docker_image_latest }} psql -h nextcloud-postgres -f /in/{{ postgres_dump_name }}
+  command: "{{ nextcloud_postgres_import_command }}"
 
 - name: Delete Postgres database dump file
   file:
@@ -134,7 +140,10 @@
     state: absent
 
 - name: Ensure nextcloud-apache is started
-  service: name=nextcloud-apache state=started daemon_reload=yes
+  service:
+    name: nextcloud-apache
+    state: started
+    daemon_reload: yes
 
 - debug:
     msg: "NOTE: Your old Postgres data directory is preserved at `{{ postgres_auto_upgrade_backup_data_path }}`. You might want to get rid of it once you've confirmed that all is well."

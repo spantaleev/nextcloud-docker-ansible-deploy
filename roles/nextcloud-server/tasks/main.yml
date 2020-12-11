@@ -13,14 +13,14 @@
     - setup-all
     - setup-ssl
 
-- include: tasks/upgrade_postgres.yml
-  tags:
-    - upgrade-postgres
-
 - include: tasks/setup_postgres.yml
   tags:
     - setup-all
     - setup-postgres
+
+- include: tasks/upgrade_postgres.yml
+  tags:
+    - upgrade-postgres
 
 - include: tasks/setup_goofys.yml
   tags:
