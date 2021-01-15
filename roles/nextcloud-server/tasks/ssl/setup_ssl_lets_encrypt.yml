@@ -1,0 +1,66 @@
+---
+
+#
+# Tasks related to setting up Let's Encrypt's management of certificates
+#
+
+- name: Allow access to HTTP/HTTPS in firewalld
+  firewalld:
+    service: "{{ item }}"
+    state: enabled
+    immediate: yes
+    permanent: yes
+  with_items:
+    - http
+    - https
+  when: "nextcloud_ssl_retrieval_method == 'lets-encrypt' and ansible_os_family == 'RedHat'"
+
+- name: Fail if required variables are undefined
+  fail:
+    msg: "Detected an undefined required variable"
+  with_items:
+    - "host_specific_nextcloud_ssl_support_email"
+  when: "nextcloud_ssl_retrieval_method == 'lets-encrypt' and vars[item] is none"
+
+- name: Ensure certbot Docker image is pulled
+  docker_image:
+    name: "{{ nextcloud_ssl_certbot_docker_image }}"
+    source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
+  when: "nextcloud_ssl_retrieval_method == 'lets-encrypt'"
+
+- name: Obtain initial certificates
+  include_tasks: "{{ role_path }}/tasks/ssl/setup_ssl_lets_encrypt_obtain_for_domain.yml"
+  with_items: "{{ domains_to_obtain_certificate_for }}"
+  loop_control:
+    loop_var: domain_name
+  when: "nextcloud_ssl_retrieval_method == 'lets-encrypt'"
+
+- name: Ensure SSL renewal script installed
+  template:
+    src: "{{ role_path }}/templates/usr-local-bin/nextcloud-ssl-certificates-renew.j2"
+    dest: "/usr/local/bin/nextcloud-ssl-certificates-renew"
+    mode: 0750
+  when: "nextcloud_ssl_retrieval_method == 'lets-encrypt'"
+
+- name: Ensure periodic SSL renewal cronjob configured
+  template:
+    src: "{{ role_path }}/templates/cron.d/nextcloud-ssl-certificate-renewal.j2"
+    dest: "/etc/cron.d/nextcloud-ssl-certificate-renewal"
+    mode: 0600
+  when: "nextcloud_ssl_retrieval_method == 'lets-encrypt'"
+
+#
+# Tasks related to getting rid of Let's Encrypt's management of certificates
+#
+
+- name: Ensure Let's Encrypt SSL renewal script removed
+  file:
+    path: "/usr/local/bin/nextcloud-ssl-certificates-renew"
+    state: absent
+  when: "nextcloud_ssl_retrieval_method != 'lets-encrypt'"
+
+- name: Ensure periodic SSL renewal cronjob removed
+  file:
+    path: "/etc/cron.d/nextcloud-ssl-certificate-renewal"
+    state: absent
+  when: "nextcloud_ssl_retrieval_method != 'lets-encrypt'"
