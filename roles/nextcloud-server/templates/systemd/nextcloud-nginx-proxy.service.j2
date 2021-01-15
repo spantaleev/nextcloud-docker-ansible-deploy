@@ -7,6 +7,7 @@ DefaultDependencies=no
 
 [Service]
 Type=simple
+Environment="HOME={{ nextcloud_systemd_unit_home_path }}"
 ExecStartPre=-/usr/bin/docker kill nextcloud-nginx-proxy
 ExecStartPre=-/usr/bin/docker rm nextcloud-nginx-proxy
 ExecStart=/usr/bin/docker run --rm --name nextcloud-nginx-proxy \

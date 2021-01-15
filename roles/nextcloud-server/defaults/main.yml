@@ -8,6 +8,11 @@ nextcloud_user_gid: 3991
 nextcloud_http_user_uid: 33
 nextcloud_http_user_gid: 33
 
+# Specifies the path to use for the `HOME` environment variable for systemd unit files.
+# Docker 20.10 complains with `WARNING: Error loading config file: .dockercfg: $HOME is not defined`
+# if `$HOME` is not defined, so we define something to make it happy.
+nextcloud_systemd_unit_home_path: /root
+
 # The Docker network that all services would be put into
 nextcloud_docker_network: "nextcloud"
 

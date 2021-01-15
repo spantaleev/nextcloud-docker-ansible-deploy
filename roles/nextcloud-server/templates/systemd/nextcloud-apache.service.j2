@@ -16,6 +16,7 @@ DefaultDependencies=no
 
 [Service]
 Type=simple
+Environment="HOME={{ nextcloud_systemd_unit_home_path }}"
 ExecStartPre=-/usr/bin/docker kill nextcloud-apache
 ExecStartPre=-/usr/bin/docker rm nextcloud-apache
 {% if nextcloud_goofys_external_storage_enabled %}
