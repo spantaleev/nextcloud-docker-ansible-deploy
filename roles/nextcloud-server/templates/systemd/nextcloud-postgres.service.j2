@@ -6,6 +6,7 @@ DefaultDependencies=no
 
 [Service]
 Type=simple
+Environment="HOME={{ nextcloud_systemd_unit_home_path }}"
 ExecStartPre=-/usr/bin/docker stop nextcloud-postgres
 ExecStartPre=-/usr/bin/docker rm nextcloud-postgres
 ExecStartPre=-/usr/bin/mkdir {{ nextcloud_postgres_data_path }}

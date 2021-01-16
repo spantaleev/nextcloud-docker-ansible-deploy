@@ -6,6 +6,7 @@ DefaultDependencies=no
 
 [Service]
 Type=simple
+Environment="HOME={{ nextcloud_systemd_unit_home_path }}"
 ExecStartPre=-/usr/bin/docker stop nextcloud-onlyoffice-document-server
 ExecStartPre=-/usr/bin/docker rm nextcloud-onlyoffice-document-server
 ExecStart=/usr/bin/docker run --rm --name nextcloud-onlyoffice-document-server \

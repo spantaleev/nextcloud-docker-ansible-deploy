@@ -6,6 +6,7 @@ DefaultDependencies=no
 
 [Service]
 Type=simple
+Environment="HOME={{ nextcloud_systemd_unit_home_path }}"
 ExecStartPre=-/usr/bin/docker kill %n
 ExecStartPre=-/usr/bin/docker rm %n
 ExecStart=/usr/bin/docker run --rm --name %n \
