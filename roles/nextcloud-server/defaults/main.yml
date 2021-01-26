@@ -23,7 +23,7 @@ nextcloud_scratchpad_dir: "{{ nextcloud_base_data_path }}/scratchpad"
 
 
 nextcloud_nextcloud_data_path: "{{ nextcloud_base_data_path }}/nextcloud-data"
-nextcloud_nextcloud_docker_image: "nextcloud:20.0.5-apache"
+nextcloud_nextcloud_docker_image: "docker.io/nextcloud:20.0.6-apache"
 
 # Controls whether the nextcloud-apache container's memory usage
 # is limited and to what extent.
@@ -46,11 +46,11 @@ nextcloud_postgres_connection_username: "nextcloud"
 nextcloud_postgres_connection_password: "nextcloud-password"
 nextcloud_postgres_db_name: "nextcloud"
 
-nextcloud_postgres_docker_image_v9: "postgres:9.6.20-alpine"
-nextcloud_postgres_docker_image_v10: "postgres:10.15-alpine"
-nextcloud_postgres_docker_image_v11: "postgres:11.10-alpine"
-nextcloud_postgres_docker_image_v12: "postgres:12.5-alpine"
-nextcloud_postgres_docker_image_v13: "postgres:13.1-alpine"
+nextcloud_postgres_docker_image_v9: "docker.io/postgres:9.6.20-alpine"
+nextcloud_postgres_docker_image_v10: "docker.io/postgres:10.15-alpine"
+nextcloud_postgres_docker_image_v11: "docker.io/postgres:11.10-alpine"
+nextcloud_postgres_docker_image_v12: "docker.io/postgres:12.5-alpine"
+nextcloud_postgres_docker_image_v13: "docker.io/postgres:13.1-alpine"
 nextcloud_postgres_docker_image_latest: "{{ nextcloud_postgres_docker_image_v13 }}"
 
 nextcloud_postgres_data_path: "{{ nextcloud_base_data_path }}/postgres"
@@ -82,7 +82,7 @@ nextcloud_services_restart_cron_time_definition: "15 4 3 * *"
 
 
 nextcloud_goofys_external_storage_enabled: false
-nextcloud_goofys_docker_image: "cloudproto/goofys:latest"
+nextcloud_goofys_docker_image: "docker.io/cloudproto/goofys:latest"
 nextcloud_goofys_external_storage_path: "{{ nextcloud_external_storage_path }}/goofys"
 nextcloud_goofys_external_storage_bucket_name: "your-bucket-name"
 nextcloud_goofys_external_storage_aws_access_key: "your-aws-access-key"
@@ -102,7 +102,7 @@ nextcloud_goofys_external_storage_for_appdata_previews_instance_id: "ocdmh6gdl21
 # and take care of proxying by yourself.
 nextcloud_nginx_proxy_enabled: true
 
-nextcloud_nginx_proxy_docker_image: "nginx:1.19.6-alpine"
+nextcloud_nginx_proxy_docker_image: "docker.io/nginx:1.19.6-alpine"
 
 nextcloud_nginx_proxy_data_path: "{{ nextcloud_base_data_path }}/nginx-proxy"
 nextcloud_nginx_proxy_confd_path: "{{ nextcloud_nginx_proxy_data_path }}/conf.d"
@@ -118,7 +118,7 @@ nextcloud_ssl_base_path: "{{ nextcloud_base_data_path }}/ssl"
 nextcloud_ssl_config_dir_path: "{{ nextcloud_ssl_base_path }}/config"
 nextcloud_ssl_log_dir_path: "{{ nextcloud_ssl_base_path }}/log"
 nextcloud_ssl_support_email: "{{ host_specific_nextcloud_ssl_support_email }}"
-nextcloud_ssl_certbot_docker_image: "certbot/certbot:v1.10.1"
+nextcloud_ssl_certbot_docker_image: "docker.io/certbot/certbot:v1.11.0"
 nextcloud_ssl_certbot_standalone_http_port: 2403
 nextcloud_ssl_use_staging: false
 
@@ -127,7 +127,7 @@ nextcloud_ssl_renew_cron_time_definition: "15 5 */5 * *"
 
 
 nextcloud_onlyoffice_enabled: false
-nextcloud_onlyoffice_document_server_docker_image: "onlyoffice/documentserver:6.1.0.83"
+nextcloud_onlyoffice_document_server_docker_image: "docker.io/onlyoffice/documentserver:6.1.0.83"
 
 # If `nextcloud_nginx_proxy_enabled` is set to `true`,
 # nextcloud-onlyoffice-document-server's port 80 is exposed to the container host (127.0.0.1)
