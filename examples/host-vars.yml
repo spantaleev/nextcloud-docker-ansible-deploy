@@ -9,5 +9,5 @@ host_specific_nextcloud_ssl_support_email: YOUR_EMAIL_ADDRESS_HERE
 
 # This is your domain name (`<your-domain`).
 #
-# Example value: example.com
+# Example value: nextcloud.example.com
 host_specific_nextcloud_hostname: YOUR_DOMAIN_NAME_HERE
