@@ -66,12 +66,31 @@
     update_cache: yes
   when: ansible_os_family == 'Debian'
 
+- name: Fail if using python2 on Archlinux
+  fail:
+    msg: "Detected that you're using python2 when installing onto Archlinux. Archlinux by default only supports python3."
+  when:
+    - ansible_os_family == 'Archlinux'
+    - ansible_python.version.major != 3
+
+- name: Ensure packages are installed (Archlinux)
+  pacman:
+    name:
+      - python-docker
+      - ntp
+      # TODO This needs to be verified. Which version do we need?
+      - fuse3
+      - docker
+    state: latest
+    update_cache: yes
+  when: ansible_os_family == 'Archlinux'
+
 - name: Ensure Docker is started and autoruns
   service: name=docker state=started enabled=yes
 
 - name: Ensure ntpd is started and autoruns
   service:
-    name: "{{ 'ntpd' if ansible_os_family == 'RedHat' else 'ntp' }}"
+    name: "{{ 'ntpd' if ansible_os_family == 'RedHat' or ansible_os_family == 'Archlinux' else 'ntp' }}"
     state: started
     enabled: yes
 
