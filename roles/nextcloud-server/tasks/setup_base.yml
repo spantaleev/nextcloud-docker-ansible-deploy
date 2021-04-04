@@ -66,7 +66,6 @@
     update_cache: yes
   when: ansible_distribution == 'Debian'
 
-# python-docker needs to be installed using pip on ubuntu
 - name: Ensure APT packages are installed (Ubuntu)
   apt:
     name:
@@ -74,17 +73,10 @@
       - docker-ce
       - ntp
       - fuse
-      - python3-pip
+      - python3-docker
     state: latest
     update_cache: yes
   when: ansible_distribution == 'Ubuntu'
-
-- name: Install Docker Module for Python (Ubuntu)
-  pip:
-    name: docker
-  when: ansible_distribution == 'Ubuntu'
-
-
 
 - name: Fail if using python2 on Archlinux
   fail:
