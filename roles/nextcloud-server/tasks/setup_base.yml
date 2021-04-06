@@ -59,24 +59,12 @@
     name:
       - bash-completion
       - docker-ce
-      - python-docker
+      - python{{'3' if ansible_python.version.major == 3 else ''}}-docker
       - ntp
       - fuse
     state: latest
     update_cache: yes
-  when: ansible_distribution == 'Debian'
-
-- name: Ensure APT packages are installed (Ubuntu)
-  apt:
-    name:
-      - bash-completion
-      - docker-ce
-      - ntp
-      - fuse
-      - python3-docker
-    state: latest
-    update_cache: yes
-  when: ansible_distribution == 'Ubuntu'
+  when:  ansible_os_family == 'Debian'
 
 - name: Fail if using python2 on Archlinux
   fail:
