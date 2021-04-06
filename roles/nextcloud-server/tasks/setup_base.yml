@@ -64,7 +64,7 @@
       - fuse
     state: latest
     update_cache: yes
-  when:  ansible_os_family == 'Debian'
+  when: ansible_os_family == 'Debian'
 
 - name: Fail if using python2 on Archlinux
   fail:
