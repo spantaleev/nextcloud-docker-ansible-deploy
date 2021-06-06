@@ -1,13 +1,13 @@
 ---
 
+- name: Fail if using unsupported SSL certificate retrieval method
+  fail:
+    msg: "The `nextcloud_ssl_retrieval_method` variable contains an unsupported value"
+  when: "nextcloud_ssl_retrieval_method not in ['lets-encrypt', 'self-signed', 'manually-managed', 'none']"
+
 - name: Determine domains to obtain certificates for (Nextcloud)
   set_fact:
     domains_to_obtain_certificate_for: "['{{ hostname_nextcloud }}']"
-
-- name: Ensure certbot Docker image is pulled
-  docker_image:
-    name: "{{ nextcloud_ssl_certbot_docker_image }}"
-    source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
 
 - name: Ensure SSL certificates path exists
   file:
@@ -19,21 +19,13 @@
   with_items:
     - "{{ nextcloud_ssl_log_dir_path }}"
     - "{{ nextcloud_ssl_config_dir_path }}"
+  when: "nextcloud_ssl_retrieval_method != 'none'"
 
-- name: Obtain initial certificates
-  include_tasks: "setup_ssl_for_domain.yml"
-  with_items: "{{ domains_to_obtain_certificate_for }}"
-  loop_control:
-    loop_var: domain_name
+# Method specific tasks follow
 
-- name: Ensure SSL renewal script installed
-  template:
-    src: "{{ role_path }}/templates/usr-local-bin/nextcloud-ssl-certificates-renew.j2"
-    dest: "/usr/local/bin/nextcloud-ssl-certificates-renew"
-    mode: 0750
+- import_tasks: tasks/ssl/setup_ssl_lets_encrypt.yml
 
-- name: Ensure periodic SSL renewal cronjob configured
-  template:
-    src: "{{ role_path }}/templates/cron.d/nextcloud-ssl-certificate-renewal.j2"
-    dest: "/etc/cron.d/nextcloud-ssl-certificate-renewal"
-    mode: 0600
+- import_tasks: tasks/ssl/setup_ssl_self_signed.yml
+
+- import_tasks: tasks/ssl/setup_ssl_manually_managed.yml
+

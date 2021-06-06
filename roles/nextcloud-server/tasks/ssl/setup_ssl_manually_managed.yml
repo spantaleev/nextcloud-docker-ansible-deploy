@@ -1,0 +1,8 @@
+---
+
+- name: Verify certificates
+  include_tasks: "{{ role_path }}/tasks/ssl/setup_ssl_manually_managed_verify_for_domain.yml"
+  with_items: "{{ domains_to_obtain_certificate_for }}"
+  loop_control:
+    loop_var: domain_name
+  when: "nextcloud_ssl_retrieval_method == 'manually-managed'"
