@@ -9,3 +9,5 @@
 - `nextcloud.<your-domain>` domain name pointing to your new server - this is where the Nextcloud server will live
 
 - some TCP/UDP ports open. This playbook configures the server's internal firewall for you. In most cases, you don't need to do anything special. But **if your server is running behind another firewall**, you'd need to open these ports: `80/tcp` (HTTP webserver), `443/tcp` (HTTPS webserver).
+
+When ready to proceed, continue with [Configuring the Ansible playbook](configuring-playbook.md).
