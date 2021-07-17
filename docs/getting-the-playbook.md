@@ -1,6 +1,6 @@
 # Getting the playbook
 
-This Ansible playbook is meant to be executed on your own computer (not the Matrix server).
+This Ansible playbook is meant to be executed on your own computer (not the Nextcloud server).
 
 In special cases (if your computer cannot run Ansible, etc.) you may put the playbook on the server as well.
 
