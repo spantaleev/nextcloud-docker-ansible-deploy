@@ -78,7 +78,7 @@ server {
     rewrite ^/\.well-known/caldav https://$http_host/remote.php/dav/ permanent;
 
 	location / {
-		{% if nextcloud_nginx_proxy_enabled %}
+		{% if nextcloud_nginx_proxy_service_reach_mode == 'container' %}
 			{# Use the embedded DNS resolver in Docker containers to discover the service #}
 			resolver 127.0.0.11 valid=5s;
 			set $backend "nextcloud-apache:80";
