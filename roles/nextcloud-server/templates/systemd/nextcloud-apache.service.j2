@@ -32,8 +32,8 @@ ExecStart=/usr/bin/docker run --rm --name nextcloud-apache \
 			{% if nextcloud_goofys_external_storage_enabled %}
 			-v {{ nextcloud_external_storage_path }}:{{ nextcloud_external_storage_path }}:slave \
 			{% endif %}
-			{% if not nextcloud_nginx_proxy_enabled %}
-			-p 127.0.0.1:{{ nextcloud_apache_http_port_on_host }}:80 \
+			{% if nextcloud_nextcloud_apache_container_http_host_bind_port %}
+			-p {{ nextcloud_nextcloud_apache_container_http_host_bind_port }}:80 \
 			{% endif %}
 			{% if nextcloud_nextcloud_apache_container_memory_limit != '' %}
 				--memory={{ nextcloud_nextcloud_apache_container_memory_limit }} \
