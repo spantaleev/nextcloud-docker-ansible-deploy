@@ -28,7 +28,7 @@
 {% endmacro %}
 
 server {
-	listen 80;
+	listen 8080;
 	server_name {{ hostname_nextcloud }};
 
 	server_tokens off;
@@ -51,15 +51,14 @@ server {
 }
 
 server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
+	listen 8443 ssl http2;
+	listen [::]:8443 ssl http2;
 
-    server_name {{ hostname_nextcloud }};
+	server_name {{ hostname_nextcloud }};
 
 	server_tokens off;
 	root /dev/null;
 
-	ssl on;
 	ssl_certificate {{ nextcloud_ssl_config_dir_path }}/live/{{ hostname_nextcloud }}/fullchain.pem;
 	ssl_certificate_key {{ nextcloud_ssl_config_dir_path }}/live/{{ hostname_nextcloud }}/privkey.pem;
 	ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
@@ -75,7 +74,7 @@ server {
 	{% endif %}
 
 	rewrite ^/\.well-known/carddav https://$http_host/remote.php/dav/ permanent;
-    rewrite ^/\.well-known/caldav https://$http_host/remote.php/dav/ permanent;
+	rewrite ^/\.well-known/caldav https://$http_host/remote.php/dav/ permanent;
 
 	location / {
 		{% if nextcloud_nginx_proxy_service_reach_mode == 'container' %}

@@ -13,8 +13,8 @@ ExecStartPre=-/usr/bin/docker rm nextcloud-nginx-proxy
 ExecStart=/usr/bin/docker run --rm --name nextcloud-nginx-proxy \
 			--log-driver=none \
 			--network={{ nextcloud_docker_network }} \
-			-p 80:80 \
-			-p 443:443 \
+			-p 80:8080 \
+			-p 443:8443 \
 			-v {{ nextcloud_nginx_proxy_confd_path }}:/etc/nginx/conf.d:ro \
 			-v {{ nextcloud_ssl_config_dir_path }}:{{ nextcloud_ssl_config_dir_path }}:ro \
 			{{ nextcloud_nginx_proxy_docker_image }}
