@@ -1,0 +1,18 @@
+---
+
+- name: Install host dependencies
+  pacman:
+    name:
+      - python-docker
+      - "{{ nextcloud_ntpd_package }}"
+      # TODO This needs to be verified. Which version do we need?
+      - fuse3
+    state: latest
+    update_cache: yes
+
+- name: Ensure Docker is installed
+  pacman:
+    name:
+      - docker
+    state: latest
+  when: nextcloud_docker_installation_enabled|bool

@@ -1,0 +1,32 @@
+- name: Ensure Docker repository is enabled
+  template:
+    src: "{{ role_path }}/files/yum.repos.d/{{ item }}"
+    dest: "/etc/yum.repos.d/{{ item }}"
+    owner: "root"
+    group: "root"
+    mode: 0644
+  with_items:
+    - docker-ce.repo
+  when: nextcloud_docker_installation_enabled|bool and nextcloud_docker_package_name == 'docker-ce'
+
+- name: Ensure Docker's RPM key is trusted
+  rpm_key:
+    state: present
+    key: https://download.docker.com/linux/centos/gpg
+  when: nextcloud_docker_installation_enabled|bool and nextcloud_docker_package_name == 'docker-ce'
+
+- name: Ensure yum packages are installed
+  yum:
+    name:
+      - "{{ nextcloud_ntpd_package }}"
+      - fuse
+    state: latest
+    update_cache: yes
+
+- name: Ensure Docker is installed
+  yum:
+    name:
+      - "{{ nextcloud_docker_package_name }}"
+      - docker-python
+    state: latest
+  when: nextcloud_docker_installation_enabled|bool

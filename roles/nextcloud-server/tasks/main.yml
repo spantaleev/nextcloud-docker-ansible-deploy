@@ -1,6 +1,6 @@
 ---
 
-- include: tasks/setup_base.yml
+- include: tasks/server_base/setup.yml
   tags:
     - setup-all
 

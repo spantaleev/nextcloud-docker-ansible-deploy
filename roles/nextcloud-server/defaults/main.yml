@@ -16,6 +16,18 @@ nextcloud_systemd_unit_home_path: /root
 # The Docker network that all services would be put into
 nextcloud_docker_network: "nextcloud"
 
+# Controls whether Docker is automatically installed.
+# If you change this to false you must install and update Docker manually. You also need to install the docker (https://pypi.org/project/docker/) Python package.
+nextcloud_docker_installation_enabled: true
+
+# Controls the Docker package that is installed.
+# Possible values are "docker-ce" (default) and "docker.io" (Debian).
+nextcloud_docker_package_name: docker-ce
+
+nextcloud_ntpd_package: "{{ 'systemd-timesyncd' if ansible_distribution == 'CentOS' and ansible_distribution_major_version > '7' else 'ntp' }}"
+nextcloud_ntpd_service: "{{ 'systemd-timesyncd' if ansible_distribution == 'CentOS' and ansible_distribution_major_version > '7' else ('ntpd' if ansible_os_family == 'RedHat' or ansible_distribution == 'Archlinux' else 'ntp') }}"
+
+
 nextcloud_base_data_path: "/nextcloud"
 nextcloud_environment_variables_data_path: "{{ nextcloud_base_data_path }}/environment-variables"
 nextcloud_external_storage_path: "{{ nextcloud_base_data_path }}/external-storage"
