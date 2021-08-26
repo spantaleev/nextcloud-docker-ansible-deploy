@@ -27,6 +27,15 @@ nextcloud_docker_package_name: docker-ce
 nextcloud_ntpd_package: "{{ 'systemd-timesyncd' if ansible_distribution == 'CentOS' and ansible_distribution_major_version > '7' else 'ntp' }}"
 nextcloud_ntpd_service: "{{ 'systemd-timesyncd' if ansible_distribution == 'CentOS' and ansible_distribution_major_version > '7' else ('ntpd' if ansible_os_family == 'RedHat' or ansible_distribution == 'Archlinux' else 'ntp') }}"
 
+# The architecture that your server runs.
+# Recognized values by us are 'amd64'.
+# Currently only 'amd64' is supported.
+nextcloud_architecture: amd64
+
+# The architecture for Debian packages.
+# See: https://wiki.debian.org/SupportedArchitectures
+# We just remap from our `nextcloud_architecture` values to what Debian and possibly other distros call things.
+nextcloud_debian_arch: "{{ 'armhf' if nextcloud_architecture == 'arm32' else nextcloud_architecture }}"
 
 nextcloud_base_data_path: "/nextcloud"
 nextcloud_environment_variables_data_path: "{{ nextcloud_base_data_path }}/environment-variables"
