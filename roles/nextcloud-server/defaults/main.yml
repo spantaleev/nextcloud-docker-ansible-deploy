@@ -141,6 +141,8 @@ nextcloud_nginx_proxy_confd_path: "{{ nextcloud_nginx_proxy_data_path }}/conf.d"
 
 nextcloud_nginx_proxy_client_max_body_size: "4G"
 
+nextcloud_nginx_proxy_ssl_protocols: "TLSv1.2 TLSv1.3"
+
 nextcloud_ssl_base_path: "{{ nextcloud_base_data_path }}/ssl"
 nextcloud_ssl_config_dir_path: "{{ nextcloud_ssl_base_path }}/config"
 nextcloud_ssl_log_dir_path: "{{ nextcloud_ssl_base_path }}/log"
