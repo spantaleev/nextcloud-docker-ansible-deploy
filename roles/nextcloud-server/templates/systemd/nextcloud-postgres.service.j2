@@ -11,6 +11,7 @@ ExecStartPre=-/usr/bin/docker stop nextcloud-postgres
 ExecStartPre=-/usr/bin/docker rm nextcloud-postgres
 ExecStartPre=-/usr/bin/mkdir {{ nextcloud_postgres_data_path }}
 ExecStartPre=-/usr/bin/chown {{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} {{ nextcloud_postgres_data_path }}
+
 ExecStart=/usr/bin/docker run --rm --name nextcloud-postgres \
 			--log-driver=none \
 			--user={{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} \
@@ -18,7 +19,12 @@ ExecStart=/usr/bin/docker run --rm --name nextcloud-postgres \
 			--env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-server-docker \
 			-v {{ nextcloud_postgres_data_path }}:/var/lib/postgresql/data \
 			-v /etc/passwd:/etc/passwd:ro \
-			{{ nextcloud_postgres_docker_image_to_use }}
+			{% for arg in nextcloud_postgres_container_extra_arguments %}
+			{{ arg }} \
+			{% endfor %}
+			{{ nextcloud_postgres_docker_image_to_use }} \
+			postgres {{ nextcloud_postgres_process_extra_arguments|join(' ') }}
+
 ExecStop=-/usr/bin/docker stop nextcloud-postgres
 ExecStop=-/usr/bin/docker rm nextcloud-postgres
 Restart=always

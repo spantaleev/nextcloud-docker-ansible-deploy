@@ -84,6 +84,13 @@ nextcloud_postgres_docker_image_latest: "{{ nextcloud_postgres_docker_image_v13 
 
 nextcloud_postgres_data_path: "{{ nextcloud_base_data_path }}/postgres"
 
+# A list of extra arguments to pass to the container
+nextcloud_postgres_container_extra_arguments: []
+
+# A list of extra arguments to pass to the postgres process
+# e.g. "-c 'max_connections=200'"
+nextcloud_postgres_process_extra_arguments: []
+
 # A list of configuration parameters for Nextcloud.
 # To define your own, we advise editing `nextcloud_config_additional_parameters`.
 nextcloud_config_parameters: "{{ nextcloud_config_default_parameters + nextcloud_config_additional_parameters }}"
