@@ -1,9 +1,5 @@
 ---
 
-- name: Determine domains to obtain certificates for (Nextcloud)
-  set_fact:
-    domains_to_obtain_certificate_for: "['{{ hostname_nextcloud }}']"
-
 - name: Ensure certbot Docker image is pulled
   docker_image:
     name: "{{ nextcloud_ssl_certbot_docker_image }}"
@@ -22,7 +18,7 @@
 
 - name: Obtain initial certificates
   include_tasks: "setup_ssl_for_domain.yml"
-  with_items: "{{ domains_to_obtain_certificate_for }}"
+  with_items: "{{ nextcloud_ssl_domains_to_obtain_certificates_for }}"
   loop_control:
     loop_var: domain_name
 

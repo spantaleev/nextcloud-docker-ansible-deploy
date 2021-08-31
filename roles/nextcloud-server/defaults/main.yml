@@ -166,6 +166,14 @@ nextcloud_ssl_use_staging: false
 # Specifies when to attempt to retrieve new SSL certificates from Let's Encrypt.
 nextcloud_ssl_renew_cron_time_definition: "15 5 */5 * *"
 
+# The full list of domains that this role will obtain certificates for.
+# This variable is likely redefined outside of the role, to include the domains that are necessary (depending on the services that are enabled).
+# To add additional domain names, consider using `nextcloud_ssl_additional_domains_to_obtain_certificates_for` instead.
+nextcloud_ssl_domains_to_obtain_certificates_for: "{{ nextcloud_ssl_additional_domains_to_obtain_certificates_for }}"
+
+# A list of additional domain names to obtain certificates for.
+nextcloud_ssl_additional_domains_to_obtain_certificates_for: []
+
 
 nextcloud_onlyoffice_enabled: false
 nextcloud_onlyoffice_document_server_docker_image: "docker.io/onlyoffice/documentserver:6.4.0.121"

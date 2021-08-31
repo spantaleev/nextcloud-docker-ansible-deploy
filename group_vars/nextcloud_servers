@@ -1,0 +1,6 @@
+nextcloud_ssl_domains_to_obtain_certificates_for: |
+  {{
+    ([hostname_nextcloud])
+    +
+    nextcloud_ssl_additional_domains_to_obtain_certificates_for
+  }}
