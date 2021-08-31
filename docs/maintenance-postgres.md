@@ -6,35 +6,58 @@ Table of contents:
 
 - [Getting a database terminal](#getting-a-database-terminal), for when you wish to execute SQL queries
 
+- [Vacuuming PostgreSQL](#vacuuming-postgresql), for when you wish to run a Postgres [VACUUM](https://www.postgresql.org/docs/current/sql-vacuum.html) (optimizing disk space)
+
 - [Backing up PostgreSQL](#backing-up-postgresql), for when you wish to make a backup
 
 - [Upgrading PostgreSQL](#upgrading-postgresql), for upgrading to new major versions of PostgreSQL. Such **manual upgrades are sometimes required**.
 
+- [Tuning PostgreSQL](#tuning-postgresql) to make it run faster
+
 
 ## Getting a database terminal
 
-You can use the `/usr/local/bin/nextcloud-postgres-cli` tool to get interactive terminal access ([psql](https://www.postgresql.org/docs/11/app-psql.html)) to the PostgreSQL server.
+You can use the `/usr/local/bin/nextcloud-postgres-cli` tool to get interactive terminal access ([psql](https://www.postgresql.org/docs/13/app-psql.html)) to the PostgreSQL server.
 
 If you are using an [external Postgres server](configuring-playbook-external-postgres.md), the above tool will not be available.
+
+By default, this tool puts you in the `nextcloud` database, where all the data is stored.
+
+You can then proceed to write queries. Example: `SELECT COUNT(*) FROM oc_accounts;`
+
+**Be careful**. Modifying the database directly (especially as services are running) is dangerous and may lead to irreversible database corruption.
+When in doubt, consider [making a backup](#backing-up-postgresql).
+
+
+## Vacuuming PostgreSQL
+
+Deleting lots data from Postgres does not make it release disk space, until you perform a `VACUUM` operation.
+
+To perform a `FULL` Postgres [VACUUM](https://www.postgresql.org/docs/current/sql-vacuum.html), run the playbook with `--tags=run-postgres-vacuum`.
+
+Example:
+
+```bash
+ansible-playbook -i inventory/hosts setup.yml --tags=run-postgres-vacuum,start
+```
+
+**Note**: this will automatically stop Synapse temporarily and restart it later. You'll also need plenty of available disk space in your Postgres data directory (usually `/nextcloud/postgres/data`).
 
 
 ## Backing up PostgreSQL
 
-To make a back up of the current PostgreSQL database, make sure it's running and then execute a command like this on the server:
+To automatically make Postgres database backups on a fixed schedule, see [Setting up postgres backup](configuring-playbook-postgres-backup.md).
+
+To make a one off back up of the current PostgreSQL database, make sure it's running and then execute a command like this on the server:
 
 ```bash
-docker run \
---rm \
---log-driver=none \
---network=nextcloud \
+/usr/bin/docker exec \
 --env-file=/nextcloud/environment-variables/env-postgres-pgsql-docker \
-postgres:13.1-alpine \
-pg_dumpall -h nextcloud-postgres \
+nextcloud-postgres \
+/usr/local/bin/pg_dumpall -h nextcloud-postgres \
 | gzip -c \
-> /postgres.sql.gz
+> /nextcloud/postgres.sql.gz
 ```
-
-If you are using an [external Postgres server](configuring-playbook-external-postgres.md), the above command will not work, because the credentials file (`/nextcloud/environment-variables/env-postgres-pgsql-docker`) is not available.
 
 Restoring a backup made this way can be done by [importing it](importing-postgres.md).
 
@@ -65,3 +88,67 @@ If you have plenty of space in `/tmp` and would rather avoid gzipping, you can e
 Example: `--extra-vars="postgres_dump_name=nextcloud-postgres-dump.sql"`
 
 **All databases, roles, etc. on the Postgres server are migrated**.
+
+
+## Tuning PostgreSQL
+
+PostgreSQL can be tuned to make it run faster. This is done by passing extra arguments to Postgres with the `nextcloud_postgres_process_extra_arguments` variable. You should use a website like https://pgtune.leopard.in.ua/ or information from https://wiki.postgresql.org/wiki/Tuning_Your_PostgreSQL_Server to determine what Postgres settings you should change.
+
+**Note**: the configuration generator at https://pgtune.leopard.in.ua/ adds spaces around the `=` sign, which is invalid. You'll need to remove it manually (`max_connections = 300` -> `max_connections=300`)
+
+### Here are some examples:
+
+These are not recommended values and they may not work well for you. This is just to give you an idea of some of the options that can be set. If you are an experienced PostgreSQL admin feel free to update this documentation with better examples.
+
+Here is an example config for a small 2 core server with 4GB of RAM and SSD storage:
+```
+nextcloud_postgres_process_extra_arguments: [
+  "-c shared_buffers=128MB",
+  "-c effective_cache_size=2304MB",
+  "-c effective_io_concurrency=100",
+  "-c random_page_cost=2.0",
+  "-c min_wal_size=500MB",
+]
+```
+
+Here is an example config for a 4 core server with 8GB of RAM on a Virtual Private Server (VPS); the paramters have been configured using https://pgtune.leopard.in.ua with the following setup: PostgreSQL version 12, OS Type: Linux, DB Type: Mixed type of application, Data Storage: SSD storage:
+```
+nextcloud_postgres_process_extra_arguments: [
+  "-c max_connections=100",
+  "-c shared_buffers=2GB",
+  "-c effective_cache_size=6GB",
+  "-c maintenance_work_mem=512MB",
+  "-c checkpoint_completion_target=0.9",
+  "-c wal_buffers=16MB",
+  "-c default_statistics_target=100",
+  "-c random_page_cost=1.1",
+  "-c effective_io_concurrency=200",
+  "-c work_mem=5242kB",
+  "-c min_wal_size=1GB",
+  "-c max_wal_size=4GB",
+  "-c max_worker_processes=4",
+  "-c max_parallel_workers_per_gather=2",
+  "-c max_parallel_workers=4",
+  "-c max_parallel_maintenance_workers=2",
+]
+```
+
+Here is an example config for a large 6 core server with 24GB of RAM:
+```
+nextcloud_postgres_process_extra_arguments: [
+  "-c max_connections=40",
+  "-c shared_buffers=1536MB",
+  "-c checkpoint_completion_target=0.7",
+  "-c wal_buffers=16MB",
+  "-c default_statistics_target=100",
+  "-c random_page_cost=1.1",
+  "-c effective_io_concurrency=100",
+  "-c work_mem=2621kB",
+  "-c min_wal_size=1GB",
+  "-c max_wal_size=4GB",
+  "-c max_worker_processes=6",
+  "-c max_parallel_workers_per_gather=3",
+  "-c max_parallel_workers=6",
+  "-c max_parallel_maintenance_workers=3",
+]
+```
