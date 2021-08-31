@@ -7,9 +7,9 @@ DefaultDependencies=no
 [Service]
 Type=simple
 Environment="HOME={{ nextcloud_systemd_unit_home_path }}"
-ExecStartPre=-/usr/bin/docker kill %n
-ExecStartPre=-/usr/bin/docker rm %n
-ExecStart=/usr/bin/docker run --rm --name %n \
+ExecStartPre=-{{ nextcloud_host_command_docker }} kill %n
+ExecStartPre=-{{ nextcloud_host_command_docker }} rm %n
+ExecStart={{ nextcloud_host_command_docker }} run --rm --name %n \
 			--log-driver=none \
 			--user={{ nextcloud_http_user_uid }}:{{ nextcloud_http_user_gid }} \
 			--security-opt apparmor:unconfined \
@@ -22,9 +22,9 @@ ExecStart=/usr/bin/docker run --rm --name %n \
 			{{ nextcloud_goofys_docker_image }} \
 			-c 'goofys -f --storage-class=STANDARD_IA --region {{ nextcloud_goofys_external_storage_region }}  {% if nextcloud_goofys_external_storage_endpoint|length %} --endpoint {{ nextcloud_goofys_external_storage_endpoint }} {% endif %} --stat-cache-ttl 60m0s --type-cache-ttl 60m0s --dir-mode 0700 --file-mode 0700 {{ nextcloud_goofys_external_storage_bucket_name }}:appdata-preview /s3'
 TimeoutStartSec=5min
-ExecStop=-/usr/bin/docker stop %n
-ExecStop=-/usr/bin/docker kill %n
-ExecStop=-/usr/bin/docker rm %n
+ExecStop=-{{ nextcloud_host_command_docker }} stop %n
+ExecStop=-{{ nextcloud_host_command_docker }} kill %n
+ExecStop=-{{ nextcloud_host_command_docker }} rm %n
 ExecStop=-/bin/fusermount -u {{ nextcloud_appdata_preview_path }}
 Restart=always
 RestartSec=5

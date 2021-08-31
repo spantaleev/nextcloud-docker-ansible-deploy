@@ -8,6 +8,11 @@ nextcloud_user_gid: 3991
 nextcloud_http_user_uid: 33
 nextcloud_http_user_gid: 33
 
+nextcloud_host_command_docker: "/usr/bin/env docker"
+nextcloud_host_command_chown: "/usr/bin/env chown"
+nextcloud_host_command_mkdir: "/usr/bin/env mkdir"
+nextcloud_host_command_sleep: "/usr/bin/env sleep"
+
 # Specifies the path to use for the `HOME` environment variable for systemd unit files.
 # Docker 20.10 complains with `WARNING: Error loading config file: .dockercfg: $HOME is not defined`
 # if `$HOME` is not defined, so we define something to make it happy.

@@ -8,9 +8,9 @@ DefaultDependencies=no
 [Service]
 Type=simple
 Environment="HOME={{ nextcloud_systemd_unit_home_path }}"
-ExecStartPre=-/usr/bin/docker kill nextcloud-nginx-proxy
-ExecStartPre=-/usr/bin/docker rm nextcloud-nginx-proxy
-ExecStart=/usr/bin/docker run --rm --name nextcloud-nginx-proxy \
+ExecStartPre=-{{ nextcloud_host_command_docker }} kill nextcloud-nginx-proxy
+ExecStartPre=-{{ nextcloud_host_command_docker }} rm nextcloud-nginx-proxy
+ExecStart={{ nextcloud_host_command_docker }} run --rm --name nextcloud-nginx-proxy \
 			--log-driver=none \
 			--network={{ nextcloud_docker_network }} \
 			-p 80:8080 \
@@ -18,9 +18,9 @@ ExecStart=/usr/bin/docker run --rm --name nextcloud-nginx-proxy \
 			-v {{ nextcloud_nginx_proxy_confd_path }}:/etc/nginx/conf.d:ro \
 			-v {{ nextcloud_ssl_config_dir_path }}:{{ nextcloud_ssl_config_dir_path }}:ro \
 			{{ nextcloud_nginx_proxy_docker_image }}
-ExecStop=-/usr/bin/docker kill nextcloud-nginx-proxy
-ExecStop=-/usr/bin/docker rm nextcloud-nginx-proxy
-ExecReload=/usr/bin/docker exec nextcloud-nginx-proxy /usr/sbin/nginx -s reload
+ExecStop=-{{ nextcloud_host_command_docker }} kill nextcloud-nginx-proxy
+ExecStop=-{{ nextcloud_host_command_docker }} rm nextcloud-nginx-proxy
+ExecReload={{ nextcloud_host_command_docker }} exec nextcloud-nginx-proxy /usr/sbin/nginx -s reload
 Restart=always
 RestartSec=30
 

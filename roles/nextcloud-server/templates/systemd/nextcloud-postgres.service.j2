@@ -7,12 +7,12 @@ DefaultDependencies=no
 [Service]
 Type=simple
 Environment="HOME={{ nextcloud_systemd_unit_home_path }}"
-ExecStartPre=-/usr/bin/docker stop nextcloud-postgres
-ExecStartPre=-/usr/bin/docker rm nextcloud-postgres
-ExecStartPre=-/usr/bin/mkdir {{ nextcloud_postgres_data_path }}
-ExecStartPre=-/usr/bin/chown {{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} {{ nextcloud_postgres_data_path }}
+ExecStartPre=-{{ nextcloud_host_command_docker }} stop nextcloud-postgres
+ExecStartPre=-{{ nextcloud_host_command_docker }} rm nextcloud-postgres
+ExecStartPre=-{{ nextcloud_host_command_mkdir }} {{ nextcloud_postgres_data_path }}
+ExecStartPre=-{{ nextcloud_host_command_chown }} {{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} {{ nextcloud_postgres_data_path }}
 
-ExecStart=/usr/bin/docker run --rm --name nextcloud-postgres \
+ExecStart={{ nextcloud_host_command_docker }} run --rm --name nextcloud-postgres \
 			--log-driver=none \
 			--user={{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} \
 			--network={{ nextcloud_docker_network }} \
@@ -25,8 +25,8 @@ ExecStart=/usr/bin/docker run --rm --name nextcloud-postgres \
 			{{ nextcloud_postgres_docker_image_to_use }} \
 			postgres {{ nextcloud_postgres_process_extra_arguments|join(' ') }}
 
-ExecStop=-/usr/bin/docker stop nextcloud-postgres
-ExecStop=-/usr/bin/docker rm nextcloud-postgres
+ExecStop=-{{ nextcloud_host_command_docker }} stop nextcloud-postgres
+ExecStop=-{{ nextcloud_host_command_docker }} rm nextcloud-postgres
 Restart=always
 RestartSec=30
 

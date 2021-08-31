@@ -17,15 +17,15 @@ DefaultDependencies=no
 [Service]
 Type=simple
 Environment="HOME={{ nextcloud_systemd_unit_home_path }}"
-ExecStartPre=-/usr/bin/docker kill nextcloud-apache
-ExecStartPre=-/usr/bin/docker rm nextcloud-apache
+ExecStartPre=-{{ nextcloud_host_command_docker }} kill nextcloud-apache
+ExecStartPre=-{{ nextcloud_host_command_docker }} rm nextcloud-apache
 {% if nextcloud_goofys_external_storage_enabled %}
 # Allow for some time before starting, so that external storage can mount.
 # Mounting can happen later too, but if we start writing,
 # we'd write files to the local filesystem and fusermount will complain.
-ExecStartPre=/bin/sleep 5
+ExecStartPre={{ nextcloud_host_command_sleep }} 5
 {% endif %}
-ExecStart=/usr/bin/docker run --rm --name nextcloud-apache \
+ExecStart={{ nextcloud_host_command_docker }} run --rm --name nextcloud-apache \
 			--log-driver=none \
 			--network={{ nextcloud_docker_network }} \
 			-v {{ nextcloud_nextcloud_data_path }}:/var/www/html \
@@ -42,8 +42,8 @@ ExecStart=/usr/bin/docker run --rm --name nextcloud-apache \
 				--memory-swap={{ nextcloud_nextcloud_apache_container_memory_swap_limit }} \
 			{% endif %}
 			{{ nextcloud_nextcloud_docker_image }}
-ExecStop=-/usr/bin/docker kill nextcloud-apache
-ExecStop=-/usr/bin/docker rm nextcloud-apache
+ExecStop=-{{ nextcloud_host_command_docker }} kill nextcloud-apache
+ExecStop=-{{ nextcloud_host_command_docker }} rm nextcloud-apache
 Restart=always
 RestartSec=30
 
