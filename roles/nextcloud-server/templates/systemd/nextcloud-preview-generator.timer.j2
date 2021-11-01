@@ -1,0 +1,9 @@
+[Unit]
+Description=Run the generate-preview app of Nextcloud (timer)
+
+[Timer]
+{{ nextcloud_previewgenerator_timer }}
+Persistent=true
+
+[Install]
+WantedBy=timers.target

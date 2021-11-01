@@ -183,3 +183,16 @@ nextcloud_onlyoffice_document_server_docker_image: "docker.io/onlyoffice/documen
 # nextcloud-onlyoffice-document-server's port 80 is exposed to the container host (127.0.0.1)
 # on this port by default.
 nextcloud_onlyoffice_document_server_http_port_on_host: 37180
+
+nextcloud_previewgenerator_enabled: false
+
+nextcloud_previewgenerator_configurations:
+- key: squareSizes
+  value: "32 64 1024"
+- key: widthSizes
+  value: "64 128 1024"
+- key: heightSizes
+  value: "64 256 1024"
+
+nextcloud_previewgenerator_timer: "OnCalendar=hourly"
+nextcloud_previewgenerator_lock_file_path: "{{ nextcloud_base_data_path }}/preview_generate_all_done"
