@@ -51,6 +51,11 @@
   tags:
     - setup-onlyoffice-app
 
+# This is meant to be executed subsequently, after Nextcloud is fully setup
+- include: tasks/setup_previewgenerator_app.yml
+  tags:
+    - setup-previewgenerator-app
+
 - include: tasks/setup_nginx_proxy.yml
   tags:
     - setup-all
