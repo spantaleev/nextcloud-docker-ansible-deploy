@@ -2,6 +2,11 @@
 
 - import_tasks: "{{ role_path }}/tasks/util/detect_existing_postgres_version.yml"
 
+- name: Abort if on an unsupported Postgres version
+  fail:
+    msg: "You're on Postgres {{ nextcloud_postgres_detected_version }}, which is no longer supported. To upgrade, see docs/maintenance-postgres.md"
+  when: "nextcloud_postgres_detected_version.startswith('9.')"
+
 # If we have found an existing version (installed from before), we use its corresponding Docker image.
 # If not, we install using the latest Postgres.
 #
