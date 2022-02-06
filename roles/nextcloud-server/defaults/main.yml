@@ -29,8 +29,8 @@ nextcloud_docker_installation_enabled: true
 # Possible values are "docker-ce" (default) and "docker.io" (Debian).
 nextcloud_docker_package_name: docker-ce
 
-nextcloud_ntpd_package: "{{ 'systemd-timesyncd' if ansible_distribution == 'CentOS' and ansible_distribution_major_version > '7' else 'ntp' }}"
-nextcloud_ntpd_service: "{{ 'systemd-timesyncd' if ansible_distribution == 'CentOS' and ansible_distribution_major_version > '7' else ('ntpd' if ansible_os_family == 'RedHat' or ansible_distribution == 'Archlinux' else 'ntp') }}"
+nextcloud_ntpd_package: "{{ 'systemd-timesyncd' if (ansible_os_family == 'RedHat' and ansible_distribution_major_version > '7') or (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version > '18')  else ( 'systemd' if ansible_os_family == 'Suse' else 'ntp' ) }}"
+nextcloud_ntpd_service: "{{ 'systemd-timesyncd' if (ansible_os_family == 'RedHat' and ansible_distribution_major_version > '7') or (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version > '18') or ansible_distribution == 'Archlinux' or ansible_os_family == 'Suse' else ('ntpd' if ansible_os_family == 'RedHat' else 'ntp') }}"
 
 # The architecture that your server runs.
 # Recognized values by us are 'amd64'.
