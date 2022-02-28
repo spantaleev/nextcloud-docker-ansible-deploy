@@ -59,8 +59,8 @@ server {
 		listen 8443 ssl http2;
 		listen [::]:8443 ssl http2;
 	{% else %}
-                listen 443 ssl http2;
-                listen [::]:443 ssl http2;
+		listen 443 ssl http2;
+		listen [::]:443 ssl http2;
 	{% endif %}
 	server_name {{ hostname_nextcloud }};
 
