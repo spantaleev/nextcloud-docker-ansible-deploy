@@ -108,6 +108,9 @@ nextcloud_config_default_parameters:
   - key: overwriteprotocol
     value: "https"
     type: string
+  - key: overwrite.cli.url
+    value: "https://{{ host_specific_nextcloud_hostname }}"
+    type: string
 
 # Add your custom Nextcloud configuration parameters here.
 #
