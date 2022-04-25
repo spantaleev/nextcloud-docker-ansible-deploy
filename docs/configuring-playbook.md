@@ -16,7 +16,8 @@ You can follow these steps:
 
 
 For a basic Nextcloud installation, that's all you need.
-For a more custom setup, see the [Other configuration options](#other-configuration-options) below.
+For a more custom setup, see the [Other configuration options](#other-configuration-options) below.  
+You can look into the [default variables](/roles/nextcloud-server/defaults/main.yml) aswell, if you look to customize something else.
 
 When you're done with all the configuration you'd like to do, continue with [Installing](installing.md).
 
