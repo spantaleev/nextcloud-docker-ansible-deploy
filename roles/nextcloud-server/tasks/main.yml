@@ -66,10 +66,6 @@
     - start
     - update
     
-- import_tasks: tasks/stop.yml
-  tags:
-    - stop
-
 - import_tasks: tasks/setup_adjust_config.yml
   tags:
     - setup-adjust-config
