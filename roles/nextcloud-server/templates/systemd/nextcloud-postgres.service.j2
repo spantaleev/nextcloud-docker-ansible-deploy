@@ -16,6 +16,9 @@ ExecStart={{ nextcloud_host_command_docker }} run --rm --name nextcloud-postgres
 			--log-driver=none \
 			--user={{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} \
 			--network={{ nextcloud_docker_network }} \
+			{% if nextcloud_postgres_container_postgres_bind_port %}
+			-p {{ nextcloud_postgres_container_postgres_bind_port }}:5432 \
+			{% endif %}
 			--env-file={{ nextcloud_environment_variables_data_path }}/env-postgres-server-docker \
 			-v {{ nextcloud_postgres_data_path }}:/var/lib/postgresql/data \
 			-v /etc/passwd:/etc/passwd:ro \
