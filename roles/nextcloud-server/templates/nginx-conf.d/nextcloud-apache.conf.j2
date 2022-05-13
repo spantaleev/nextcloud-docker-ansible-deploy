@@ -28,7 +28,7 @@
 {% endmacro %}
 
 server {
-	{% if nextcloud_nginx_proxy_enabled %}
+	{% if nextcloud_nginx_proxy_service_reach_mode == 'container' %}
 		listen 8080;
 	{% else %}
 		listen 80;
@@ -55,7 +55,7 @@ server {
 }
 
 server {
-	{% if nextcloud_nginx_proxy_enabled %}
+	{% if nextcloud_nginx_proxy_service_reach_mode == 'container' %}
 		listen 8443 ssl http2;
 		listen [::]:8443 ssl http2;
 	{% else %}
