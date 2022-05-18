@@ -178,6 +178,25 @@ nextcloud_ssl_use_staging: false
 # Specifies when to attempt to retrieve new SSL certificates from Let's Encrypt.
 nextcloud_ssl_renew_cron_time_definition: "15 5 */5 * *"
 
+# By default, this playbook automatically retrieves and auto-renews
+# free SSL certificates from Let's Encrypt.
+#
+# The following retrieval methods are supported:
+# - "lets-encrypt" - the playbook obtains free SSL certificates from Let's Encrypt
+# - "none" - lets you manage certificates by yourself; it doesn't care if you don't drop certificates in the location it expects
+#
+# If you decide to manage certificates by yourself (`nextcloud_ssl_retrieval_method: none`),
+# you'd need to drop them into the directory specified by `nextcloud_ssl_config_dir_path`
+# obeying the following hierarchy:
+# - <nextcloud_ssl_config_dir_path>/live/<domain>/fullchain.pem
+# - <nextcloud_ssl_config_dir_path>/live/<domain>/privkey.pem
+# where <domain> refers to the domains that you need (usually `hostname_nextcloud`).
+#
+# The "none" type (`nextcloud_ssl_retrieval_method: none`), simply means that no certificate retrieval will happen.
+# It's useful for when you've disabled the nginx proxy (`nextcloud_nginx_proxy_enabled: false`)
+# and you'll be using another reverse-proxy server (like Apache) with your own certificates, managed by yourself.
+nextcloud_ssl_retrieval_method: "lets-encrypt"
+
 # The full list of domains that this role will obtain certificates for.
 # This variable is likely redefined outside of the role, to include the domains that are necessary (depending on the services that are enabled).
 # To add additional domain names, consider using `nextcloud_ssl_additional_domains_to_obtain_certificates_for` instead.
