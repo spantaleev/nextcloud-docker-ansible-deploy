@@ -26,6 +26,16 @@
     mode: 0750
     owner: "{{ nextcloud_user_username }}"
     group: "{{ nextcloud_user_username }}"
+    
+- name: Preserve vars.yml on the server for easily restoring if it gets lost later on
+  copy:
+    src: "{{ nextcloud_vars_yml_snapshotting_src }}"
+    dest: "{{ nextcloud_base_data_path }}/vars.yml"
+    owner: "{{ nextcloud_user_username }}"
+    group: "{{ nextcloud_user_username }}"
+    mode: '0660'
+  when: "nextcloud_vars_yml_snapshotting_enabled|bool"    
+    
 
 - name: Ensure Nextcloud network is created in Docker
   docker_network:
