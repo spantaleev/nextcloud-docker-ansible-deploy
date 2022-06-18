@@ -29,6 +29,11 @@ ExecStart={{ nextcloud_host_command_docker }} run --rm --name nextcloud-apache \
 			--log-driver=none \
 			--network={{ nextcloud_docker_network }} \
 			-v {{ nextcloud_nextcloud_data_path }}:/var/www/html \
+			{% if nextcloud_external_storage_path_local %}
+			{% for nextcloud_external_storage_path_local in nextcloud_external_storage_path_local %}
+			-v {{ nextcloud_external_storage_path_local }}:{{ nextcloud_external_storage_path_local }}:slave \
+			{% endfor %}
+			{% endif %}
 			{% if nextcloud_goofys_external_storage_enabled %}
 			-v {{ nextcloud_external_storage_path }}:{{ nextcloud_external_storage_path }}:slave \
 			{% endif %}

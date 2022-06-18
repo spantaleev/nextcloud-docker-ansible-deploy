@@ -133,6 +133,9 @@ nextcloud_config_additional_parameters: []
 # a new SSL certificate could go into effect (UTC time).
 nextcloud_services_restart_cron_time_definition: "15 4 3 * *"
 
+# if you want to add local directorys of the server as external storage add it here
+# nextcloud_external_storage_path_local:
+# - "/media/example"
 
 nextcloud_goofys_external_storage_enabled: false
 nextcloud_goofys_docker_image: "docker.io/cloudproto/goofys:latest"
