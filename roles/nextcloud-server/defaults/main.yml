@@ -120,6 +120,12 @@ nextcloud_config_default_parameters:
     value: "https://{{ host_specific_nextcloud_hostname }}"
     type: string
 
+# Controls whether we'll preserve the vars.yml file on the Nextcloud server.
+# If you have a differently organized inventory, you may wish to disable this feature,
+# or to repoint `nextcloud_vars_yml_snapshotting_src` to the file you'd like to preserve.
+nextcloud_vars_yml_snapshotting_enabled: true
+nextcloud_vars_yml_snapshotting_src: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/vars.yml"
+    
 # Add your custom Nextcloud configuration parameters here.
 #
 # Example:
