@@ -143,7 +143,7 @@ nextcloud_services_restart_cron_time_definition: "15 4 3 * *"
 # Contains definition objects like this: 
 # nextcloud_container_additional_mounts: 
 # - "type=bind|volume|tmpfs,source=/outside,target=/inside,readonly,bind-propagation=slave"
-nextcloud_container_additional_mounts:
+nextcloud_container_additional_mounts: []
 
 nextcloud_goofys_external_storage_enabled: false
 nextcloud_goofys_docker_image: "docker.io/cloudproto/goofys:latest"
