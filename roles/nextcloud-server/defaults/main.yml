@@ -125,7 +125,7 @@ nextcloud_config_default_parameters:
 # or to repoint `nextcloud_vars_yml_snapshotting_src` to the file you'd like to preserve.
 nextcloud_vars_yml_snapshotting_enabled: true
 nextcloud_vars_yml_snapshotting_src: "{{ inventory_dir }}/host_vars/{{ inventory_hostname }}/vars.yml"
-    
+
 # Add your custom Nextcloud configuration parameters here.
 #
 # Example:
@@ -140,8 +140,8 @@ nextcloud_config_additional_parameters: []
 nextcloud_services_restart_cron_time_definition: "15 4 3 * *"
 
 # A list of additional "mounts" to be mounted in the container.
-# Contains definition objects like this: 
-# nextcloud_container_additional_mounts: 
+# Contains definition objects like this:
+# nextcloud_container_additional_mounts:
 # - "type=bind|volume|tmpfs,source=/outside,target=/inside,readonly,bind-propagation=slave"
 nextcloud_container_additional_mounts: []
 
@@ -169,7 +169,7 @@ nextcloud_nginx_proxy_enabled: true
 # Specifies how the nginx configuration should be generated with regard to how services are reached.
 nextcloud_nginx_proxy_service_reach_mode: "{{ 'container' if nextcloud_nginx_proxy_enabled else 'local' }}"
 
-nextcloud_nginx_proxy_docker_image: "docker.io/nginx:1.21.6-alpine"
+nextcloud_nginx_proxy_docker_image: "docker.io/nginx:1.23.0-alpine"
 
 nextcloud_nginx_proxy_data_path: "{{ nextcloud_base_data_path }}/nginx-proxy"
 nextcloud_nginx_proxy_confd_path: "{{ nextcloud_nginx_proxy_data_path }}/conf.d"
