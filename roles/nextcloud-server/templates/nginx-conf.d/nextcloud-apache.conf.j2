@@ -16,7 +16,7 @@
 			proxy_pass http://$backend;
 		{% else %}
 			{# Generic configuration for people to use outside of our container setup #}
-			proxy_pass http://localhost:{{ nextcloud_onlyoffice_document_server_http_port_on_host }};
+			proxy_pass http://127.0.0.1:{{ nextcloud_onlyoffice_document_server_http_port_on_host }};
 		{% endif %}
 
 		proxy_set_header Host $host;
@@ -45,7 +45,7 @@ server {
 			proxy_pass http://$backend;
 		{% else %}
 			{# Generic configuration for use outside of our container setup #}
-			proxy_pass http://localhost:{{ nextcloud_ssl_certbot_standalone_http_port }};
+			proxy_pass http://127.0.0.1:{{ nextcloud_ssl_certbot_standalone_http_port }};
 		{% endif %}
 	}
 
@@ -92,7 +92,7 @@ server {
 			proxy_pass http://$backend;
 		{% else %}
 			{# Generic configuration for people to use outside of our container setup #}
-			proxy_pass http://localhost:{{ nextcloud_apache_http_port_on_host }};
+			proxy_pass http://127.0.0.1:{{ nextcloud_apache_http_port_on_host }};
 		{% endif %}
 
 		# We disable request buffering in order to directly pass the request to the upstream server.
