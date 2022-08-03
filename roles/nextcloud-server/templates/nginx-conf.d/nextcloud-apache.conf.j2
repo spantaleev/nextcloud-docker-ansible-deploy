@@ -30,8 +30,10 @@
 server {
 	{% if nextcloud_nginx_proxy_service_reach_mode == 'container' %}
 		listen 8080;
+		listen [::]:8080;
 	{% else %}
 		listen 80;
+		listen [::]:80;
 	{% endif %}
 	server_name {{ hostname_nextcloud }};
 
