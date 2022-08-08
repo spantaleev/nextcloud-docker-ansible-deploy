@@ -48,7 +48,7 @@ nextcloud_external_storage_path: "{{ nextcloud_base_data_path }}/external-storag
 nextcloud_scratchpad_dir: "{{ nextcloud_base_data_path }}/scratchpad"
 
 nextcloud_nextcloud_data_path: "{{ nextcloud_base_data_path }}/nextcloud-data"
-nextcloud_nextcloud_docker_image: "docker.io/nextcloud:24.0.2-apache"
+nextcloud_nextcloud_docker_image: "docker.io/nextcloud:24.0.3-apache"
 
 # Controls whether the nextcloud-apache container's memory usage
 # is limited and to what extent.
@@ -169,7 +169,7 @@ nextcloud_nginx_proxy_enabled: true
 # Specifies how the nginx configuration should be generated with regard to how services are reached.
 nextcloud_nginx_proxy_service_reach_mode: "{{ 'container' if nextcloud_nginx_proxy_enabled else 'local' }}"
 
-nextcloud_nginx_proxy_docker_image: "docker.io/nginx:1.23.0-alpine"
+nextcloud_nginx_proxy_docker_image: "docker.io/nginx:1.23.1-alpine"
 
 nextcloud_nginx_proxy_data_path: "{{ nextcloud_base_data_path }}/nginx-proxy"
 nextcloud_nginx_proxy_confd_path: "{{ nextcloud_nginx_proxy_data_path }}/conf.d"
