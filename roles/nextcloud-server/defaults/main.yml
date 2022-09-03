@@ -33,8 +33,8 @@ nextcloud_ntpd_package: "{{ 'systemd-timesyncd' if (ansible_os_family == 'RedHat
 nextcloud_ntpd_service: "{{ 'systemd-timesyncd' if (ansible_os_family == 'RedHat' and ansible_distribution_major_version|int > 7) or (ansible_distribution == 'Ubuntu' and ansible_distribution_major_version|int > 18) or ansible_distribution == 'Archlinux' or ansible_os_family == 'Suse' else ('ntpd' if ansible_os_family == 'RedHat' else 'ntp') }}"
 
 # The architecture that your server runs.
-# Recognized values by us are 'amd64'.
-# Currently only 'amd64' is supported.
+# Recognized values by us are 'amd64', 'arm32' and 'arm64'.
+# Not all architectures support all services, so your experience (on non-amd64) may vary.
 nextcloud_architecture: amd64
 
 # The architecture for Debian packages.
