@@ -50,6 +50,9 @@ nextcloud_scratchpad_dir: "{{ nextcloud_base_data_path }}/scratchpad"
 nextcloud_nextcloud_data_path: "{{ nextcloud_base_data_path }}/nextcloud-data"
 nextcloud_nextcloud_docker_image: "docker.io/nextcloud:24.0.4-apache"
 
+# A list of extra arguments to pass to the container
+nextcloud_nextcloud_docker_container_extra_arguments: []
+
 # Controls whether the nextcloud-apache container's memory usage
 # is limited and to what extent.
 #

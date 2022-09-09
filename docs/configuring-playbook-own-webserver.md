@@ -13,11 +13,6 @@ There are **2 ways you can go about it**, if you'd like to use your own webserve
   - [Method 2: Fronting the integrated nginx reverse-proxy webserver with another reverse-proxy](#method-2-fronting-the-integrated-nginx-reverse-proxy-webserver-with-another-reverse-proxy)
     - [Sample configuration for running behind Traefik 2.0](#sample-configuration-for-running-behind-traefik-20)
 
-- [Using your own webserver, instead of this playbook's nginx proxy (optional, advanced)](#using-your-own-webserver-instead-of-this-playbooks-nginx-proxy-optional-advanced)
-  - [Method 1: Disabling the integrated nginx reverse-proxy webserver](#method-1-disabling-the-integrated-nginx-reverse-proxy-webserver)
-  - [Method 2: Fronting the integrated nginx reverse-proxy webserver with another reverse-proxy](#method-2-fronting-the-integrated-nginx-reverse-proxy-webserver-with-another-reverse-proxy)
-    - [Sample configuration for running behind Traefik 2.0](#sample-configuration-for-running-behind-traefik-20)
-
 ## Method 1: Disabling the integrated nginx reverse-proxy webserver
 
 All it takes is:
@@ -46,7 +41,7 @@ nextcloud_nginx_proxy_enabled: false
 
 This method is about leaving the integrated nginx reverse-proxy webserver be, but making it not get in the way (using up important ports, trying to retrieve SSL certificates, etc.).
 
-If you wish to use another webserver, the integrated nginx reverse-proxy webserver usually gets in the way because it attempts to fetch SSL certificates and binds to ports 80, 443 and 8448 (if Matrix Federation is enabled).
+If you wish to use another webserver, the integrated nginx reverse-proxy webserver usually gets in the way because it attempts to fetch SSL certificates and binds to ports 80 and 443.
 
 You can disable such behavior and make the integrated nginx reverse-proxy webserver only serve traffic locally (or over a local network).
 
