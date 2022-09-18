@@ -55,6 +55,10 @@ Below is a sample configuration for using this playbook with a [Traefik](https:/
 # Disable generation and retrieval of SSL certs (Traefik will handle this)
 nextcloud_ssl_retrieval_method: none
 
+# Don't bind any HTTP or federation port to the host
+# (Traefik will proxy directly into the containers)
+nextcloud_nextcloud_apache_container_http_host_bind_port: ''
+
 # All containers need to be on the same Docker network as Traefik
 # (This network should already exist and Traefik should be using this network)
 nextcloud_docker_network: 'traefik'
