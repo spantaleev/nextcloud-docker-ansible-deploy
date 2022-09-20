@@ -44,6 +44,9 @@ ExecStart={{ nextcloud_host_command_docker }} run --rm --name nextcloud-apache \
 			{% if nextcloud_nextcloud_apache_container_memory_swap_limit != '' %}
 				--memory-swap={{ nextcloud_nextcloud_apache_container_memory_swap_limit }} \
 			{% endif %}
+			{% for arg in nextcloud_nextcloud_docker_container_extra_arguments %}
+			{{ arg }} \
+			{% endfor %}
 			{{ nextcloud_nextcloud_docker_image }}
 ExecStop=-{{ nextcloud_host_command_docker }} kill nextcloud-apache
 ExecStop=-{{ nextcloud_host_command_docker }} rm nextcloud-apache

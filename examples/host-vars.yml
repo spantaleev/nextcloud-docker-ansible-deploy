@@ -11,3 +11,7 @@ host_specific_nextcloud_ssl_support_email: YOUR_EMAIL_ADDRESS_HERE
 #
 # Example value: nextcloud.example.com
 host_specific_nextcloud_hostname: YOUR_DOMAIN_NAME_HERE
+
+# A Postgres password to use for the superuser Postgres user (called `nextcloud` by default).
+# You can put any string here, but generating a strong one is preferred (e.g. `pwgen -s 64 1`).
+nextcloud_postgres_connection_password: YOUR_POSTGRES_PASSWORD

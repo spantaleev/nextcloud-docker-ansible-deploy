@@ -12,7 +12,7 @@ However, if you've installed this on some server where you have other stuff you 
 
 - delete some helper scripts (`rm -f /usr/local/bin/nextcloud*`)
 
-- delete some cached Docker images (or just delete them all: `docker rmi $(docker images -aq)`)
+- delete some cached Docker images (or just delete them all: `docker rmi $(docker images -aq)`
 
 - uninstall Docker itself, if necessary
 

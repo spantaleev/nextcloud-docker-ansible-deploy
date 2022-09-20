@@ -50,6 +50,9 @@ nextcloud_scratchpad_dir: "{{ nextcloud_base_data_path }}/scratchpad"
 nextcloud_nextcloud_data_path: "{{ nextcloud_base_data_path }}/nextcloud-data"
 nextcloud_nextcloud_docker_image: "docker.io/nextcloud:24.0.5-apache"
 
+# A list of extra arguments to pass to the container
+nextcloud_nextcloud_docker_container_extra_arguments: []
+
 # Controls whether the nextcloud-apache container's memory usage
 # is limited and to what extent.
 #
@@ -75,10 +78,10 @@ nextcloud_nextcloud_apache_container_http_host_bind_port: "{{ '' if nextcloud_ng
 # on this port by default.
 nextcloud_apache_http_port_on_host: 37150
 
-nextcloud_postgres_connection_hostname: "nextcloud-postgres"
 nextcloud_postgres_connection_username: "nextcloud"
 nextcloud_postgres_connection_password: "nextcloud-password"
 nextcloud_postgres_db_name: "nextcloud"
+nextcloud_postgres_connection_hostname: "nextcloud-postgres"
 
 nextcloud_postgres_docker_image_v9: "docker.io/postgres:9.6.23-alpine"
 nextcloud_postgres_docker_image_v10: "docker.io/postgres:10.21-alpine"
