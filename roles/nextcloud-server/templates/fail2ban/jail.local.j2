@@ -1,0 +1,10 @@
+[nextcloud]
+backend = auto
+enabled = true
+port = {{ nextcloud_fail2ban_ports }}
+protocol = tcp
+filter = nextcloud
+maxretry = {{ nextcloud_fail2ban_maxretry }}
+bantime = {{ nextcloud_fail2ban_bantime }}
+findtime = {{ nextcloud_fail2ban_findtime }}
+logpath = {{ nextcloud_fail2ban_logpath }}

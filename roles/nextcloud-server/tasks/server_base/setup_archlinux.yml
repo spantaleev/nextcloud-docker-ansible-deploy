@@ -7,6 +7,7 @@
       - "{{ nextcloud_ntpd_package }}"
       # TODO This needs to be verified. Which version do we need?
       - fuse3
+      - "{{ nextcloud_fail2ban_package }}"
     state: latest
     update_cache: yes
 

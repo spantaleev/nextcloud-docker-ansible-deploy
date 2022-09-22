@@ -6,6 +6,7 @@
       - apt-transport-https
       - ca-certificates
       - gnupg
+      - "{{ nextcloud_fail2ban_package }}"
     state: present
     update_cache: yes
 

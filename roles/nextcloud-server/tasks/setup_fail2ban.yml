@@ -1,0 +1,33 @@
+---
+
+- name: Copy filter file for fail2ban
+  copy:
+    src: "{{ role_path }}/templates/fail2ban/filter.conf"
+    dest: "/etc/fail2ban/filter.d/nextcloud.conf"
+    mode: 0644
+    owner: root
+    group: root
+    force: yes
+  when: nextcloud_fail2ban_enabled|bool
+
+- name: Copy jail file for fail2ban
+  template:
+    src: "{{ role_path }}/templates/fail2ban/jail.local.j2"
+    dest: "/etc/fail2ban/jail.d/nextcloud.local"
+    mode: 0644
+    force: yes
+  when: nextcloud_fail2ban_enabled|bool
+
+- name: Restart and enable fail2ban service
+  service:
+    name: fail2ban
+    state: restarted
+    enabled: yes
+  when: nextcloud_fail2ban_enabled|bool
+
+- name: Stop and disable fail2ban service (if not enabled)
+  service:
+    name: fail2ban
+    state: stopped
+    enabled: no
+  when: "not nextcloud_fail2ban_enabled"
