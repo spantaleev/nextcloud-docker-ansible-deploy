@@ -20,6 +20,7 @@
     name:
       - "{{ nextcloud_ntpd_package }}"
       - fuse
+      - "{{ nextcloud_fail2ban_package }}"
     state: latest
     update_cache: yes
 

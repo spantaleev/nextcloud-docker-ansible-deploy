@@ -8,6 +8,10 @@
   tags:
     - setup-all
 
+- import_tasks: tasks/setup_fail2ban.yml
+  tags:
+    - setup-all
+
 - import_tasks: tasks/setup_ssl.yml
   tags:
     - setup-all
