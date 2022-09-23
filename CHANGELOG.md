@@ -1,3 +1,12 @@
+# 2022-09-23
+
+## Fail2ban support added and enabled by default
+
+Thanks to [Gergely Horváth (@hooger)](https://github.com/hooger) we now have [Fail2ban](https://www.fail2ban.org) support, configured as recommended by the [Nextcloud guide upstream](https://docs.nextcloud.com/server/21/admin_manual/installation/harden_server.html#setup-fail2ban).
+
+**Fail2ban is also enabled by default now**. If you wish to continue running **without** Fail2ban, add this to your `vars.yml` file: `nextcloud_fail2ban_enabled: false`.
+
+
 # 2019-08-08
 
 ## Volume-mounting changes
