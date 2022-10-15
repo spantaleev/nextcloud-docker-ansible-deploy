@@ -50,8 +50,18 @@ nextcloud_scratchpad_dir: "{{ nextcloud_base_data_path }}/scratchpad"
 nextcloud_nextcloud_data_path: "{{ nextcloud_base_data_path }}/nextcloud-data"
 nextcloud_customized_docker_src_files_path: "{{ nextcloud_base_data_path }}/customized-docker-src"
 
+# SVG support for imagick can be setup like this:
+# https://docs.nextcloud.com/server/24/admin_manual/configuration_server/theming.html?highlight=libmagickcore%20q16%20extra#theming-of-icons
+# However, using Imagick may have a negative effect on security, that is the reason
+# behind not installing it by default. See:
+# https://github.com/nextcloud/server/issues/13099
+# Tread wisely!
+nextcloud_container_image_customizations_php_imageick_installation_enabled: false
+nextcloud_container_image_customizations_php_imageick_installation_package: "libmagickcore-6.q16-6-extra"
+
 # nextcloud_container_image_customizations_enabled controls whether a customized Nextcloud image will be built.
 #
+# We toggle this variable to `true` when certain features which require a custom build are enabled.
 # Feel free to toggle this to `true` yourself and specify build steps in `nextcloud_container_image_customizations_dockerfile_body_custom`.
 #
 # See:
@@ -59,7 +69,7 @@ nextcloud_customized_docker_src_files_path: "{{ nextcloud_base_data_path }}/cust
 # - `nextcloud_container_image_customizations_dockerfile_body_custom`
 # - `nextcloud_docker_image_customized`
 # - `nextcloud_docker_image_final`
-nextcloud_container_image_customizations_enabled: false
+nextcloud_container_image_customizations_enabled: "{{ nextcloud_container_image_customizations_php_imageick_installation_enabled }}"
 
 # nextcloud_container_image_customizations_dockerfile_body_custom contains your custom Dockerfile steps
 # for building your customized Nextcloud image based on the original (upstream) image (`nextcloud_nextcloud_docker_image`).
