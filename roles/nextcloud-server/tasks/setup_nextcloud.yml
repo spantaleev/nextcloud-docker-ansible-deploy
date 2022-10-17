@@ -1,17 +1,39 @@
 ---
 
-- name: Ensure Nextcloud data path exists
+- name: Ensure Nextcloud paths exists
   file:
-    path: "{{ nextcloud_nextcloud_data_path }}"
+    path: "{{ item.path }}"
     state: directory
     mode: 0755
     owner: "{{ nextcloud_user_username }}"
     group: "{{ nextcloud_user_username }}"
+  with_items:
+    - {path: "{{ nextcloud_nextcloud_data_path }}", when: true}
+    - {path: "{{ nextcloud_customized_docker_src_files_path }}", when: "{{ nextcloud_container_image_customizations_enabled }}"}
 
 - name: Ensure Nextcloud Docker image is pulled
   docker_image:
     name: "{{ nextcloud_nextcloud_docker_image }}"
     source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
+
+- when: "nextcloud_container_image_customizations_enabled | bool"
+  block:
+    - name: Ensure customizations Dockerfile is created
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/customizations/Dockerfile.j2"
+        dest: "{{ nextcloud_customized_docker_src_files_path }}/Dockerfile"
+        owner: "{{ nextcloud_user_username }}"
+        group: "{{ nextcloud_user_username }}"
+        mode: 0640
+
+    - name: Ensure customized Docker image for Nextcloud is built
+      docker_image:
+        name: "{{ nextcloud_docker_image_customized }}"
+        source: build
+        build:
+          dockerfile: Dockerfile
+          path: "{{ nextcloud_customized_docker_src_files_path }}"
+          pull: true
 
 - name: Ensure nextcloud-apache.service installed
   template:

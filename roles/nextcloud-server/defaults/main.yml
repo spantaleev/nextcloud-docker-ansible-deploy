@@ -48,7 +48,53 @@ nextcloud_external_storage_path: "{{ nextcloud_base_data_path }}/external-storag
 nextcloud_scratchpad_dir: "{{ nextcloud_base_data_path }}/scratchpad"
 
 nextcloud_nextcloud_data_path: "{{ nextcloud_base_data_path }}/nextcloud-data"
-nextcloud_nextcloud_docker_image: "docker.io/nextcloud:24.0.5-apache"
+nextcloud_customized_docker_src_files_path: "{{ nextcloud_base_data_path }}/customized-docker-src"
+
+# SVG support for imagick can be setup like this:
+# https://docs.nextcloud.com/server/24/admin_manual/configuration_server/theming.html?highlight=libmagickcore%20q16%20extra#theming-of-icons
+# However, using Imagick may have a negative effect on security, that is the reason
+# behind not installing it by default. See:
+# https://github.com/nextcloud/server/issues/13099
+# Tread wisely!
+nextcloud_container_image_customizations_php_imageick_installation_enabled: false
+nextcloud_container_image_customizations_php_imageick_installation_package: "libmagickcore-6.q16-6-extra"
+
+# nextcloud_container_image_customizations_enabled controls whether a customized Nextcloud image will be built.
+#
+# We toggle this variable to `true` when certain features which require a custom build are enabled.
+# Feel free to toggle this to `true` yourself and specify build steps in `nextcloud_container_image_customizations_dockerfile_body_custom`.
+#
+# See:
+# - `roles/nextcloud-server/templates/customizations/Dockerfile.j2`
+# - `nextcloud_container_image_customizations_dockerfile_body_custom`
+# - `nextcloud_docker_image_customized`
+# - `nextcloud_docker_image_final`
+nextcloud_container_image_customizations_enabled: "{{ nextcloud_container_image_customizations_php_imageick_installation_enabled }}"
+
+# nextcloud_container_image_customizations_dockerfile_body_custom contains your custom Dockerfile steps
+# for building your customized Nextcloud image based on the original (upstream) image (`nextcloud_nextcloud_docker_image`).
+# A `FROM ...` clause is included automatically so you don't have to.
+#
+# Example:
+# nextcloud_container_image_customizations_dockerfile_body_custom: |
+#  RUN echo 'This is a custom step for building the customized Docker image for Nextcloud.'
+#  RUN echo 'You can override nextcloud_container_image_customizations_dockerfile_body_custom to add your own steps.'
+#  RUN echo 'You do NOT need to include a FROM clause yourself.'
+nextcloud_container_image_customizations_dockerfile_body_custom: ''
+
+nextcloud_container_global_registry_prefix: "docker.io/"
+nextcloud_docker_image_name_prefix: "{{ nextcloud_container_global_registry_prefix }}"
+nextcloud_version: "24.0.5-apache"
+nextcloud_docker_image_tag: "{{ nextcloud_version }}"
+nextcloud_nextcloud_docker_image: "{{ nextcloud_docker_image_name_prefix }}nextcloud:{{ nextcloud_docker_image_tag }}"
+
+# nextcloud_docker_image_customized is the name of the locally built Nextcloud image
+# which adds various customizations on top of the original (upstream) Nextcloud image.
+# This image will be based on the upstream `nextcloud_nextcloud_docker_image` image, only if `nextcloud_container_image_customizations_enabled: true`.
+nextcloud_docker_image_customized: "localhost/nextcloud:{{ nextcloud_docker_image_tag }}-customized"
+
+# nextcloud_docker_image_final holds the name of the Nextcloud image to run depending on whether or not customizations are enabled.
+nextcloud_docker_image_final: "{{ nextcloud_docker_image_customized if nextcloud_container_image_customizations_enabled else nextcloud_nextcloud_docker_image }} "
 
 # A list of extra arguments to pass to the container
 nextcloud_nextcloud_docker_container_extra_arguments: []
