@@ -1,5 +1,5 @@
 # Setting up preview generator
-To install [Preview Generator](https://github.com/nextcloud/previewgenerator) first you need to setup your Nextcloud instance. When finisehd, enable it in your configuration file (`inventory/<your-domain>/vars.yml`) like this:
+To install [Preview Generator](https://github.com/nextcloud/previewgenerator) first you need to setup your Nextcloud instance. When finisehd, enable it in your configuration file (`inventory/host_vars/<your-domain>/vars.yml`) like this:
 
 ```yaml
 nextcloud_previewgenerator_enabled: true

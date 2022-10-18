@@ -1,6 +1,6 @@
 # Setting up OnlyOffice integration
 
-To install the [OnlyOffice](https://www.onlyoffice.com/) document-editing services, enable it like this in your configuration file (`inventory/<your-domain>/vars.yml`).
+To install the [OnlyOffice](https://www.onlyoffice.com/) document-editing services, enable it like this in your configuration file (`inventory/host_vars/<your-domain>/vars.yml`).
 
 ```yaml
 nextcloud_onlyoffice_enabled: true
