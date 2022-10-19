@@ -77,7 +77,7 @@ nextcloud_nextcloud_docker_container_extra_arguments:
   - '--label "traefik.http.routers.nextcloud-nginx-proxy.tls.certResolver=default"'
 ```
 
-This method uses labels attached to the Nginx and Synapse containers to provide the Traefik Docker provider with the information it needs to proxy `nextcloud.DOMAIN`. Some [static configuration](https://docs.traefik.io/v2.0/reference/static-configuration/file/) is required in Traefik; namely, having endpoints on ports 443 and having a certificate resolver.
+This method uses labels attached to the Nginx container to provide the Traefik Docker provider with the information it needs to proxy `nextcloud.DOMAIN`. Some [static configuration](https://docs.traefik.io/v2.0/reference/static-configuration/file/) is required in Traefik; namely, having endpoints on ports 443 and having a certificate resolver.
 
 Note that this configuration on its own does **not** redirect traffic on port 80 (plain HTTP) to port 443 for HTTPS, which may cause some issues, since the built-in Nginx proxy usually does this. If you are not already doing this in Traefik, it can be added to Traefik in a [file provider](https://docs.traefik.io/v2.0/providers/file/) as follows:
 
