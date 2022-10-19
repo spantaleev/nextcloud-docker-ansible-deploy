@@ -65,15 +65,6 @@
     - setup-all
     - setup-nginx-proxy
 
-- import_tasks: tasks/start.yml
-  tags:
-    - start
-    - update
-    
-- import_tasks: tasks/stop.yml
-  tags:
-    - stop
-    
 - import_tasks: tasks/setup_adjust_config.yml
   tags:
     - setup-adjust-config

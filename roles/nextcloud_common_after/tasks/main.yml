@@ -1,0 +1,10 @@
+---
+
+- import_tasks: tasks/start.yml
+  tags:
+    - start
+    - update
+
+- import_tasks: tasks/stop.yml
+  tags:
+    - stop

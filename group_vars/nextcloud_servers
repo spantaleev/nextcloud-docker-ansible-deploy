@@ -1,6 +1,23 @@
+---
+
 nextcloud_ssl_domains_to_obtain_certificates_for: |
   {{
     ([hostname_nextcloud])
     +
     nextcloud_ssl_additional_domains_to_obtain_certificates_for
+  }}
+
+nextcloud_services_list: |
+  {{
+    (['nextcloud-apache.service'])
+    +
+    (['nextcloud-postgres.service'])
+    +
+    (['nextcloud-goofys.service'] if nextcloud_goofys_external_storage_enabled else [])
+    +
+    (['nextcloud-goofys-appdata-preview.service'] if nextcloud_goofys_external_storage_for_appdata_previews_enabled else [])
+    +
+    (['nextcloud-onlyoffice-document-server.service'] if nextcloud_onlyoffice_enabled else [])
+    +
+    (['nextcloud-nginx-proxy.service'] if nextcloud_nginx_proxy_enabled else [])
   }}
