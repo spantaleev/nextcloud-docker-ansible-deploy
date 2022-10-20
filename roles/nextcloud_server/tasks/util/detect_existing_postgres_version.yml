@@ -59,3 +59,13 @@
   set_fact:
     nextcloud_postgres_detected_version_corresponding_docker_image: "{{ nextcloud_postgres_docker_image_v13 }}"
   when: "nextcloud_postgres_detected_version == '13' or nextcloud_postgres_detected_version.startswith('13.')"
+
+- name: Determine corresponding Docker image to detected version (use 14.x, if detected)
+  set_fact:
+    nextcloud_postgres_detected_version_corresponding_docker_image: "{{ nextcloud_postgres_docker_image_v14 }}"
+  when: "nextcloud_postgres_detected_version == '14' or nextcloud_postgres_detected_version.startswith('14.')"
+
+- name: Determine corresponding Docker image to detected version (use 15.x, if detected)
+  set_fact:
+    nextcloud_postgres_detected_version_corresponding_docker_image: "{{ nextcloud_postgres_docker_image_v15 }}"
+  when: "nextcloud_postgres_detected_version == '15' or nextcloud_postgres_detected_version.startswith('15.')"

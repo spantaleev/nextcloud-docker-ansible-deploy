@@ -137,7 +137,8 @@ nextcloud_postgres_docker_image_v11: "docker.io/postgres:11.17-alpine"
 nextcloud_postgres_docker_image_v12: "docker.io/postgres:12.12-alpine"
 nextcloud_postgres_docker_image_v13: "docker.io/postgres:13.8-alpine"
 nextcloud_postgres_docker_image_v14: "docker.io/postgres:14.5-alpine"
-nextcloud_postgres_docker_image_latest: "{{ nextcloud_postgres_docker_image_v14 }}"
+nextcloud_postgres_docker_image_v15: "docker.io/postgres:15.0-alpine"
+nextcloud_postgres_docker_image_latest: "{{ nextcloud_postgres_docker_image_v15 }}"
 
 nextcloud_postgres_data_path: "{{ nextcloud_base_data_path }}/postgres"
 
