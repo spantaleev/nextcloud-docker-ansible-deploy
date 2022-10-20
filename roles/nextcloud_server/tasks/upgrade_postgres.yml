@@ -112,8 +112,8 @@
       {{ nextcloud_postgres_docker_image_latest }}
       -c "cat /in/{{ postgres_dump_name }} |
       {{ 'gunzip |' if postgres_dump_name.endswith('.gz') else '' }}
-      grep -vE '^CREATE ROLE {{ nextcloud_postgres_connection_username }}' |
-      grep -vE '^CREATE DATABASE {{ nextcloud_postgres_db_name }}' |
+      grep -vE '{{ nextcloud_postgres_import_roles_ignore_regex }}' |
+      grep -vE '{{ nextcloud_postgres_import_databases_ignore_regex }}' |
       psql -v ON_ERROR_STOP=1 -h nextcloud-postgres"
 
 # This is a hack.
