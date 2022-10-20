@@ -86,7 +86,7 @@ nextcloud_container_image_customizations_dockerfile_body_custom: ''
 
 nextcloud_container_global_registry_prefix: "docker.io/"
 nextcloud_docker_image_name_prefix: "{{ nextcloud_container_global_registry_prefix }}"
-nextcloud_version: "24.0.5-apache"
+nextcloud_version: "25.0.0-apache"
 nextcloud_docker_image_tag: "{{ nextcloud_version }}"
 nextcloud_nextcloud_docker_image: "{{ nextcloud_docker_image_name_prefix }}nextcloud:{{ nextcloud_docker_image_tag }}"
 
