@@ -1,8 +1,0 @@
----
-- name: "Set up a Nextcloud server"
-  hosts: "{{ target if target is defined else 'nextcloud_servers' }}"
-  become: true
-
-  roles:
-    - nextcloud_server
-    - nextcloud_common_after
