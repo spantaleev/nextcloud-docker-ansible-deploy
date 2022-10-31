@@ -52,7 +52,7 @@ To make a one off back up of the current PostgreSQL database, make sure it's run
 
 ```bash
 /usr/bin/docker exec \
---env-file=/nextcloud/postgres/env-postgres-pgsql-docker \
+--env-file=/nextcloud/postgres/env-postgres-psql \
 nextcloud-postgres \
 /usr/local/bin/pg_dumpall -h nextcloud-postgres \
 | gzip -c \
