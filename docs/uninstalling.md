@@ -4,15 +4,17 @@
 
 However, if you've installed this on some server where you have other stuff you wish to preserve, and now want get rid of Nextcloud, it's enough to do these:
 
-- ensure all Nextcloud services are stopped (`systemctl stop 'nextcloud*'`)
+- ensure all Nextcloud services are stopped and disabled (`systemctl disable --now 'nextcloud*'`)
 
-- delete the Nextcloud-related systemd .service files (`rm -f /etc/systemd/system/nextcloud*`) and reload systemd (`systemctl daemon-reload`)
+- delete the Nextcloud-related systemd .service files (`rm -f /etc/systemd/system/nextcloud*`)
 
-- delete all Nextcloud-related cronjobs (`rm -f /etc/cron.d/nextcloud*`)
+- stop and disable Traefik (`systemctl disable --now devture-traefik`)
 
-- delete some helper scripts (`rm -f /usr/local/bin/nextcloud*`)
+- delete the `devture-traefik` systemd service (`rm -f /etc/systemd/system/devture-traefik.service`)
 
-- delete some cached Docker images (or just delete them all: `docker rmi $(docker images -aq)`
+- reload systemd (`systemctl daemon-reload`)
+
+- delete some cached container images (or just delete them all: `docker rmi $(docker images -aq)`
 
 - uninstall Docker itself, if necessary
 

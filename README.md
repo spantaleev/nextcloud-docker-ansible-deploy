@@ -2,23 +2,34 @@
 
 # Nextcloud (A safe home for all your data) server setup using Ansible and Docker
 
-## Purpose
+This [Ansible](https://www.ansible.com/) playbook can help you set your own [Nextcloud](https://nextcloud.com/) server:
 
-This Ansible playbook is meant to easily let you run your own [Nextcloud](https://nextcloud.com/) server.
+- on your own Debian/CentOS/RedHat server
+
+- with all services ([Nextcloud](https://nextcloud.com/), [PostgreSQL](https://www.postgresql.org/), [Traefik](https://traefik.io), [OnlyOffice](https://www.onlyoffice.com/), etc.) running in [Docker](https://www.docker.com/) containers
+
+- powered by [the official Nextcloud container image](https://hub.docker.com/_/nextcloud)
+
+- [interoperates nicely](docs/configuring-playbook-interoperability.md) with [related](#related) Ansible playbooks or other services using Traefik for reverse-proxying
+
+SSL certificates are automatically managed by a [Traefik](https://traefik.io) reverse-proxy.
+
+Various components (Postgres, Traefik, etc.) can be disabled and replaced with your own other implementations (see [configuring the playbook](docs/configuring-playbook.md)).
+
+
+## Features
 
 Using this playbook, you can get the following services configured on your server:
 
 - a [Nextcloud](https://nextcloud.com/) server - storing your data
 
-- (optional) [Amazon S3](https://aws.amazon.com/s3/) remote storage for your Nextcloud data using [Goofys](https://github.com/kahing/goofys)
+- (optional) a [PostgreSQL](https://www.postgresql.org/) database for Nextcloud
 
-- a [PostgreSQL](https://www.postgresql.org/) database for Nextcloud
-
-- free [Let's Encrypt](https://letsencrypt.org/) SSL certificate, which secures the connection to the Nextcloud server
+- (optional) free [Let's Encrypt](https://letsencrypt.org/) SSL certificate, which secures the connection to the Nextcloud server
 
 - (optional) [OnlyOffice](https://www.onlyoffice.com/) integration - for online document editing/previewing
 
-Basically, this playbook aims to get you up-and-running with all the basic necessities around Nextcloud, without you having to do anything else.
+Basically, this playbook aims to get you up-and-running with all the basic necessities around Nextcloud.
 
 
 ## Installing
@@ -33,31 +44,17 @@ This playbook evolves over time, sometimes with backward-incompatible changes.
 When updating the playbook, refer to [the changelog](CHANGELOG.md) to catch up with what's new.
 
 
-## Docker images used by this playbook
-
-This playbook sets up your server using the following Docker images:
-
-- [nextcloud](https://hub.docker.com/r/_/nextcloud/) - the official [Nextcloud](https://github.com/nextcloud/server) server
-
-- [postgres](https://hub.docker.com/_/postgres/) - the [Postgres](https://www.postgresql.org/) database server (optional)
-
-- [cloudproto/goofys](https://hub.docker.com/r/cloudproto/goofys/) - the [Goofys](https://github.com/kahing/goofys) Amazon [S3](https://aws.amazon.com/s3/) file-system-mounting program (optional)
-
-- [nginx](https://hub.docker.com/_/nginx/) - the [nginx](http://nginx.org/) web server (optional)
-
-- [certbot/certbot](https://hub.docker.com/r/certbot/certbot/) - the [certbot](https://certbot.eff.org/) tool for obtaining SSL certificates from [Let's Encrypt](https://letsencrypt.org/)
-
-- [onlyoffice/documentserver](https://hub.docker.com/r/onlyoffice/documentserver/) - the [OnlyOffice](https://www.onlyoffice.com/) Document Server, for online document editing/previewing (optional)
-
-
-## Deficiencies
-
-This Ansible playbook can be improved in the following ways:
-
-- setting up automatic backups to one or more storage providers
-
 ## Support
 
 - Matrix room: [#nextcloud-docker-ansible-deploy:devture.com](https://matrix.to/#/#nextcloud-docker-ansible-deploy:devture.com)
 
 - Github issues: [spantaleev/nextcloud-docker-ansible-deploy/issues](https://github.com/spantaleev/nextcloud-docker-ansible-deploy/issues)
+
+
+## Related
+
+You may also be interested in these other playbooks:
+
+- [matrix-docker-ansible-deploy](https://github.com/spantaleev/matrix-docker-ansible-deploy) - for deploying a fully-featured [Matrix](https://matrix.org) homeserver
+
+- [gitea-docker-ansible-deploy](https://github.com/spantaleev/gitea-docker-ansible-deploy) - for deploying a [Gitea](https://gitea.io) (self-hosted [Git](https://git-scm.com/) service) server

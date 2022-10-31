@@ -1,0 +1,6 @@
+[Unit]
+Description=Renews Let's Encrypt SSL certificates periodically
+
+[Service]
+Type=oneshot
+ExecStart={{ nextcloud_nginx_proxy_bin_path }}/ssl-certificates-renew

@@ -1,0 +1,9 @@
+{% if nextcloud_reverse_proxy_companion_container_labels_traefik_enabled %}
+traefik.enable=true
+traefik.http.routers.nextcloud-reverse-proxy-companion.rule={{ nextcloud_reverse_proxy_companion_container_labels_traefik_rule }}
+traefik.http.routers.nextcloud-reverse-proxy-companion.entrypoints={{ nextcloud_reverse_proxy_companion_container_labels_traefik_entrypoints }}
+traefik.http.routers.nextcloud-reverse-proxy-companion.tls.certResolver={{ nextcloud_reverse_proxy_companion_container_labels_traefik_tls_certResolver }}
+traefik.http.services.nextcloud-reverse-proxy-companion.loadbalancer.server.port=3000
+{% endif %}
+
+{{ nextcloud_reverse_proxy_companion_container_labels_additional_labels }}

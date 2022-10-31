@@ -4,5 +4,50 @@
   become: true
 
   roles:
-    - nextcloud_server
-    - nextcloud_common_after
+    # This role has no tasks at all
+    - role: galaxy/com.devture.ansible.role.playbook_help
+
+    # This role has no tasks at all
+    - role: galaxy/com.devture.ansible.role.systemd_docker_base
+
+    - role: custom/nextcloud_playbook_migration
+
+    - when: nextcloud_playbook_docker_installation_enabled | bool
+      role: galaxy/geerlingguy.docker
+      vars:
+        docker_install_compose: false
+      tags:
+        - setup-docker
+        - setup-all
+
+    - when: nextcloud_playbook_timesync_installation_enabled | bool
+      role: galaxy/com.devture.ansible.role.timesync
+      tags:
+        - setup-timesync
+        - setup-all
+
+    - role: custom/base
+      tags:
+        - setup-all
+
+    - when: nextcloud_playbook_vars_preservation_enabled | bool
+      role: galaxy/com.devture.ansible.role.vars_preserver
+      tags:
+        - setup-all
+
+    # This role exposes various tags (setup-postgres, setup-all, upgrade-postgres, import-postgres, etc.) so we don't tag it here.
+    - when: nextcloud_playbook_postgres_installation_enabled | bool
+      role: galaxy/com.devture.ansible.role.postgres
+
+    # This role exposes various tags (setup-nextcloud, setup-all, setup-onlyoffice-app, setup-adjust-config, etc.) so we don't tag it here.
+    - role: custom/nextcloud_server
+
+    # This role exposes various tags (setup-onlyoffice-document-server, setup-onlyoffice-app, setup-all, etc.) so we don't tag it here.
+    - role: custom/nextcloud_onlyoffice_document_server
+
+    - role: custom/nextcloud_reverse_proxy_companion
+
+    - when: nextcloud_playbook_nginx_proxy_installation_enabled | bool
+      role: custom/nextcloud_nginx_proxy
+
+    - role: custom/nextcloud_common_after

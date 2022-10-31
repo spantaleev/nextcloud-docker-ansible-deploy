@@ -1,8 +1,0 @@
-FROM {{ nextcloud_nextcloud_docker_image }}
-
-{% if nextcloud_container_image_customizations_php_imageick_installation_enabled %}
-RUN apt -y update
-RUN apt -y install {{ nextcloud_container_image_customizations_php_imageick_installation_package }}
-{% endif %}
-
-{{ nextcloud_container_image_customizations_dockerfile_body_custom }}

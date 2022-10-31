@@ -1,0 +1,72 @@
+---
+
+nextcloud_reverse_proxy_companion_enabled: false
+
+nextcloud_reverse_proxy_companion_base_path: "{{ nextcloud_base_path }}/reverse-proxy-companion"
+nextcloud_reverse_proxy_companion_config_path: "{{ nextcloud_reverse_proxy_companion_base_path }}/conf.d"
+
+nextcloud_reverse_proxy_companion_container_image: "docker.io/nginx:1.23.2-alpine"
+
+nextcloud_reverse_proxy_companion_http_bind_port: ''
+
+nextcloud_reverse_proxy_companion_x_forwarded_proto: '$http_x_forwarded_proto'
+
+nextcloud_reverse_proxy_companion_systemd_required_services_list: ['docker.service']
+nextcloud_reverse_proxy_companion_systemd_wanted_services_list: ['nextcloud-apache.service']
+
+# nextcloud_reverse_proxy_companion_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
+# See `roles/custom/nextcloud_reverse_proxy_companion/templates/labels.j2` for details.
+#
+# To inject your own other container labels, see `nextcloud_reverse_proxy_companion_container_labels_additional_labels`.
+nextcloud_reverse_proxy_companion_container_labels_traefik_enabled: false
+nextcloud_reverse_proxy_companion_container_labels_traefik_rule: 'Host(`{{ nextcloud_server_fqn_nextcloud }}`)'
+nextcloud_reverse_proxy_companion_container_labels_traefik_entrypoints: web-secure
+nextcloud_reverse_proxy_companion_container_labels_traefik_tls_certResolver: default  # noqa var-naming
+
+# nextcloud_reverse_proxy_companion_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
+# See `roles/custom/nextcloud_reverse_proxy_companion/templates/labels.j2` for details.
+#
+# Example:
+# nextcloud_reverse_proxy_companion_container_labels_additional_labels: |
+#   my.label=1
+#   another.label="here"
+nextcloud_reverse_proxy_companion_container_labels_additional_labels: ''
+
+nextcloud_reverse_proxy_companion_client_max_body_size: "4G"
+
+nextcloud_reverse_proxy_companion_tmp_directory_size_mb: 512
+
+# The amount of worker processes and connections
+# Consider increasing these when you are expecting high amounts of traffic
+# http://nginx.org/en/docs/ngx_core_module.html#worker_connections
+nextcloud_reverse_proxy_companion_worker_processes: auto
+nextcloud_reverse_proxy_companion_worker_connections: 1024
+
+# A list of strings containing additional configuration blocks to add to the nginx server configuration (nginx.conf).
+# for big servers to enlarge the number of open files to prevent timeouts
+# nextcloud_reverse_proxy_companion_proxy_additional_configuration_blocks:
+#  - 'worker_rlimit_nofile 30000;'
+nextcloud_reverse_proxy_companion_proxy_additional_configuration_blocks: []
+
+# A list of strings containing additional configuration blocks to add to the nginx event server configuration (nginx.conf).
+nextcloud_reverse_proxy_companion_proxy_event_additional_configuration_blocks: []
+
+# Option to disable the access log
+nextcloud_reverse_proxy_companion_access_log_enabled: true
+
+# To increase request timeout in NGINX using proxy_read_timeout, proxy_connect_timeout, proxy_send_timeout, send_timeout directives
+# Nginx Default: proxy_connect_timeout 60s;   #Defines a timeout for establishing a connection with a proxied server
+# Nginx Default: proxy_send_timeout 60s;      #Sets a timeout for transmitting a request to the proxied server.
+# Nginx Default: proxy_read_timeout 60s;      #Defines a timeout for reading a response from the proxied server.
+# Nginx Default: send_timeout 60s;            #Sets a timeout for transmitting a response to the client.
+#
+# For more information visit:
+# http://nginx.org/en/docs/http/ngx_http_proxy_module.html
+# http://nginx.org/en/docs/http/ngx_http_core_module.html#send_timeout
+# https://www.nginx.com/resources/wiki/start/topics/examples/fullexample2/
+#
+# Here we are sticking with nginx default values change this value carefully.
+nextcloud_reverse_proxy_companion_proxy_connect_timeout: 60
+nextcloud_reverse_proxy_companion_proxy_send_timeout: 60
+nextcloud_reverse_proxy_companion_proxy_read_timeout: 60
+nextcloud_reverse_proxy_companion_send_timeout: 60

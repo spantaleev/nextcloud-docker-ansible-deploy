@@ -1,0 +1,23 @@
+---
+
+
+- name: Ensure Nextcloud proxy vhost configured
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/nginx-conf.d/{{ item }}.j2"
+    dest: "{{ nextcloud_nginx_proxy_confd_path }}/{{ item }}"
+    mode: 0644
+  with_items:
+    - "nextcloud-apache.conf"
+
+- name: Ensure nginx-proxy container image is pulled
+  community.docker.docker_image:
+    name: "{{ nextcloud_nginx_proxy_container_image }}"
+    source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
+    force_source: "{{ nextcloud_nginx_proxy_container_image_force_pull if ansible_version.major > 2 or ansible_version.minor >= 8 else omit }}"
+    force: "{{ omit if ansible_version.major > 2 or ansible_version.minor >= 8 else nextcloud_nginx_proxy_container_image_force_pull }}"
+
+- name: Ensure nextcloud-nginx-proxy.service installed
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/systemd/nextcloud-nginx-proxy.service.j2"
+    dest: "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-nginx-proxy.service"
+    mode: 0644

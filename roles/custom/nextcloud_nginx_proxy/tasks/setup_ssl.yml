@@ -1,0 +1,63 @@
+---
+
+- name: Fail if using unsupported SSL certificate retrieval method
+  ansible.builtin.fail:
+    msg: "The `nextcloud_nginx_proxy_ssl_retrieval_method` variable contains an unsupported value"
+  when: "nextcloud_nginx_proxy_ssl_retrieval_method not in ['lets-encrypt', 'none']"
+
+- name: Ensure SSL certificates path exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: 0770
+    owner: "{{ nextcloud_user_uid }}"
+    group: "{{ nextcloud_user_gid }}"
+  with_items:
+    - "{{ nextcloud_nginx_proxy_ssl_log_dir_path }}"
+    - "{{ nextcloud_nginx_proxy_ssl_config_dir_path }}"
+  when: "nextcloud_nginx_proxy_ssl_retrieval_method != 'none'"
+
+- when: "nextcloud_nginx_proxy_ssl_retrieval_method == 'lets-encrypt'"
+  block:
+    - name: Obtain initial certificates
+      ansible.builtin.include_tasks: "setup_ssl_for_domain.yml"
+      with_items: "{{ nextcloud_nginx_proxy_ssl_domains_to_obtain_certificates_for }}"
+      loop_control:
+        loop_var: domain_name
+
+    - name: Ensure SSL renewal script installed
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/bin/ssl-certificates-renew.j2"
+        dest: "{{ nextcloud_nginx_proxy_bin_path }}/ssl-certificates-renew"
+        mode: 0750
+
+    - name: Ensure SSL renewal systemd units installed
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/systemd/{{ item }}.j2"
+        dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ item }}"
+        mode: 0644
+      with_items:
+        - nextcloud-nginx-proxy-ssl-certificate-renew.timer
+        - nextcloud-nginx-proxy-ssl-certificate-renew.service
+        - nextcloud-nginx-proxy-reload.timer
+        - nextcloud-nginx-proxy-reload.service
+
+    - name: Ensure certbot container image is pulled
+      community.docker.docker_image:
+        name: "{{ nextcloud_nginx_proxy_ssl_certbot_container_image }}"
+        source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
+        force_source: "{{ nextcloud_nginx_proxy_ssl_certbot_container_image_force_pull if ansible_version.major > 2 or ansible_version.minor >= 8 else omit }}"
+        force: "{{ omit if ansible_version.major > 2 or ansible_version.minor >= 8 else nextcloud_nginx_proxy_ssl_certbot_container_image_force_pull }}"
+
+- when: "nextcloud_nginx_proxy_ssl_retrieval_method != 'lets-encrypt'"
+  block:
+    - name: Ensure SSL renewal files removed
+      ansible.builtin.file:
+        path: "{{ nextcloud_nginx_proxy_bin_path }}/ssl-certificates-renew"
+        state: absent
+      with_items:
+        - "{{ nextcloud_nginx_proxy_bin_path }}/ssl-certificates-renew"
+        - "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-nginx-proxy-ssl-certificate-renew.timer"
+        - "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-nginx-proxy-ssl-certificate-renew.service"
+        - "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-nginx-proxy-reload.timer"
+        - "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-nginx-proxy-reload.service"

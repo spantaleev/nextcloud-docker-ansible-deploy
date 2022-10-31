@@ -1,0 +1,47 @@
+---
+
+#
+# Tasks related to setting up the OnlyOffice app
+#
+
+- name: Fail if OnlyOffice not enabled
+  ansible.builtin.fail:
+    msg: "Before installing and making use of the OnlyOffice app, you need to install the OnlyOffice services (see `nextcloud_onlyoffice_document_server_enabled`)"
+  when: not nextcloud_onlyoffice_document_server_enabled
+
+- name: Ensure nextcloud-apache is started
+  ansible.builtin.service:
+    name: nextcloud-apache
+    state: started
+    daemon_reload: true
+  register: nextcloud_start
+
+- name: Wait a while, so that Nextcloud can manage to start
+  ansible.builtin.pause:
+    seconds: 7
+  when: nextcloud_start.changed | bool
+
+- name: Install OnlyOffice app
+  ansible.builtin.shell:
+    cmd: "docker exec -u www-data nextcloud-apache php occ --no-warnings app:install onlyoffice"
+  failed_when: false
+  register: onlyoffice_install_result
+
+- name: Fail if OnlyOffice failed to install
+  ansible.builtin.fail:
+    msg: "OnlyOffice failed to install. Full error: {{ onlyoffice_install_result }}"
+  when: "onlyoffice_install_result.rc != 0 and onlyoffice_install_result.stdout != 'onlyoffice already installed'"
+
+- name: Configure OnlyOffice app
+  ansible.builtin.shell:
+    cmd: "docker exec -u www-data nextcloud-apache php occ --no-warnings config:system:set onlyoffice {{ item.key }} --value=\"{{ item.value }}\""
+  with_items:
+    -
+      key: DocumentServerUrl
+      value: /onlyoffice-document-server/
+    -
+      key: DocumentServerInternalUrl
+      value: http://nextcloud-onlyoffice-document-server/
+    -
+      key: StorageUrl
+      value: "https://{{ nextcloud_server_fqn_nextcloud }}/"

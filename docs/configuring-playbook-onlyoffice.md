@@ -1,9 +1,11 @@
 # Setting up OnlyOffice integration
 
+**WARNING**: The OnlyOffice integration appears to be broken at this time.
+
 To install the [OnlyOffice](https://www.onlyoffice.com/) document-editing services, enable it like this in your configuration file (`inventory/host_vars/<your-domain>/vars.yml`).
 
 ```yaml
-nextcloud_onlyoffice_enabled: true
+nextcloud_onlyoffice_document_server_enabled: true
 ```
 
 If you had already installed Nextcloud, you'll need to re-run the [installation](installing.md) procedure and restart the services.
@@ -16,4 +18,4 @@ ansible-playbook -i inventory/hosts setup.yml --tags=setup-onlyoffice-app
 ```
 
 The above only does basic configuration, hooking your OnlyOffice document server with Nextcloud.
-The OnlyOffice app for Nextcloud supports additional options, which you can configure manually from: **Settings** -> **ONLYOFFICE**.
+The OnlyOffice app for Nextcloud supports additional options, which you can configure manually from: **Administration Settings** -> **ONLYOFFICE**.

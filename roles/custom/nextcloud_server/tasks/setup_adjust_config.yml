@@ -1,0 +1,21 @@
+---
+
+- name: Adjust Nextcloud configuration (disable bruteforce protection)
+  ansible.builtin.command:
+    cmd: |-
+      docker exec -u www-data nextcloud-apache php occ --no-warnings config:system:set {{ item.key }} --type="{{ item.type }}" --value={{ item.value }}
+  with_items:
+    - key: auth.bruteforce.protection.enabled
+      value: "false"
+      type: boolean
+
+- name: Adjust Nextcloud configuration (custom parameters)
+  ansible.builtin.command:
+    cmd: |-
+      docker exec -u www-data nextcloud-apache php occ --no-warnings config:system:set {{ item.key }} --type="{{ item.type }}" --value={{ item.value }}
+  with_items: "{{ nextcloud_nextcloud_config_parameters }}"
+
+- name: Update database indices
+  ansible.builtin.command:
+    cmd: |-
+      docker exec -u www-data nextcloud-apache php occ db:add-missing-indices

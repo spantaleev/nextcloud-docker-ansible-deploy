@@ -1,0 +1,10 @@
+[Unit]
+Description=Launches nextcloud-nginx-proxy-ssl-certificate-renew.service periodically
+
+[Timer]
+Unit=nextcloud-nginx-proxy-ssl-certificate-renew.service
+OnCalendar={{ nextcloud_nginx_proxy_ssl_certificate_renew_schedule }}
+RandomizedDelaySec={{ nextcloud_nginx_proxy_ssl_certificate_renew_randomized_delay }}
+
+[Install]
+WantedBy=timers.target

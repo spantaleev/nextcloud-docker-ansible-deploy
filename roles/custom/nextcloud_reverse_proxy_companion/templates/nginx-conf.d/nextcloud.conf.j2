@@ -1,0 +1,48 @@
+server {
+	listen 3000;
+
+	server_tokens off;
+	root /dev/null;
+
+	client_body_buffer_size 20M;
+	client_max_body_size {{ nextcloud_reverse_proxy_companion_client_max_body_size }};
+	proxy_max_temp_file_size 0;
+
+	{% if nextcloud_onlyoffice_document_server_enabled %}
+		location ~* ^/onlyoffice-document-server/(.*)$ {
+			resolver 127.0.0.11 valid=5s;
+			set $backend "nextcloud-onlyoffice-document-server:80";
+			proxy_pass http://$backend/$1;
+
+			proxy_set_header Host $host;
+			proxy_set_header X-Forwarded-Proto {{ nextcloud_reverse_proxy_companion_x_forwarded_proto }};
+			proxy_set_header X-Real-IP $remote_addr;
+			proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+			proxy_set_header X-Forwarded-Host $http_host/onlyoffice-document-server;
+		}
+	{% endif %}
+
+	rewrite ^/\.well-known/carddav https://$http_host/remote.php/dav/ permanent;
+	rewrite ^/\.well-known/caldav https://$http_host/remote.php/dav/ permanent;
+
+	location / {
+		{# Use the embedded DNS resolver in Docker containers to discover the service #}
+		resolver 127.0.0.11 valid=5s;
+		set $backend "nextcloud-apache:80";
+		proxy_pass http://$backend;
+
+		# We disable request buffering in order to directly pass the request to the upstream server.
+		# Otheriwse, we need to buffer it all on our side (in memory) before we pass it along.
+		# Buffering GB of data in memory is not feasible, so we can't do that.
+		proxy_request_buffering off;
+
+		proxy_read_timeout 120s;
+
+		proxy_set_header Host $host;
+		proxy_set_header X-Forwarded-Proto {{ nextcloud_reverse_proxy_companion_x_forwarded_proto }};
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		add_header Front-End-Https on;
+		add_header Strict-Transport-Security "max-age=15552000; includeSubDomains";
+	}
+}

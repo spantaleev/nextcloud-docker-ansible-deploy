@@ -1,0 +1,15 @@
+---
+
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/validate_config.yml"
+  tags:
+    - setup-all
+    - setup-nextcloud
+
+- ansible.builtin.import_tasks: tasks/setup.yml
+  tags:
+    - setup-all
+    - setup-nextcloud
+
+- ansible.builtin.import_tasks: tasks/setup_adjust_config.yml
+  tags:
+    - setup-adjust-config

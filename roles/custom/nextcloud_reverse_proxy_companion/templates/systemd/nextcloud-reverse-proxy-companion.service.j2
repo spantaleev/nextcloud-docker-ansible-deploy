@@ -1,0 +1,44 @@
+[Unit]
+Description=Nextcloud reverse-proxy companion
+{% for service in nextcloud_reverse_proxy_companion_systemd_required_services_list %}
+Requires={{ service }}
+After={{ service }}
+{% endfor %}
+{% for service in nextcloud_reverse_proxy_companion_systemd_wanted_services_list %}
+Wants={{ service }}
+{% endfor %}
+DefaultDependencies=no
+
+[Service]
+Type=simple
+Environment="HOME={{ devture_systemd_docker_base_systemd_unit_home_path }}"
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-reverse-proxy-companion 2>/dev/null'
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-reverse-proxy-companion 2>/dev/null'
+
+ExecStart={{ devture_systemd_docker_base_host_command_docker }} run \
+			--rm \
+			--name=nextcloud-reverse-proxy-companion \
+			--log-driver=none \
+			--user={{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} \
+			--cap-drop=ALL \
+			--read-only \
+			--tmpfs=/tmp:rw,noexec,nosuid,size={{ nextcloud_reverse_proxy_companion_tmp_directory_size_mb }}m \
+			--network={{ nextcloud_container_network }} \
+			{% if nextcloud_reverse_proxy_companion_http_bind_port != '' %}
+			-p {{ nextcloud_reverse_proxy_companion_http_bind_port }}:3000 \
+			{% endif %}
+			--label-file={{ nextcloud_reverse_proxy_companion_base_path }}/labels \
+			--mount type=bind,src={{nextcloud_reverse_proxy_companion_base_path }}/nginx.conf,dst=/etc/nginx/nginx.conf,ro \
+			--mount type=bind,src={{ nextcloud_reverse_proxy_companion_config_path }},dst=/etc/nginx/conf.d,ro \
+			{{ nextcloud_reverse_proxy_companion_container_image }}
+
+ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-reverse-proxy-companion 2>/dev/null'
+ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-reverse-proxy-companion 2>/dev/null'
+
+ExecReload={{ devture_systemd_docker_base_host_command_docker }} exec nextcloud-reverse-proxy-companion /usr/sbin/nginx -s reload
+Restart=always
+RestartSec=30
+SyslogIdentifier=nextcloud-reverse-proxy-companion
+
+[Install]
+WantedBy=multi-user.target

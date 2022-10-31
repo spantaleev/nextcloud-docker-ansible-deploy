@@ -1,0 +1,56 @@
+---
+
+- name: Ensure Nextcloud path exists
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: 0700
+    owner: "{{ nextcloud_user_uid }}"
+    group: "{{ nextcloud_user_gid }}"
+  with_items:
+    - {path: "{{ nextcloud_nextcloud_base_path }}", when: true}
+    - {path: "{{ nextcloud_nextcloud_data_path }}", when: true}
+    - {path: "{{ nextcloud_nextcloud_customized_docker_src_files_path }}", when: "{{ nextcloud_nextcloud_container_image_customizations_enabled }}"}
+  when: item.when | bool
+
+- name: Ensure Nextcloud container image is pulled
+  community.docker.docker_image:
+    name: "{{ nextcloud_nextcloud_container_image }}"
+    source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
+    force_source: "{{ nextcloud_nextcloud_container_image_force_pull if ansible_version.major > 2 or ansible_version.minor >= 8 else omit }}"
+    force: "{{ omit if ansible_version.major > 2 or ansible_version.minor >= 8 else nextcloud_nextcloud_container_image_force_pull }}"
+
+- when: "nextcloud_nextcloud_container_image_customizations_enabled | bool"
+  block:
+    - name: Ensure customizations Dockerfile is created
+      ansible.builtin.template:
+        src: "{{ role_path }}/templates/customizations/Dockerfile.j2"
+        dest: "{{ nextcloud_nextcloud_customized_docker_src_files_path }}/Dockerfile"
+        owner: "{{ nextcloud_user_username }}"
+        group: "{{ nextcloud_user_username }}"
+        mode: 0640
+
+    - name: Ensure customized container image for Nextcloud is built
+      community.docker.docker_image:
+        name: "{{ nextcloud_nextcloud_container_image_customized }}"
+        source: build
+        build:
+          dockerfile: Dockerfile
+          path: "{{ nextcloud_nextcloud_customized_docker_src_files_path }}"
+          pull: true
+
+- name: Ensure Nextcloud systemd services installed
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/systemd/{{ item }}.j2"
+    dest: "{{ devture_systemd_docker_base_systemd_path }}/{{ item }}"
+    mode: 0640
+  with_items:
+    - nextcloud-apache.service
+    - nextcloud-cron.service
+    - nextcloud-cron.timer
+  register: nextcloud_nextcloud_systemd_service_result
+
+- name: Ensure systemd reloaded after backup services installation
+  ansible.builtin.service:
+    daemon_reload: true
+  when: nextcloud_nextcloud_systemd_service_result.changed | bool

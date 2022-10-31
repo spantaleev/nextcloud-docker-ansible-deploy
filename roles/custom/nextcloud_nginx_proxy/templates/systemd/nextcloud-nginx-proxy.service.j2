@@ -1,0 +1,28 @@
+[Unit]
+Description=Nextcloud nginx proxy server
+After=docker.service
+Requires=docker.service
+Wants=nextcloud-apache.service
+DefaultDependencies=no
+
+[Service]
+Type=simple
+Environment="HOME={{ devture_systemd_docker_base_systemd_unit_home_path }}"
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-nginx-proxy
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-nginx-proxy
+ExecStart={{ devture_systemd_docker_base_host_command_docker }} run --rm --name nextcloud-nginx-proxy \
+			--log-driver=none \
+			--network={{ nextcloud_container_network }} \
+			-p 80:8080 \
+			-p 443:8443 \
+			-v {{ nextcloud_nginx_proxy_confd_path }}:/etc/nginx/conf.d:ro \
+			-v {{ nextcloud_nginx_proxy_ssl_config_dir_path }}:{{ nextcloud_nginx_proxy_ssl_config_dir_path }}:ro \
+			{{ nextcloud_nginx_proxy_container_image }}
+ExecStop=-{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-nginx-proxy
+ExecStop=-{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-nginx-proxy
+ExecReload={{ devture_systemd_docker_base_host_command_docker }} exec nextcloud-nginx-proxy /usr/sbin/nginx -s reload
+Restart=always
+RestartSec=30
+
+[Install]
+WantedBy=multi-user.target

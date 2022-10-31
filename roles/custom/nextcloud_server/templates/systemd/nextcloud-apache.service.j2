@@ -1,0 +1,50 @@
+[Unit]
+Description=Nextcloud Apache server
+{% for service in nextcloud_nextcloud_systemd_required_services_list %}
+Requires={{ service }}
+After={{ service }}
+{% endfor %}
+DefaultDependencies=no
+
+[Service]
+Type=simple
+Environment="HOME={{ devture_systemd_docker_base_systemd_unit_home_path }}"
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-apache 2>/dev/null'
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-apache 2>/dev/null'
+
+ExecStart={{ devture_systemd_docker_base_host_command_docker }} run \
+			--rm \
+			--name=nextcloud-apache \
+			--log-driver=none \
+			--network={{ nextcloud_container_network }} \
+			--user={{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} \
+			--cap-drop=ALL \
+			--read-only \
+			--mount type=bind,src={{ nextcloud_nextcloud_data_path }},dst=/var/www/html \
+			{% for mount in nextcloud_nextcloud_container_additional_mounts %}
+			--mount {{ mount }} \
+			{% endfor %}
+			--tmpfs=/tmp:rw,noexec,nosuid,size=128m \
+			--tmpfs=/var/run/apache2:rw,noexec,nosuid,size=128m \
+			{% if nextcloud_nextcloud_container_http_host_bind_port %}
+			-p {{ nextcloud_nextcloud_container_http_host_bind_port }}:80 \
+			{% endif %}
+			{% if nextcloud_nextcloud_apache_container_memory_limit != '' %}
+				--memory={{ nextcloud_nextcloud_apache_container_memory_limit }} \
+			{% endif %}
+			{% if nextcloud_nextcloud_apache_container_memory_swap_limit != '' %}
+				--memory-swap={{ nextcloud_nextcloud_apache_container_memory_swap_limit }} \
+			{% endif %}
+			{% for arg in nextcloud_nextcloud_docker_container_extra_arguments %}
+			{{ arg }} \
+			{% endfor %}
+			{{ nextcloud_nextcloud_container_image_final }}
+
+ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-apache 2>/dev/null'
+ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-apache 2>/dev/null'
+Restart=always
+RestartSec=30
+SyslogIdentifier=nextcloud-apache
+
+[Install]
+WantedBy=multi-user.target

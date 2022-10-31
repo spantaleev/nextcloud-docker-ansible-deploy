@@ -1,0 +1,13 @@
+---
+
+- name: Fail if required Nextcloud settings not defined
+  ansible.builtin.fail:
+    msg: >-
+      You need to define a required configuration setting (`{{ item }}`) for using this role.
+  when: "vars[item] == ''"
+  with_items:
+    - nextcloud_server_fqn_nextcloud
+    - nextcloud_nextcloud_database_hostname
+    - nextcloud_nextcloud_database_name
+    - nextcloud_nextcloud_database_username
+    - nextcloud_nextcloud_database_password

@@ -1,5 +1,10 @@
-help: ## Show this help.
-	@fgrep -h "##" $(MAKEFILE_LIST) | fgrep -v fgrep | sed -e 's/\\$$//' | sed -e 's/##//'
+.PHONY: roles
 
-update: ## Performs an upgrade of Nextcloud
-	ansible-playbook -i inventory/hosts setup.yml --tags=update
+help: ## Show this help.
+	@grep -F -h "##" $(MAKEFILE_LIST) | grep -v grep | sed -e 's/\\$$//' | sed -e 's/##//'
+
+roles: ## Pull roles
+	ansible-galaxy install -r requirements.yml -p roles/galaxy/ --force
+
+lint: ## Runs ansible-lint against all roles in the playbook
+	ansible-lint

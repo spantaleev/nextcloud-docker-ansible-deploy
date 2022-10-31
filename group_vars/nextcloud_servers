@@ -1,23 +1,135 @@
 ---
 
-nextcloud_ssl_domains_to_obtain_certificates_for: |
-  {{
-    ([hostname_nextcloud])
-    +
-    nextcloud_ssl_additional_domains_to_obtain_certificates_for
-  }}
+### Playbook
+
+# Controls whether to install Docker or not
+nextcloud_playbook_docker_installation_enabled: true
+
+# Controls whether to install systemd-timesyncd/ntpd or not
+nextcloud_playbook_timesync_installation_enabled: true
+
+# Controls whether to install Postgres or not
+# See the `com.devture.ansible.role.postgres` section below for configuration.
+nextcloud_playbook_postgres_installation_enabled: true
+
+# Controls whether to install Traefik or not
+# See the `com.devture.ansible.role.traefik` section below for configuration.
+nextcloud_playbook_traefik_installation_enabled: true
+
+# Controls whether to install nextcloud-nginx-proxy or not
+# You may wish to enable this if you're not using Traefik.
+nextcloud_playbook_nginx_proxy_installation_enabled: false
+
+# Controls whether to install nextcloud-goofys or not
+nextcloud_playbook_goofys_installation_enabled: false
+
+# Controls whether the inventory vars.yml file is preserved on the host
+# See the `com.devture.ansible.role.vars_preserver` section below for configuration.
+nextcloud_playbook_vars_preservation_enabled: true
+
+### /Playbook
+
+
+### Base
 
 nextcloud_services_list: |
   {{
     (['nextcloud-apache.service'])
     +
-    (['nextcloud-postgres.service'])
+    (['nextcloud-cron.timer'])
     +
-    (['nextcloud-goofys.service'] if nextcloud_goofys_external_storage_enabled else [])
+    ([devture_postgres_identifier ~ '.service'] if nextcloud_playbook_postgres_installation_enabled else [])
     +
-    (['nextcloud-goofys-appdata-preview.service'] if nextcloud_goofys_external_storage_for_appdata_previews_enabled else [])
+    (['devture-traefik.service'] if nextcloud_playbook_traefik_installation_enabled else [])
     +
-    (['nextcloud-onlyoffice-document-server.service'] if nextcloud_onlyoffice_enabled else [])
+    (['nextcloud-onlyoffice-document-server.service'] if nextcloud_onlyoffice_document_server_enabled else [])
     +
-    (['nextcloud-nginx-proxy.service'] if nextcloud_nginx_proxy_enabled else [])
+    (['nextcloud-reverse-proxy-companion.service'] if nextcloud_reverse_proxy_companion_enabled else [])
+    +
+    (['nextcloud-nginx-proxy.service'] if nextcloud_playbook_nginx_proxy_installation_enabled else [])
+    +
+    (['nextcloud-nginx-proxy-ssl-certificate-renew.timer', 'nextcloud-nginx-proxy-reload.timer'] if nextcloud_playbook_nginx_proxy_installation_enabled and nextcloud_nginx_proxy_ssl_retrieval_method == 'lets-encrypt' else [])
   }}
+
+### /Base
+
+
+### Nextcloud
+
+nextcloud_nextcloud_systemd_required_services_list: |
+  {{
+    (['docker.service'])
+    +
+    ([devture_postgres_identifier ~ '.service'] if nextcloud_playbook_postgres_installation_enabled else [])
+  }}
+
+nextcloud_nextcloud_database_hostname: "{{ devture_postgres_identifier if nextcloud_playbook_postgres_installation_enabled else '' }}"
+nextcloud_nextcloud_database_port: "{{ '5432' if nextcloud_playbook_postgres_installation_enabled else '' }}"
+nextcloud_nextcloud_database_username: "nextcloud"
+nextcloud_nextcloud_database_password: "{{ '%s' | format(nextcloud_generic_secret_key) | password_hash('sha512', 'db.nextcloud') | to_uuid }}"
+
+### /Nextcloud
+
+
+### Nextcloud reverse-proxy companion
+
+nextcloud_reverse_proxy_companion_enabled: true
+
+nextcloud_reverse_proxy_companion_container_labels_traefik_enabled: true
+
+### /Nextcloud reverse-proxy companion
+
+
+### com.devture.ansible.role.postgres
+
+# To completely disable installing Postgres, use `nextcloud_playbook_postgres_installation_enabled`.
+
+devture_postgres_identifier: nextcloud-postgres
+
+devture_postgres_base_path: "{{ nextcloud_base_path }}/postgres"
+
+devture_postgres_container_network: "{{ nextcloud_container_network }}"
+
+devture_postgres_uid: "{{ nextcloud_user_uid }}"
+devture_postgres_gid: "{{ nextcloud_user_gid }}"
+
+devture_postgres_vacuum_database: "nextcloud"
+
+devture_postgres_systemd_services_to_stop_for_maintenance_list: |
+  {{
+    (['nextcloud-apache.service'])
+  }}
+
+devture_postgres_additional_databases: |
+  {{
+    [{
+      'name': nextcloud_nextcloud_database_name,
+      'username': nextcloud_nextcloud_database_username,
+      'password': nextcloud_nextcloud_database_password,
+    }]
+  }}
+
+### /com.devture.ansible.role.postgres
+
+
+### com.devture.ansible.role.vars_preserver
+
+# To completely disable this feature, use `nextcloud_playbook_vars_preservation_enabled`.
+
+devture_vars_preserver_dst: "{{ nextcloud_base_path }}/vars.yml"
+devture_vars_preserver_uid: "{{ nextcloud_user_uid }}"
+devture_vars_preserver_gid: "{{ nextcloud_user_gid }}"
+
+### /com.devture.ansible.role.vars_preserver
+
+
+### com.devture.ansible.role.traefik
+
+# To completely disable installing Traefik, use `nextcloud_playbook_traefik_installation_enabled`.
+
+devture_traefik_container_network: "{{ nextcloud_container_network }}"
+
+devture_traefik_uid: "{{ nextcloud_user_uid }}"
+devture_traefik_gid: "{{ nextcloud_user_gid }}"
+
+### /com.devture.ansible.role.traefik

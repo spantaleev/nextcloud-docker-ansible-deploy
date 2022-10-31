@@ -17,11 +17,11 @@ Table of contents:
 
 ## Getting a database terminal
 
-You can use the `/usr/local/bin/nextcloud-postgres-cli` tool to get interactive terminal access ([psql](https://www.postgresql.org/docs/13/app-psql.html)) to the PostgreSQL server.
+You can use the `/nextcloud/postgres/bin/cli` tool to get interactive terminal access ([psql](https://www.postgresql.org/docs/15/app-psql.html)) to the PostgreSQL server.
 
 If you are using an [external Postgres server](configuring-playbook-external-postgres.md), the above tool will not be available.
 
-By default, this tool puts you in the `nextcloud` database, where all the data is stored.
+By default, this tool puts you in the `main` database. To switch to the Nextcloud database (`nextcloud`) where all the data is stored, use `\c nextcloud`.
 
 You can then proceed to write queries. Example: `SELECT COUNT(*) FROM oc_accounts;`
 
@@ -52,11 +52,11 @@ To make a one off back up of the current PostgreSQL database, make sure it's run
 
 ```bash
 /usr/bin/docker exec \
---env-file=/nextcloud/environment-variables/env-postgres-pgsql-docker \
+--env-file=/nextcloud/postgres/env-postgres-pgsql-docker \
 nextcloud-postgres \
 /usr/local/bin/pg_dumpall -h nextcloud-postgres \
 | gzip -c \
-> /nextcloud/postgres.sql.gz
+> /nextcloud-postgres.sql.gz
 ```
 
 Restoring a backup made this way can be done by [importing it](importing-postgres.md).
@@ -75,7 +75,7 @@ This playbook can upgrade your existing Postgres setup with the following comman
 
 	ansible-playbook -i inventory/hosts setup.yml --tags=upgrade-postgres
 
-**The old Postgres data directory is backed up** automatically, by renaming it to `/nextcloud/postgres-auto-upgrade-backup`.
+**The old Postgres data directory is backed up** automatically, by renaming it to `/nextcloud/postgres/data-auto-upgrade-backup`.
 To rename to a different path, pass some extra flags to the command above, like this: `--extra-vars="postgres_auto_upgrade_backup_data_path=/another/disk/nextcloud-postgres-before-upgrade"`
 
 The auto-upgrade-backup directory stays around forever, until you **manually decide to delete it**.

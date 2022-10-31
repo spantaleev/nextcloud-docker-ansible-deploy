@@ -1,0 +1,11 @@
+---
+
+# The following variable controls if fail2ban should be used.
+# The applied configuration is based on https://docs.nextcloud.com/server/21/admin_manual/installation/harden_server.html#setup-fail2ban
+nextcloud_fail2ban_enabled: true
+nextcloud_fail2ban_package: "fail2ban"
+nextcloud_fail2ban_ports: "80,443"
+nextcloud_fail2ban_maxretry: 3
+nextcloud_fail2ban_bantime: 86400
+nextcloud_fail2ban_findtime: 43200
+nextcloud_fail2ban_logpath: "{{ nextcloud_nextcloud_base_path }}/data/nextcloud.log"

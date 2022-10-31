@@ -1,0 +1,19 @@
+---
+
+- name: Install fail2ban on RedHat
+  when: ansible_distribution == 'RedHat'
+  ansible.builtin.yum:
+    name: "{{ nextcloud_fail2ban_package }}"
+    state: present
+
+- name: Ensure APT usage dependencies are installed
+  when: ansible_distribution == 'Debian'
+  ansible.builtin.apt:
+    name: "{{ nextcloud_fail2ban_package }}"
+    state: present
+
+- name: Install fail2ban on Archlinux
+  when: ansible_distribution == 'Archlinux'
+  community.general.packaging.os.pacman:
+    name: "{{ nextcloud_fail2ban_package }}"
+    state: present

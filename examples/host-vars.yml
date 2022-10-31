@@ -1,17 +1,19 @@
-# This is something which is provided to Let's Encrypt
-# when retrieving the SSL certificates for `<your-domain>`.
-#
-# In case SSL renewal fails at some point, you'll also get
-# an email notification there.
-#
-# Example value: someone@example.com
-host_specific_nextcloud_ssl_support_email: YOUR_EMAIL_ADDRESS_HERE
-
-# This is your domain name (`<your-domain`).
+# This is your Nextcloud server's domain name.
 #
 # Example value: nextcloud.example.com
-host_specific_nextcloud_hostname: YOUR_DOMAIN_NAME_HERE
+nextcloud_server_fqn_nextcloud: YOUR_DOMAIN_NAME_HERE
 
-# A Postgres password to use for the superuser Postgres user (called `nextcloud` by default).
+# A secret used as a base, for generating various other secrets.
 # You can put any string here, but generating a strong one is preferred (e.g. `pwgen -s 64 1`).
-nextcloud_postgres_connection_password: YOUR_POSTGRES_PASSWORD
+nextcloud_generic_secret_key: ''
+
+devture_traefik_ssl_email_address: ''
+
+# A Postgres password to use for the superuser Postgres user (called `root` by default).
+#
+# The playbook creates additional Postgres users and databases (one for each enabled service) using this superuser account.
+devture_postgres_connection_password: ''
+
+# A Postgres password to use for the `nextcloud` database.
+# You will use the same password during initial Nextcloud installation.
+nextcloud_nextcloud_database_password: ''

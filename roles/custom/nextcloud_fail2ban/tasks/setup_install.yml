@@ -1,0 +1,35 @@
+---
+
+- ansible.builtin.import_tasks: "{{ role_path }}/tasks/setup_install_package.yml"
+
+- name: Copy filter file for fail2ban
+  ansible.builtin.copy:
+    src: "{{ role_path }}/templates/filter.conf"
+    dest: "/etc/fail2ban/filter.d/nextcloud.conf"
+    mode: 0644
+    owner: root
+    group: root
+    force: true
+  when: nextcloud_fail2ban_enabled | bool
+
+- name: Copy jail file for fail2ban
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/jail.local.j2"
+    dest: "/etc/fail2ban/jail.d/nextcloud.local"
+    mode: 0644
+    force: true
+  when: nextcloud_fail2ban_enabled | bool
+
+- name: Restart and enable fail2ban service
+  ansible.builtin.service:
+    name: fail2ban
+    state: restarted
+    enabled: true
+  when: nextcloud_fail2ban_enabled | bool
+
+- name: Stop and disable fail2ban service (if not enabled)
+  ansible.builtin.service:
+    name: fail2ban
+    state: stopped
+    enabled: false
+  when: "not nextcloud_fail2ban_enabled"

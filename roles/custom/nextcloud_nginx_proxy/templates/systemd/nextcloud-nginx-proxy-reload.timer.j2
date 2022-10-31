@@ -1,0 +1,10 @@
+[Unit]
+Description=Reloads nextcloud-nginx-proxy.service periodically so that new SSL certificates can kick in
+
+[Timer]
+Unit=nextcloud-nginx-proxy-reload.service
+OnCalendar=*-*-* 06:30:00
+RandomizedDelaySec=1h
+
+[Install]
+WantedBy=timers.target

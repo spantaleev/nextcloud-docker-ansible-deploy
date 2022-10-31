@@ -1,0 +1,49 @@
+---
+
+
+- name: Ensure Nextcloud group is created
+  ansible.builtin.group:
+    name: "{{ nextcloud_user_username }}"
+    gid: "{{ nextcloud_user_gid }}"
+    state: present
+
+- name: Ensure Nextcloud user is created
+  ansible.builtin.user:
+    name: "{{ nextcloud_user_username }}"
+    uid: "{{ nextcloud_user_gid }}"
+    group: "{{ nextcloud_user_username }}"
+    state: present
+
+- name: Ensure Nextcloud base path exists
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: "0750"
+    owner: "{{ nextcloud_user_uid }}"
+    group: "{{ nextcloud_user_gid }}"
+  with_items:
+    - "{{ nextcloud_base_path }}"
+
+# `docker_network` doesn't work as expected when the given network
+# is a substring of a network that already exists.
+#
+# See:
+# - https://github.com/spantaleev/matrix-docker-ansible-deploy/issues/12
+# - https://github.com/ansible/ansible/issues/32926
+#
+# Due to that, we employ a workaround below.
+#
+# - name: Ensure Nextcloud network is created in Docker
+#   docker_network:
+#     name: "{{ nextcloud_container_network }}"
+#     driver: bridge
+- name: Check existence of Nextcloud network in Docker
+  ansible.builtin.command:
+    cmd: "docker network ls -q --filter='name=^{{ nextcloud_container_network }}$'"
+  register: nextcloud_result_docker_network
+  changed_when: false
+
+- name: Create Nextcloud network in Docker
+  ansible.builtin.command:
+    cmd: "docker network create --driver=bridge {{ nextcloud_container_network }}"
+  when: "nextcloud_result_docker_network.stdout == ''"

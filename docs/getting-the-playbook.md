@@ -37,4 +37,4 @@ You're supposed to execute all other installation commands inside that directory
 
 ---------------------------------------------
 
-No matter which method you've used to download the playbook, you can proceed by [Configuring the playbook](configuring-playbook.md).
+No matter which method you've used to download the playbook, you can proceed to [Prerequisites](prerequisites.md).

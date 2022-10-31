@@ -1,0 +1,63 @@
+---
+
+- name: (Deprecation) Catch and report renamed Nextcloud settings
+  ansible.builtin.fail:
+    msg: >-
+      Your configuration contains a variable, which now has a different name.
+      Please change your configuration to rename the variable (`{{ item.old }}` -> `{{ item.new }}`).
+  when: "item.old in vars"
+  with_items:
+    - {'old': 'host_specific_nextcloud_hostname', 'new': 'nextcloud_server_fqn_nextcloud'}
+    - {'old': 'nextcloud_docker_installation_enabled', 'new': 'nextcloud_playbook_docker_installation_enabled'}
+    - {'old': 'nextcloud_docker_package_name', 'new': '<Not applicable. Docker is installed using https://github.com/geerlingguy/ansible-role-docker now>'}
+    - {'old': 'nextcloud_ntpd_package', 'new': 'devture_timesync_ntpd_package'}
+    - {'old': 'nextcloud_ntpd_service', 'new': 'devture_timesync_ntpd_service'}
+    - {'old': 'nextcloud_base_data_path', 'new': 'nextcloud_base_path'}
+    - {'old': 'host_specific_nextcloud_nginx_proxy_ssl_support_email', 'new': 'nextcloud_nginx_proxy_ssl_support_email'}
+
+    - {'old': 'nextcloud_vars_yml_snapshotting_enabled', 'new': 'nextcloud_playbook_vars_preservation_enabled'}
+    - {'old': 'nextcloud_vars_yml_snapshotting_src', 'new': 'devture_vars_preserver_src'}
+
+    - {'old': 'nextcloud_docker_network', 'new': 'nextcloud_container_network'}
+
+    - {'old': 'nextcloud_postgres_connection_username', 'new': 'nextcloud_nextcloud_database_username'}
+    - {'old': 'nextcloud_postgres_connection_password', 'new': 'nextcloud_nextcloud_database_password'}
+    - {'old': 'nextcloud_postgres_db_name', 'new': 'nextcloud_nextcloud_database_name'}
+    - {'old': 'nextcloud_postgres_connection_hostname', 'new': 'nextcloud_nextcloud_database_hostname'}
+    - {'old': 'nextcloud_postgres_container_postgres_bind_port', 'new': 'devture_postgres_container_postgres_bind_port'}
+    - {'old': 'nextcloud_postgres_container_extra_arguments', 'new': 'devture_postgres_container_extra_arguments'}
+    - {'old': 'nextcloud_postgres_process_extra_arguments', 'new': 'devture_postgres_process_extra_arguments'}
+    - {'old': 'nextcloud_postgres_data_path', 'new': 'devture_postgres_data_path'}
+    - {'old': 'nextcloud_container_additional_mounts', 'new': 'nextcloud_nextcloud_container_additional_mounts'}
+    - {'old': 'nextcloud_container_image_customizations_enabled', 'new': 'nextcloud_nextcloud_container_image_customizations_enabled'}
+    - {'old': 'nextcloud_docker_image', 'new': 'nextcloud_nextcloud_container_image'}
+    - {'old': 'nextcloud_docker_image_customized', 'new': 'nextcloud_nextcloud_container_image_customized'}
+    - {'old': 'nextcloud_docker_image_final', 'new': 'nextcloud_nextcloud_container_image_final'}
+    - {'old': 'nextcloud_docker_image_tag', 'new': 'nextcloud_nextcloud_container_image_tag'}
+    - {'old': 'nextcloud_container_image_customizations_dockerfile_body_custom', 'new': 'nextcloud_nextcloud_container_image_customizations_dockerfile_body_custom'}
+    - {'old': 'nextcloud_version', 'new': 'nextcloud_nextcloud_version'}
+    - {'old': 'nextcloud_services_restart_cron_time_definition', 'new': '<not applicable anymore>'}
+    - {'old': 'nextcloud_config_additional_parameters', 'new': 'nextcloud_nextcloud_config_additional_parameters'}
+    - {'old': 'nextcloud_config_parameters', 'new': 'nextcloud_nextcloud_config_parameters'}
+    - {'old': 'nextcloud_config_default_parameters', 'new': 'nextcloud_nextcloud_config_default_parameters'}
+    - {'old': 'nextcloud_database_type', 'new': 'nextcloud_nextcloud_database_type'}
+    - {'old': 'nextcloud_database_hostname', 'new': 'nextcloud_nextcloud_database_hostname'}
+    - {'old': 'nextcloud_database_port', 'new': 'nextcloud_nextcloud_database_port'}
+    - {'old': 'nextcloud_database_name', 'new': 'nextcloud_nextcloud_database_name'}
+    - {'old': 'nextcloud_database_username', 'new': 'nextcloud_nextcloud_database_username'}
+    - {'old': 'nextcloud_database_password', 'new': 'nextcloud_nextcloud_database_password'}
+    - {'old': 'nextcloud_systemd_required_services_list', 'new': 'nextcloud_nextcloud_systemd_required_services_list'}
+    - {'old': 'nextcloud_container_image_customizations_php_imageick_installation_enabled', 'new': 'nextcloud_nextcloud_container_image_customizations_php_imageick_installation_enabled'}
+    - {'old': 'nextcloud_container_image_customizations_php_imageick_installation_package', 'new': 'nextcloud_nextcloud_container_image_customizations_php_imageick_installation_package'}
+    - {'old': 'nextcloud_apache_container_http_host_bind_port', 'new': 'nextcloud_nextcloud_container_http_host_bind_port'}
+    - {'old': 'nextcloud_apache_container_memory_limit', 'new': 'nextcloud_nextcloud_apache_container_memory_limit'}
+    - {'old': 'nextcloud_apache_container_memory_swap_limit', 'new': 'nextcloud_nextcloud_apache_container_memory_swap_limit'}
+    - {'old': 'nextcloud_onlyoffice_enabled', 'new': 'nextcloud_onlyoffice_document_server_enabled'}
+
+- name: Fail if required Nextcloud settings not defined
+  ansible.builtin.fail:
+    msg: >-
+      You need to define a required configuration setting (`{{ item }}`) for using this role.
+  when: "vars[item] == ''"
+  with_items:
+    - nextcloud_server_fqn_nextcloud

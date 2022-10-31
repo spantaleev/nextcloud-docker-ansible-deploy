@@ -1,0 +1,10 @@
+---
+
+- ansible.builtin.import_tasks: tasks/start.yml
+  tags:
+    - start
+    - update
+
+- ansible.builtin.import_tasks: tasks/stop.yml
+  tags:
+    - stop

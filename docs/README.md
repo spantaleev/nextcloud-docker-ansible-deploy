@@ -2,9 +2,9 @@
 
 - [Prerequisites](prerequisites.md)
 
-- [Getting this playbook's source code](getting-the-playbook.md)
+- [Configuring DNS](configuring-dns.md)
 
-- [Configuring this Ansible playbook](configuring-playbook.md)
+- [Configuring the playbook](configuring-playbook.md)
 
 - [Installing](installing.md)
 

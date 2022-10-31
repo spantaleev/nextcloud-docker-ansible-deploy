@@ -1,0 +1,13 @@
+---
+
+- when: nextcloud_reverse_proxy_companion_enabled | bool
+  ansible.builtin.import_tasks: tasks/setup_install.yml
+  tags:
+    - setup-nextcloud-reverse-proxy-companion
+    - setup-all
+
+- when: not nextcloud_reverse_proxy_companion_enabled | bool
+  ansible.builtin.import_tasks: tasks/setup_uninstall.yml
+  tags:
+    - setup-nextcloud-reverse-proxy-companion
+    - setup-all

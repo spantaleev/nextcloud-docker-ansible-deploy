@@ -1,0 +1,118 @@
+# The fully-qualified name of your Nextcloud server (e.g. `nextcloud.example.com`)
+nextcloud_server_fqn_nextcloud: ''
+
+nextcloud_nextcloud_systemd_required_services_list: ['docker.service']
+
+nextcloud_nextcloud_base_path: "{{ nextcloud_base_path }}/nextcloud"
+nextcloud_nextcloud_data_path: "{{ nextcloud_nextcloud_base_path }}/data"
+nextcloud_nextcloud_customized_docker_src_files_path: "{{ nextcloud_nextcloud_base_path }}/customized-docker-src"
+
+# SVG support for imagick can be setup like this:
+# https://docs.nextcloud.com/server/24/admin_manual/configuration_server/theming.html?highlight=libmagickcore%20q16%20extra#theming-of-icons
+# However, using Imagick may have a negative effect on security, that is the reason
+# behind not installing it by default. See:
+# https://github.com/nextcloud/server/issues/13099
+# Tread wisely!
+nextcloud_nextcloud_container_image_customizations_php_imageick_installation_enabled: false
+nextcloud_nextcloud_container_image_customizations_php_imageick_installation_package: "libmagickcore-6.q16-6-extra"
+
+# nextcloud_nextcloud_container_image_customizations_enabled controls whether a customized Nextcloud image will be built.
+#
+# We toggle this variable to `true` when certain features which require a custom build are enabled.
+# Feel free to toggle this to `true` yourself and specify build steps in `nextcloud_nextcloud_container_image_customizations_dockerfile_body_custom`.
+#
+# See:
+# - `roles/nextcloud-server/templates/customizations/Dockerfile.j2`
+# - `nextcloud_nextcloud_container_image_customizations_dockerfile_body_custom`
+# - `nextcloud_nextcloud_container_image_customized`
+# - `nextcloud_nextcloud_container_image_final`
+nextcloud_nextcloud_container_image_customizations_enabled: "{{ nextcloud_nextcloud_container_image_customizations_php_imageick_installation_enabled }}"
+
+# nextcloud_nextcloud_container_image_customizations_dockerfile_body_custom contains your custom Dockerfile steps
+# for building your customized Nextcloud image based on the original (upstream) image (`nextcloud_nextcloud_container_image`).
+# A `FROM ...` clause is included automatically so you don't have to.
+#
+# Example:
+# nextcloud_nextcloud_container_image_customizations_dockerfile_body_custom: |
+#  RUN echo 'This is a custom step for building the customized container image for Nextcloud.'
+#  RUN echo 'You can override nextcloud_nextcloud_container_image_customizations_dockerfile_body_custom to add your own steps.'
+#  RUN echo 'You do NOT need to include a FROM clause yourself.'
+nextcloud_nextcloud_container_image_customizations_dockerfile_body_custom: ''
+
+nextcloud_nextcloud_version: "25.0.0-apache"
+nextcloud_nextcloud_container_image_tag: "{{ nextcloud_nextcloud_version }}"
+nextcloud_nextcloud_container_image: "docker.io/nextcloud:{{ nextcloud_nextcloud_container_image_tag }}"
+nextcloud_nextcloud_container_image_force_pull: "{{ nextcloud_nextcloud_container_image.endswith(':latest') }}"
+
+# nextcloud_nextcloud_container_image_customized is the name of the locally built Nextcloud image
+# which adds various customizations on top of the original (upstream) Nextcloud image.
+# This image will be based on the upstream `nextcloud_nextcloud_container_image` image, only if `nextcloud_nextcloud_container_image_customizations_enabled: true`.
+nextcloud_nextcloud_container_image_customized: "localhost/nextcloud:{{ nextcloud_nextcloud_container_image_tag }}-customized"
+
+# nextcloud_nextcloud_container_image_final holds the name of the Nextcloud image to run depending on whether or not customizations are enabled.
+nextcloud_nextcloud_container_image_final: "{{ nextcloud_nextcloud_container_image_customized if nextcloud_nextcloud_container_image_customizations_enabled else nextcloud_nextcloud_container_image }} "
+
+# A list of extra arguments to pass to the container
+nextcloud_nextcloud_docker_container_extra_arguments: []
+
+# Controls whether the nextcloud-apache container's memory usage
+# is limited and to what extent.
+#
+# When set, these options are passed to `docker run`
+# as `--memory=..` and `--memory-swap=..` respectively.
+#
+# Expected value format is `[integer][unit]`. E.g. 100M, 1G
+#
+# If `nextcloud_nextcloud_apache_container_memory_swap_limit` is set,
+# it represents the total memory that can be used (memory + swap),
+# so it must always be at least as large as `nextcloud_nextcloud_apache_container_memory_limit`.
+# To disable swapping, make it the same as `nextcloud_nextcloud_apache_container_memory_limit`.
+nextcloud_nextcloud_apache_container_memory_limit: ""
+nextcloud_nextcloud_apache_container_memory_swap_limit: ""
+
+# Controls whether the nextcloud-apache container exposes its HTTP port (tcp/80 in the container).
+#
+# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:37150"), or empty string to not expose.
+nextcloud_nextcloud_container_http_host_bind_port: ""
+
+nextcloud_nextcloud_database_type: postgres
+nextcloud_nextcloud_database_hostname: ''
+nextcloud_nextcloud_database_port: 5432
+nextcloud_nextcloud_database_name: nextcloud
+nextcloud_nextcloud_database_username: ''
+nextcloud_nextcloud_database_password: ''
+
+# A list of configuration parameters for Nextcloud.
+# To define your own, we advise editing `nextcloud_nextcloud_config_additional_parameters`.
+nextcloud_nextcloud_config_parameters: "{{ nextcloud_nextcloud_config_default_parameters + nextcloud_nextcloud_config_additional_parameters }}"
+
+# Default configuration parameters to apply to Nextcloud.
+# To add your own additional parameters, use `nextcloud_nextcloud_config_additional_parameters`.
+# To get rid of these defaults, redefine `nextcloud_nextcloud_config_default_parameters` or `nextcloud_nextcloud_config_parameters`.
+nextcloud_nextcloud_config_default_parameters:
+  - key: overwriteprotocol
+    value: "https"
+    type: string
+  - key: overwrite.cli.url
+    value: "https://{{ nextcloud_server_fqn_nextcloud }}"
+    type: string
+
+# Add your custom Nextcloud configuration parameters here.
+#
+# Example:
+# nextcloud_nextcloud_config_additional_parameters:
+#   - key: mail_smtphost
+#     value: smtp.example.com
+#     type: string
+nextcloud_nextcloud_config_additional_parameters: []
+
+# A list of additional "mounts" to be mounted in the container.
+# Contains definition objects like this:
+# nextcloud_nextcloud_container_additional_mounts:
+# - "type=bind|volume|tmpfs,source=/outside,target=/inside,readonly,bind-propagation=slave"
+nextcloud_nextcloud_container_additional_mounts: []
+
+# nextcloud_nextcloud_cron_schedule contains a systemd OnCalendar definition which controls how often `nextcloud-cron.timer` runs
+# The default value means 'every 15 minutes'.
+# Learn more here: https://man.archlinux.org/man/systemd.time.7
+nextcloud_nextcloud_cron_schedule: '*:0/15:0'

@@ -1,42 +1,28 @@
 # Installing
 
-If you've [configured the playbook](configuring-playbook.md), you can start the installation procedure.
+After [configuring DNS](configuring-dns.md) and [configuring the playbook](configuring-playbook.md), you're ready to install.
 
-Run this as-is to set up a server:
+First, update the Ansible roles in this playbook by running `make roles`.
 
-```bash
-ansible-playbook -i inventory/hosts setup.yml --tags=setup-all
-```
+Then, run the playbook: `ansible-playbook -i inventory/hosts setup.yml --tags=setup-all`.
 
-This **doesn't start any services just yet** (another step does this later - below).
+If your inventory file (`vars.yml`) contains encrypted variables, you may need to pass `--ask-vault-pass` to the `ansible-playbook` command.
 
-Feel free to **re-run this any time** you think something is off with the server configuration.
+After installing, you can start services: `ansible-playbook -i inventory/hosts setup.yml --tags=start`.
 
 
-## Starting the services
+## Initial Nextcloud setup
 
-When you're ready to start the Nextcloud services (and set them up to auto-start in the future):
-
-```bash
-ansible-playbook -i inventory/hosts setup.yml --tags=start
-```
-
-
-## Initial Nextcloud configuration
-
-After starting the services for the first time, you should
-follow Nextcloud's setup wizard at `https://<your-domain>`.
+After starting the services for the first time, you should follow Nextcloud's setup wizard at `https://<your-domain>`.
 
 You can choose any username/password for your account.
 
-In **Storage & database**, you should choose PostgreSQL, with the following settings:
+In **Storage & database**, you should choose PostgreSQL (changing the default **SQLite** choice), with the following settings:
 
 - Database user: `nextcloud`
-- Database password: `nextcloud-password`
+- Database password: the value of the `nextcloud_nextcloud_database_password` variable in `vars.yml`
 - Database name: `nextcloud`
 - Database host: `nextcloud-postgres:5432`
-
-The database is strictly local, so using the default username/password is OK.
 
 
 ## Adjusting the configuration

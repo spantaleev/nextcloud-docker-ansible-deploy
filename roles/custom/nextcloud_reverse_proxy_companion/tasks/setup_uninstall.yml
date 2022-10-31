@@ -1,0 +1,25 @@
+---
+
+- name: Check existence of nextcloud-reverse-proxy-companion service
+  ansible.builtin.stat:
+    path: "/etc/systemd/system/nextcloud-reverse-proxy-companion.service"
+  register: nextcloud_reverse_proxy_companion_service_stat
+
+- name: Ensure nextcloud-reverse-proxy-companion is stopped
+  ansible.builtin.service:
+    name: nextcloud-reverse-proxy-companion
+    state: stopped
+    daemon_reload: true
+  register: stopping_result
+  when: "not nextcloud_reverse_proxy_companion_enabled and nextcloud_reverse_proxy_companion_service_stat.stat.exists"
+
+- name: Ensure nextcloud-reverse-proxy-companion.service doesn't exist
+  ansible.builtin.file:
+    path: "/etc/systemd/system/nextcloud-reverse-proxy-companion.service"
+    state: absent
+  when: "not nextcloud_reverse_proxy_companion_enabled and nextcloud_reverse_proxy_companion_service_stat.stat.exists"
+
+- name: Ensure nextcloud-reverse-proxy-companion data is removed
+  ansible.builtin.file:
+    path: "{{ nextcloud_reverse_proxy_companion_base_path }}"
+    state: absent

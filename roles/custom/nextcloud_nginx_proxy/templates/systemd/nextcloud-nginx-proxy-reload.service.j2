@@ -1,0 +1,6 @@
+[Unit]
+Description=Reloads nextcloud-nginx-proxy.service so that new SSL certificates can kick in
+
+[Service]
+Type=oneshot
+ExecStart={{ devture_systemd_docker_base_host_command_systemctl }} reload nextcloud-nginx-proxy.service
