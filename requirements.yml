@@ -16,7 +16,7 @@
   version: 6405ac665120e321ce30a971b1b28c874db5956f
 
 - src: git+https://github.com/devture/com.devture.ansible.role.postgres.git
-  version: f8242fb32722dae62398af464f029e0c9960d645
+  version: 73d2c15ef7b5bbb1849540a179f728fcd6d15cf7
 
 - src: git+https://github.com/devture/com.devture.ansible.role.playbook_runtime_messages.git
   version: f1c78d4e85e875129790c58335d0e44385683f6b
