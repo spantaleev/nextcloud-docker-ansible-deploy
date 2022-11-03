@@ -30,11 +30,6 @@
       tags:
         - setup-all
 
-    - when: nextcloud_playbook_vars_preservation_enabled | bool
-      role: galaxy/com.devture.ansible.role.vars_preserver
-      tags:
-        - setup-all
-
     # This role exposes various tags (setup-postgres, setup-all, upgrade-postgres, import-postgres, etc.) so we don't tag it here.
     - when: nextcloud_playbook_postgres_installation_enabled | bool
       role: galaxy/com.devture.ansible.role.postgres
@@ -51,5 +46,12 @@
       role: custom/nextcloud_nginx_proxy
 
     - role: custom/nextcloud_common_after
+
+    # This is pretty much last, because we want it to better serve as a "last known good configuration".
+    # See: https://github.com/spantaleev/matrix-docker-ansible-deploy/pull/2217#issuecomment-1301487601
+    - when: nextcloud_playbook_vars_preservation_enabled | bool
+      role: galaxy/com.devture.ansible.role.vars_preserver
+      tags:
+        - setup-all
 
     - role: galaxy/com.devture.ansible.role.playbook_runtime_messages
