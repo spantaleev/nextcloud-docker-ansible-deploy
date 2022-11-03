@@ -13,7 +13,7 @@
   version: cb2236f314f56f46f2a5e9971465f1d08828a4a7
 
 - src: git+https://github.com/devture/com.devture.ansible.role.vars_preserver.git
-  version: 6405ac665120e321ce30a971b1b28c874db5956f
+  version: b17dfecebabac213e8b98b997c7dbed63017f2f0
 
 - src: git+https://github.com/devture/com.devture.ansible.role.postgres.git
   version: cc263dfe9f672df774a22a7984d736a1e21b9f93

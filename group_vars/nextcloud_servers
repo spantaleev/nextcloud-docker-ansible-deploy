@@ -23,10 +23,6 @@ nextcloud_playbook_nginx_proxy_installation_enabled: false
 # Controls whether to install nextcloud-goofys or not
 nextcloud_playbook_goofys_installation_enabled: false
 
-# Controls whether the inventory vars.yml file is preserved on the host
-# See the `com.devture.ansible.role.vars_preserver` section below for configuration.
-nextcloud_playbook_vars_preservation_enabled: true
-
 ### /Playbook
 
 
@@ -114,7 +110,7 @@ devture_postgres_additional_databases: |
 
 ### com.devture.ansible.role.vars_preserver
 
-# To completely disable this feature, use `nextcloud_playbook_vars_preservation_enabled`.
+# To completely disable this feature, use `devture_vars_preserver_enabled: false`.
 
 devture_vars_preserver_dst: "{{ nextcloud_base_path }}/vars.yml"
 devture_vars_preserver_uid: "{{ nextcloud_user_uid }}"

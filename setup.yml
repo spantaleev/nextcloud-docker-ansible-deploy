@@ -49,7 +49,7 @@
 
     # This is pretty much last, because we want it to better serve as a "last known good configuration".
     # See: https://github.com/spantaleev/matrix-docker-ansible-deploy/pull/2217#issuecomment-1301487601
-    - when: nextcloud_playbook_vars_preservation_enabled | bool
+    - when: devture_vars_preserver_enabled | bool
       role: galaxy/com.devture.ansible.role.vars_preserver
       tags:
         - setup-all
