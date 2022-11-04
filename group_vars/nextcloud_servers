@@ -1,6 +1,10 @@
 ---
 
-### Playbook
+########################################################################
+#                                                                      #
+# Playbook                                                            #
+#                                                                      #
+########################################################################
 
 # Controls whether to install Docker or not
 nextcloud_playbook_docker_installation_enabled: true
@@ -23,10 +27,19 @@ nextcloud_playbook_nginx_proxy_installation_enabled: false
 # Controls whether to install nextcloud-goofys or not
 nextcloud_playbook_goofys_installation_enabled: false
 
-### /Playbook
+########################################################################
+#                                                                      #
+# /Playbook                                                            #
+#                                                                      #
+########################################################################
 
 
-### Base
+
+########################################################################
+#                                                                      #
+# base                                                                 #
+#                                                                      #
+########################################################################
 
 nextcloud_services_list: |
   {{
@@ -47,10 +60,19 @@ nextcloud_services_list: |
     (['nextcloud-nginx-proxy-ssl-certificate-renew.timer', 'nextcloud-nginx-proxy-reload.timer'] if nextcloud_playbook_nginx_proxy_installation_enabled and nextcloud_nginx_proxy_ssl_retrieval_method == 'lets-encrypt' else [])
   }}
 
-### /Base
+########################################################################
+#                                                                      #
+# /base                                                                #
+#                                                                      #
+########################################################################
 
 
-### Nextcloud
+
+########################################################################
+#                                                                      #
+# nextcloud_server                                                     #
+#                                                                      #
+########################################################################
 
 nextcloud_nextcloud_systemd_required_services_list: |
   {{
@@ -64,21 +86,38 @@ nextcloud_nextcloud_database_port: "{{ '5432' if nextcloud_playbook_postgres_ins
 nextcloud_nextcloud_database_username: "nextcloud"
 nextcloud_nextcloud_database_password: "{{ '%s' | format(nextcloud_generic_secret_key) | password_hash('sha512', 'db.nextcloud') | to_uuid }}"
 
-### /Nextcloud
+########################################################################
+#                                                                      #
+# /nextcloud_server                                                    #
+#                                                                      #
+########################################################################
 
 
-### Nextcloud reverse-proxy companion
+
+########################################################################
+#                                                                      #
+# nextcloud_reverse_proxy_companion                                    #
+#                                                                      #
+########################################################################
 
 nextcloud_reverse_proxy_companion_enabled: true
 
 nextcloud_reverse_proxy_companion_container_labels_traefik_enabled: true
 
-### /Nextcloud reverse-proxy companion
+########################################################################
+#                                                                      #
+# /nextcloud_reverse_proxy_companion                                   #
+#                                                                      #
+########################################################################
 
 
-### com.devture.ansible.role.postgres
+########################################################################
+#                                                                      #
+# com.devture.ansible.role.postgres                                    #
+#                                                                      #
+########################################################################
 
-# To completely disable installing Postgres, use `nextcloud_playbook_postgres_installation_enabled`.
+# To completely disable installing Postgres, use `nextcloud_playbook_postgres_installation_enabled: false`.
 
 devture_postgres_identifier: nextcloud-postgres
 
@@ -105,10 +144,19 @@ devture_postgres_additional_databases: |
     }]
   }}
 
-### /com.devture.ansible.role.postgres
+########################################################################
+#                                                                      #
+# /com.devture.ansible.role.postgres                                   #
+#                                                                      #
+########################################################################
 
 
-### com.devture.ansible.role.playbook_state_preserver
+
+########################################################################
+#                                                                      #
+# com.devture.ansible.role.playbook_state_preserver                    #
+#                                                                      #
+########################################################################
 
 # To completely disable this feature, use `devture_playbook_state_preserver_enabled: false`.
 
@@ -119,16 +167,29 @@ devture_playbook_state_preserver_vars_preservation_dst: "{{ nextcloud_base_path 
 
 devture_playbook_state_preserver_commit_hash_preservation_dst: "{{ nextcloud_base_path }}/git_hash.yml"
 
-### /com.devture.ansible.role.playbook_state_preserver
+########################################################################
+#                                                                      #
+# /com.devture.ansible.role.playbook_state_preserver                   #
+#                                                                      #
+########################################################################
 
 
-### com.devture.ansible.role.traefik
 
-# To completely disable installing Traefik, use `nextcloud_playbook_traefik_installation_enabled`.
+########################################################################
+#                                                                      #
+# com.devture.ansible.role.traefik                                     #
+#                                                                      #
+########################################################################
+
+# To completely disable installing Traefik, use `nextcloud_playbook_traefik_installation_enabled: false`.
 
 devture_traefik_container_network: "{{ nextcloud_container_network }}"
 
 devture_traefik_uid: "{{ nextcloud_user_uid }}"
 devture_traefik_gid: "{{ nextcloud_user_gid }}"
 
-### /com.devture.ansible.role.traefik
+########################################################################
+#                                                                      #
+# /com.devture.ansible.role.traefik                                    #
+#                                                                      #
+########################################################################
