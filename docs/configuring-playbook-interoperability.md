@@ -31,7 +31,7 @@ Also, refer to the [configuring the reverse-proxy](configuring-playbook-reverse-
 If you're installing [Docker](https://www.docker.com/) on your server in another way, disable this component from the playbook:
 
 ```yaml
-nextcloud_playbook_docker__installation_enabled: false
+nextcloud_playbook_docker_installation_enabled: false
 ```
 
 
