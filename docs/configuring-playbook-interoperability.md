@@ -51,5 +51,5 @@ Also, refer to the [configuring the database](configuring-playbook-database.md) 
 If you're installing `systemd-timesyncd` or `ntp` on your server in another way, disable this component from the playbook:
 
 ```yaml
-nextcloud_playbook_timesync_installation_enabled: false
+devture_timesync_installation_enabled: false
 ```

@@ -59,6 +59,8 @@
     - {'old': 'nextcloud_apache_container_memory_swap_limit', 'new': 'nextcloud_nextcloud_apache_container_memory_swap_limit'}
     - {'old': 'nextcloud_onlyoffice_enabled', 'new': 'nextcloud_onlyoffice_document_server_enabled'}
 
+    - {'old': 'nextcloud_playbook_timesync_installation_enabled', 'new': 'devture_timesync_installation_enabled'}
+
 - name: Fail if required Nextcloud settings not defined
   ansible.builtin.fail:
     msg: >-

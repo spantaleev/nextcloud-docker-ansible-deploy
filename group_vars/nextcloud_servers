@@ -10,9 +10,6 @@
 # Also see `devture_docker_sdk_for_python_installation_enabled`.
 nextcloud_playbook_docker_installation_enabled: true
 
-# Controls whether to install systemd-timesyncd/ntpd or not
-nextcloud_playbook_timesync_installation_enabled: true
-
 # Controls whether to install Postgres or not
 # See the `com.devture.ansible.role.postgres` section below for configuration.
 nextcloud_playbook_postgres_installation_enabled: true
@@ -208,5 +205,21 @@ devture_traefik_gid: "{{ nextcloud_user_gid }}"
 ########################################################################
 #                                                                      #
 # /com.devture.ansible.role.docker_sdk_for_python                      #
+#                                                                      #
+########################################################################
+
+
+
+########################################################################
+#                                                                      #
+# com.devture.ansible.role.timesync                                    #
+#                                                                      #
+########################################################################
+
+# To completely disable installing systemd-timesyncd/ntpd, use `devture_timesync_installation_enabled: false`.
+
+########################################################################
+#                                                                      #
+# /com.devture.ansible.role.timesync                                   #
 #                                                                      #
 ########################################################################
