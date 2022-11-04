@@ -108,15 +108,18 @@ devture_postgres_additional_databases: |
 ### /com.devture.ansible.role.postgres
 
 
-### com.devture.ansible.role.vars_preserver
+### com.devture.ansible.role.playbook_state_preserver
 
-# To completely disable this feature, use `devture_vars_preserver_enabled: false`.
+# To completely disable this feature, use `devture_playbook_state_preserver_enabled: false`.
 
-devture_vars_preserver_dst: "{{ nextcloud_base_path }}/vars.yml"
-devture_vars_preserver_uid: "{{ nextcloud_user_uid }}"
-devture_vars_preserver_gid: "{{ nextcloud_user_gid }}"
+devture_playbook_state_preserver_uid: "{{ nextcloud_user_uid }}"
+devture_playbook_state_preserver_gid: "{{ nextcloud_user_gid }}"
 
-### /com.devture.ansible.role.vars_preserver
+devture_playbook_state_preserver_vars_preservation_dst: "{{ nextcloud_base_path }}/vars.yml"
+
+devture_playbook_state_preserver_commit_hash_preservation_dst: "{{ nextcloud_base_path }}/git_hash.yml"
+
+### /com.devture.ansible.role.playbook_state_preserver
 
 
 ### com.devture.ansible.role.traefik

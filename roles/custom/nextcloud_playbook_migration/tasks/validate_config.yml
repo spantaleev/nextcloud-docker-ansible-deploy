@@ -15,9 +15,13 @@
     - {'old': 'nextcloud_base_data_path', 'new': 'nextcloud_base_path'}
     - {'old': 'host_specific_nextcloud_nginx_proxy_ssl_support_email', 'new': 'nextcloud_nginx_proxy_ssl_support_email'}
 
-    - {'old': 'nextcloud_vars_yml_snapshotting_enabled', 'new': 'devture_vars_preserver_enabled'}
-    - {'old': 'nextcloud_playbook_vars_preservation_enabled', 'new': 'devture_vars_preserver_enabled'}
-    - {'old': 'nextcloud_vars_yml_snapshotting_src', 'new': 'devture_vars_preserver_src'}
+    - {'old': 'nextcloud_vars_yml_snapshotting_enabled', 'new': 'devture_playbook_state_preserver_enabled'}
+    - {'old': 'nextcloud_playbook_vars_preservation_enabled', 'new': 'devture_playbook_state_preserver_enabled'}
+    - {'old': 'nextcloud_vars_yml_snapshotting_src', 'new': 'devture_playbook_state_preserver_vars_preservation_src'}
+    - {'old': 'devture_vars_preserver_enabled', 'new': 'devture_playbook_state_preserver_enabled'}
+    - {'old': 'devture_vars_preserver_dst', 'new': 'devture_playbook_state_preserver_vars_preservation_dst'}
+    - {'old': 'devture_vars_preserver_uid', 'new': 'devture_playbook_state_preserver_uid'}
+    - {'old': 'devture_vars_preserver_gid', 'new': 'devture_playbook_state_preserver_gid'}
 
     - {'old': 'nextcloud_docker_network', 'new': 'nextcloud_container_network'}
 
