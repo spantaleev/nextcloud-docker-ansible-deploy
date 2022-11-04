@@ -7,6 +7,7 @@
 ########################################################################
 
 # Controls whether to install Docker or not
+# Also see `devture_docker_sdk_for_python_installation_enabled`.
 nextcloud_playbook_docker_installation_enabled: true
 
 # Controls whether to install systemd-timesyncd/ntpd or not
@@ -191,5 +192,21 @@ devture_traefik_gid: "{{ nextcloud_user_gid }}"
 ########################################################################
 #                                                                      #
 # /com.devture.ansible.role.traefik                                    #
+#                                                                      #
+########################################################################
+
+
+
+########################################################################
+#                                                                      #
+# com.devture.ansible.role.docker_sdk_for_python                       #
+#                                                                      #
+########################################################################
+
+# To completely disable installing the Docker SDK for Python, use `devture_docker_sdk_for_python_installation_enabled: false`.
+
+########################################################################
+#                                                                      #
+# /com.devture.ansible.role.docker_sdk_for_python                      #
 #                                                                      #
 ########################################################################

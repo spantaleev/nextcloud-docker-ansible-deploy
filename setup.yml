@@ -20,6 +20,12 @@
         - setup-docker
         - setup-all
 
+    - when: devture_docker_sdk_for_python_installation_enabled | bool
+      role: galaxy/com.devture.ansible.role.docker_sdk_for_python
+      tags:
+        - setup-docker
+        - setup-all
+
     - when: nextcloud_playbook_timesync_installation_enabled | bool
       role: galaxy/com.devture.ansible.role.timesync
       tags:
