@@ -16,7 +16,7 @@
   version: 461ace97fcf0e36c76747b36fcad8587d9b072f5
 
 - src: git+https://github.com/devture/com.devture.ansible.role.playbook_state_preserver.git
-  version: 0857450721d525238ca230c9e6f8f8ad3a248564
+  version: ff2fd42e1c1a9e28e3312bbd725395f9c2fc7f16
 
 - src: git+https://github.com/devture/com.devture.ansible.role.postgres.git
   version: cc263dfe9f672df774a22a7984d736a1e21b9f93
