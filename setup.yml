@@ -51,6 +51,12 @@
     - when: nextcloud_playbook_nginx_proxy_installation_enabled | bool
       role: custom/nextcloud_nginx_proxy
 
+    - when: nextcloud_playbook_traefik_installation_enabled | bool
+      role: galaxy/com.devture.ansible.role.traefik
+      tags:
+        - setup-traefik
+        - setup-all
+
     - role: custom/nextcloud_common_after
 
     # This is pretty much last, because we want it to better serve as a "last known good configuration".
