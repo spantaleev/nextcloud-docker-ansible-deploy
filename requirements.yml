@@ -22,7 +22,7 @@
   version: 0dfd1d805be6c45184d903057b08f2255da32931
 
 - src: git+https://github.com/devture/com.devture.ansible.role.traefik.git
-  version: b9bb476ca86f6d46f0e0b3cb7a4771afd9d44e57
+  version: 058481d5728cdc7eefd190f93bad6fa4263c637c
 
 - src: git+https://github.com/devture/com.devture.ansible.role.playbook_runtime_messages.git
   version: f1c78d4e85e875129790c58335d0e44385683f6b
