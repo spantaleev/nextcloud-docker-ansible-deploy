@@ -1,7 +1,7 @@
 ---
 
 - src: geerlingguy.docker
-  version: 6.0.1
+  version: 6.0.2
 
 - src: git+https://github.com/devture/com.devture.ansible.role.docker_sdk_for_python.git
   version: ee38c97969c27bc69d3625db722e3930f1f0aa2e
