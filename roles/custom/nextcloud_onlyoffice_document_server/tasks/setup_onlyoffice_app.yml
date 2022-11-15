@@ -23,7 +23,7 @@
 
 - name: Install OnlyOffice app
   ansible.builtin.shell:
-    cmd: "docker exec -u www-data nextcloud-apache php occ --no-warnings app:install onlyoffice"
+    cmd: "docker exec --user={{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} nextcloud-apache php /var/www/html/occ --no-warnings app:install onlyoffice"
   failed_when: false
   register: onlyoffice_install_result
 
@@ -34,7 +34,7 @@
 
 - name: Configure OnlyOffice app
   ansible.builtin.shell:
-    cmd: "docker exec -u www-data nextcloud-apache php occ --no-warnings config:system:set onlyoffice {{ item.key }} --value=\"{{ item.value }}\""
+    cmd: "docker exec --user={{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} nextcloud-apache php /var/www/html/occ --no-warnings config:system:set onlyoffice {{ item.key }} --value=\"{{ item.value }}\""
   with_items:
     -
       key: DocumentServerUrl
