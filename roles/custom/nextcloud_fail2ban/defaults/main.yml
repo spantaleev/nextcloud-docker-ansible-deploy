@@ -8,4 +8,4 @@ nextcloud_fail2ban_ports: "80,443"
 nextcloud_fail2ban_maxretry: 3
 nextcloud_fail2ban_bantime: 86400
 nextcloud_fail2ban_findtime: 43200
-nextcloud_fail2ban_logpath: "{{ nextcloud_nextcloud_base_path }}/data/nextcloud.log"
+nextcloud_fail2ban_logpath: "{{ nextcloud_nextcloud_data_path }}/data/nextcloud.log"

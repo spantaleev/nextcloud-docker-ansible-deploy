@@ -57,6 +57,8 @@
         - setup-traefik
         - setup-all
 
+    - role: custom/nextcloud_fail2ban
+
     - role: custom/nextcloud_common_after
 
     # This is pretty much last, because we want it to better serve as a "last known good configuration".
