@@ -9,4 +9,4 @@ skip_list:
   - yaml[line-length]
   - no-changed-when
 
-offline: false
+offline: true

@@ -4,6 +4,7 @@ nextcloud_server_fqn_nextcloud: ''
 nextcloud_nextcloud_systemd_required_services_list: ['docker.service']
 
 nextcloud_nextcloud_base_path: "{{ nextcloud_base_path }}/nextcloud"
+nextcloud_nextcloud_config_path: "{{ nextcloud_nextcloud_base_path }}/config"
 nextcloud_nextcloud_data_path: "{{ nextcloud_nextcloud_base_path }}/data"
 nextcloud_nextcloud_customized_docker_src_files_path: "{{ nextcloud_nextcloud_base_path }}/customized-docker-src"
 
@@ -105,6 +106,21 @@ nextcloud_nextcloud_config_default_parameters:
 #     value: smtp.example.com
 #     type: string
 nextcloud_nextcloud_config_additional_parameters: []
+
+# nextcloud_nextcloud_container_environment_variable_trusted_proxies_enabled tells whether a `TRUSTED_PROXIES` environment variable should be passed to Nextcloud.
+# Because we're running behind `nextcloud-reverse-proxy-companion`, it makes sense to auto-enable it.
+nextcloud_nextcloud_container_environment_variable_trusted_proxies_enabled: true
+# nextcloud_nextcloud_container_environment_variable_trusted_proxies_value tells what value to set for the `TRUSTED_PROXIES` environment variable.
+# Empty value means "use the whole container network subnet address" (see `nextcloud_container_network`).
+nextcloud_nextcloud_container_environment_variable_trusted_proxies_value: ''
+
+# nextcloud_nextcloud_container_additional_environment_variables contains a multiline string with additional environment variables to pass to the container.
+#
+# Example:
+# nextcloud_nextcloud_container_additional_environment_variables: |
+#   VAR=1
+#   ANOTHER=value
+nextcloud_nextcloud_container_additional_environment_variables: ''
 
 # A list of additional "mounts" to be mounted in the container.
 # Contains definition objects like this:

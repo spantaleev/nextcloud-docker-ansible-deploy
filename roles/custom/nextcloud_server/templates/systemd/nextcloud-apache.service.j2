@@ -28,6 +28,7 @@ ExecStart={{ devture_systemd_docker_base_host_command_docker }} run \
 			--tmpfs=/var/run/apache2:rw,noexec,nosuid,size=128m \
 			{% if nextcloud_nextcloud_container_http_host_bind_port %}
 			-p {{ nextcloud_nextcloud_container_http_host_bind_port }}:80 \
+			--env-file={{ nextcloud_nextcloud_config_path }}/env \
 			{% endif %}
 			{% if nextcloud_nextcloud_apache_container_memory_limit != '' %}
 				--memory={{ nextcloud_nextcloud_apache_container_memory_limit }} \

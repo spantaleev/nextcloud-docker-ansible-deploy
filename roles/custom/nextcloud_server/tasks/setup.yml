@@ -9,6 +9,7 @@
     group: "{{ nextcloud_user_gid }}"
   with_items:
     - {path: "{{ nextcloud_nextcloud_base_path }}", when: true}
+    - {path: "{{ nextcloud_nextcloud_config_path }}", when: true}
     - {path: "{{ nextcloud_nextcloud_data_path }}", when: true}
     - {path: "{{ nextcloud_nextcloud_customized_docker_src_files_path }}", when: "{{ nextcloud_nextcloud_container_image_customizations_enabled }}"}
   when: item.when | bool
@@ -38,6 +39,22 @@
           dockerfile: Dockerfile
           path: "{{ nextcloud_nextcloud_customized_docker_src_files_path }}"
           pull: true
+
+- name: Determine Nextcloud container network subnet
+  ansible.builtin.command:
+    cmd: "{{ devture_systemd_docker_base_host_command_docker }} network inspect {{ nextcloud_container_network }} -f '{% raw %}{{ (index .IPAM.Config 0).Subnet }}{% endraw %}'"
+  register: nextcloud_container_network_subnet_result
+  changed_when: false
+  when: nextcloud_nextcloud_container_environment_variable_trusted_proxies_enabled | bool
+
+- name: Ensure Nextcloud support files installed
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0640
+  with_items:
+    - src: "{{ role_path }}/templates/env.j2"
+      dest: "{{ nextcloud_nextcloud_config_path }}/env"
 
 - name: Ensure Nextcloud systemd services installed
   ansible.builtin.template:
