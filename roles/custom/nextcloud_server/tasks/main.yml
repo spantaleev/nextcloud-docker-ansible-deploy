@@ -12,4 +12,4 @@
 
 - ansible.builtin.import_tasks: tasks/setup_adjust_config.yml
   tags:
-    - setup-adjust-nexcloud-config
+    - setup-adjust-nextcloud-config
