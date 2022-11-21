@@ -107,13 +107,6 @@ nextcloud_nextcloud_config_default_parameters:
 #     type: string
 nextcloud_nextcloud_config_additional_parameters: []
 
-# nextcloud_nextcloud_container_environment_variable_trusted_proxies_enabled tells whether a `TRUSTED_PROXIES` environment variable should be passed to Nextcloud.
-# Because we're running behind `nextcloud-reverse-proxy-companion`, it makes sense to auto-enable it.
-nextcloud_nextcloud_container_environment_variable_trusted_proxies_enabled: true
-# nextcloud_nextcloud_container_environment_variable_trusted_proxies_value tells what value to set for the `TRUSTED_PROXIES` environment variable.
-# Empty value means "use the whole container network subnet address" (see `nextcloud_container_network`).
-nextcloud_nextcloud_container_environment_variable_trusted_proxies_value: ''
-
 # nextcloud_nextcloud_container_additional_environment_variables contains a multiline string with additional environment variables to pass to the container.
 #
 # Example:

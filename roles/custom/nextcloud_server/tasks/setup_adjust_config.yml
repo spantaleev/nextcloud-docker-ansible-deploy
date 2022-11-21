@@ -1,5 +1,16 @@
 ---
 
+- name: Determine Nextcloud container network subnet
+  ansible.builtin.command:
+    cmd: "{{ devture_systemd_docker_base_host_command_docker }} network inspect {{ nextcloud_container_network }} -f '{% raw %}{{ (index .IPAM.Config 0).Subnet }}{% endraw %}'"
+  register: nextcloud_container_network_subnet_result
+  changed_when: false
+
+- name: Adjust Nextcloud configuration (set trusted_proxies)
+  ansible.builtin.command:
+    cmd: |-
+      docker exec --user={{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} nextcloud-apache php /var/www/html/occ --no-warnings config:system:set trusted_proxies 1 --type=string --value={{ nextcloud_container_network_subnet_result.stdout }}
+
 - name: Adjust Nextcloud configuration (disable bruteforce protection)
   ansible.builtin.command:
     cmd: |-

@@ -40,13 +40,6 @@
           path: "{{ nextcloud_nextcloud_customized_docker_src_files_path }}"
           pull: true
 
-- name: Determine Nextcloud container network subnet
-  ansible.builtin.command:
-    cmd: "{{ devture_systemd_docker_base_host_command_docker }} network inspect {{ nextcloud_container_network }} -f '{% raw %}{{ (index .IPAM.Config 0).Subnet }}{% endraw %}'"
-  register: nextcloud_container_network_subnet_result
-  changed_when: false
-  when: nextcloud_nextcloud_container_environment_variable_trusted_proxies_enabled | bool
-
 - name: Ensure Nextcloud support files installed
   ansible.builtin.template:
     src: "{{ item.src }}"
