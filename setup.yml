@@ -40,7 +40,7 @@
     - when: nextcloud_playbook_postgres_installation_enabled | bool
       role: galaxy/com.devture.ansible.role.postgres
 
-    # This role exposes various tags (setup-nextcloud, setup-all, setup-onlyoffice-app, setup-adjust-config, etc.) so we don't tag it here.
+    # This role exposes various tags (setup-nextcloud, setup-all, setup-onlyoffice-app, setup-adjust-nexcloud-config, etc.) so we don't tag it here.
     - role: custom/nextcloud_server
 
     # This role exposes various tags (setup-onlyoffice-document-server, setup-onlyoffice-app, setup-all, etc.) so we don't tag it here.

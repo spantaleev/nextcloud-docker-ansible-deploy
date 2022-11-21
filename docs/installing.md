@@ -35,5 +35,5 @@ This is necessary, because Nextcloud's brute-force security system doesn't like 
 Thus, we disable Nextcloud's bruteforce security system:
 
 ```bash
-ansible-playbook -i inventory/hosts setup.yml --tags=setup-adjust-config
+ansible-playbook -i inventory/hosts setup.yml --tags=setup-adjust-nexcloud-config
 ```
