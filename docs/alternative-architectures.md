@@ -1,20 +1,18 @@
 # Alternative architectures
 
-As stated in the [Prerequisites](prerequisites.md), currently only `x86_64` is fully supported. However, it is possible to set the target architecture, and some tools can be built on the host or other measures can be used.
+As stated in the [Prerequisites](prerequisites.md), currently only `amd64` (`x86_64`) is fully supported.
 
-To that end add the following variable to your `vars.yml` file (see [Configuring playbook](configuring-playbook.md)):
+The playbook automatically determines the target server's architecture (the `matrix_architecture` variable) to be one of the following:
 
-```yaml
-nextcloud_architecture: <your-nextcloud-server-architecture>
-```
-
-Currently supported architectures are the following:
-- `amd64` (the default)
-- `arm64`
+- `amd64` (`x86_64`)
 - `arm32`
+- `arm64`
 
-so for the Raspberry Pi, the following should be in your `vars.yml` file:
+Some tools and container images can be built on the host or other measures can be used to install on that architecture.
 
-```yaml
-nextcloud_architecture: "arm32"
-```
+
+## Implementation details
+
+For `amd64`, prebuilt container images are used for all components.
+
+For other architecture (`arm64`, `arm32`), components which have a prebuilt image make use of it. If the component is not available for the specific architecture, self-building will be used - the container image for a specific component will be built from scratch on the server. Not all components support self-building though, so your mileage may vary.

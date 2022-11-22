@@ -7,3 +7,4 @@
   when: "vars[item] == ''"
   with_items:
     - nextcloud_generic_secret_key
+    - nextcloud_architecture
