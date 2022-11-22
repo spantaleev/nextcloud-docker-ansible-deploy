@@ -25,6 +25,10 @@ server {
 	rewrite ^/\.well-known/carddav https://$http_host/remote.php/dav/ permanent;
 	rewrite ^/\.well-known/caldav https://$http_host/remote.php/dav/ permanent;
 
+	{% for configuration_block in nextcloud_reverse_proxy_companion_config_additional_configuration_blocks %}
+		{{- configuration_block }}
+	{% endfor %}
+
 	location / {
 		{# Use the embedded DNS resolver in Docker containers to discover the service #}
 		resolver 127.0.0.11 valid=5s;
