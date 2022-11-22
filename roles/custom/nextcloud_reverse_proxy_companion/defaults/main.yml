@@ -70,3 +70,6 @@ nextcloud_reverse_proxy_companion_proxy_connect_timeout: 60
 nextcloud_reverse_proxy_companion_proxy_send_timeout: 60
 nextcloud_reverse_proxy_companion_proxy_read_timeout: 60
 nextcloud_reverse_proxy_companion_send_timeout: 60
+
+# A list of strings containing additional configuration blocks to add to the nginx vhost
+nextcloud_reverse_proxy_companion_config_additional_configuration_blocks: []
