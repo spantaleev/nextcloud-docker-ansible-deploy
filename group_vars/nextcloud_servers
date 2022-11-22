@@ -119,6 +119,8 @@ nextcloud_reverse_proxy_companion_container_labels_traefik_enabled: true
 
 devture_postgres_identifier: nextcloud-postgres
 
+devture_postgres_architecture: "{{ nextcloud_architecture }}"
+
 devture_postgres_base_path: "{{ nextcloud_base_path }}/postgres"
 
 devture_postgres_container_network: "{{ nextcloud_container_network }}"
