@@ -41,21 +41,23 @@ nextcloud_playbook_goofys_installation_enabled: false
 
 nextcloud_services_list: |
   {{
-    (['nextcloud-apache.service'])
+    ([{'name': 'nextcloud-apache.service', 'priority': 1000}])
     +
-    (['nextcloud-cron.timer'])
+    ([{'name': 'nextcloud-cron.timer', 'priority': 2500}])
     +
-    ([devture_postgres_identifier ~ '.service'] if nextcloud_playbook_postgres_installation_enabled else [])
+    ([{'name': (devture_postgres_identifier + '.service'), 'priority': 500}] if nextcloud_playbook_postgres_installation_enabled else [])
     +
-    (['devture-traefik.service'] if nextcloud_playbook_traefik_installation_enabled else [])
+    ([{'name': 'devture-traefik.service', 'priority': 3000}] if nextcloud_playbook_traefik_installation_enabled else [])
     +
-    (['nextcloud-onlyoffice-document-server.service'] if nextcloud_onlyoffice_document_server_enabled else [])
+    ([{'name': 'nextcloud-onlyoffice-document-server.service', 'priority': 2000}] if nextcloud_onlyoffice_document_server_enabled else [])
     +
-    (['nextcloud-reverse-proxy-companion.service'] if nextcloud_reverse_proxy_companion_enabled else [])
+    ([{'name': 'nextcloud-reverse-proxy-companion.service', 'priority': 1500}] if nextcloud_reverse_proxy_companion_enabled else [])
     +
-    (['nextcloud-nginx-proxy.service'] if nextcloud_playbook_nginx_proxy_installation_enabled else [])
+    ([{'name': 'nextcloud-nginx-proxy.service', 'priority': 1500}] if nextcloud_playbook_nginx_proxy_installation_enabled else [])
     +
-    (['nextcloud-nginx-proxy-ssl-certificate-renew.timer', 'nextcloud-nginx-proxy-reload.timer'] if nextcloud_playbook_nginx_proxy_installation_enabled and nextcloud_nginx_proxy_ssl_retrieval_method == 'lets-encrypt' else [])
+    ([{'name': 'nextcloud-nginx-proxy-ssl-certificate-renew.timer', 'priority': 4000}] if nextcloud_playbook_nginx_proxy_installation_enabled and nextcloud_nginx_proxy_ssl_retrieval_method == 'lets-encrypt' else [])
+    +
+    ([{'name': 'nextcloud-nginx-proxy-reload.timer', 'priority': 4000}] if nextcloud_playbook_nginx_proxy_installation_enabled and nextcloud_nginx_proxy_ssl_retrieval_method == 'lets-encrypt' else [])
   }}
 
 ########################################################################

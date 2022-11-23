@@ -6,6 +6,6 @@
 
 - name: Ensure Nextcloud services stopped
   ansible.builtin.service:
-    name: "{{ item }}"
+    name: "{{ item.name }}"
     state: stopped
-  with_items: "{{ nextcloud_services_list }}"
+  with_items: "{{ nextcloud_services_list | sort (attribute='priority', reverse=true) }}"
