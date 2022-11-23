@@ -8,4 +8,4 @@
   ansible.builtin.service:
     name: "{{ item.name }}"
     state: stopped
-  with_items: "{{ nextcloud_systemd_services_list | sort (attribute='priority', reverse=true) }}"
+  with_items: "{{ nextcloud_systemd_services_list | sort (attribute='priority,name', reverse=true) }}"
