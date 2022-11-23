@@ -47,17 +47,17 @@ devture_systemd_service_manager_services_list_auto: |
     +
     ([{'name': (devture_postgres_identifier + '.service'), 'priority': 500, 'groups': ['nextcloud', 'postgres']}] if nextcloud_playbook_postgres_installation_enabled else [])
     +
-    ([{'name': 'devture-traefik.service', 'priority': 3000, 'groups': ['nextcloud', 'traefik', 'reverse-proxy']}] if nextcloud_playbook_traefik_installation_enabled else [])
+    ([{'name': 'devture-traefik.service', 'priority': 3000, 'groups': ['nextcloud', 'traefik', 'reverse-proxies']}] if nextcloud_playbook_traefik_installation_enabled else [])
     +
     ([{'name': 'nextcloud-onlyoffice-document-server.service', 'priority': 2000, 'groups': ['nextcloud', 'onlyoffice']}] if nextcloud_onlyoffice_document_server_enabled else [])
     +
-    ([{'name': 'nextcloud-reverse-proxy-companion.service', 'priority': 1500, 'groups': ['nextcloud', 'nextcloud-server', 'reverse-proxy']}] if nextcloud_reverse_proxy_companion_enabled else [])
+    ([{'name': 'nextcloud-reverse-proxy-companion.service', 'priority': 1500, 'groups': ['nextcloud', 'nextcloud-server', 'reverse-proxies']}] if nextcloud_reverse_proxy_companion_enabled else [])
     +
-    ([{'name': 'nextcloud-nginx-proxy.service', 'priority': 3000, 'groups': ['nextcloud', 'reverse-proxy']}] if nextcloud_playbook_nginx_proxy_installation_enabled else [])
+    ([{'name': 'nextcloud-nginx-proxy.service', 'priority': 3000, 'groups': ['nextcloud', 'reverse-proxies']}] if nextcloud_playbook_nginx_proxy_installation_enabled else [])
     +
-    ([{'name': 'nextcloud-nginx-proxy-ssl-certificate-renew.timer', 'priority': 4000, 'groups': ['nextcloud', 'reverse-proxy']}] if nextcloud_playbook_nginx_proxy_installation_enabled and nextcloud_nginx_proxy_ssl_retrieval_method == 'lets-encrypt' else [])
+    ([{'name': 'nextcloud-nginx-proxy-ssl-certificate-renew.timer', 'priority': 4000, 'groups': ['nextcloud', 'reverse-proxies']}] if nextcloud_playbook_nginx_proxy_installation_enabled and nextcloud_nginx_proxy_ssl_retrieval_method == 'lets-encrypt' else [])
     +
-    ([{'name': 'nextcloud-nginx-proxy-reload.timer', 'priority': 4000, 'groups': ['nextcloud', 'reverse-proxy']}] if nextcloud_playbook_nginx_proxy_installation_enabled and nextcloud_nginx_proxy_ssl_retrieval_method == 'lets-encrypt' else [])
+    ([{'name': 'nextcloud-nginx-proxy-reload.timer', 'priority': 4000, 'groups': ['nextcloud', 'reverse-proxies']}] if nextcloud_playbook_nginx_proxy_installation_enabled and nextcloud_nginx_proxy_ssl_retrieval_method == 'lets-encrypt' else [])
   }}
 
 ########################################################################
