@@ -7,7 +7,25 @@ nextcloud_user_username: nextcloud
 nextcloud_user_uid: 3991
 nextcloud_user_gid: 3991
 
-nextcloud_services_list: []
+# nextcloud_services_list_auto contains a list of systemd services and their priorities.
+# This list is managed by the playbook. You're not meant to override this variable.
+# To add your own items to the list, use `nextcloud_services_list_additional`
+nextcloud_services_list_auto: []
+
+# nextcloud_services_list_additional contains your own list of systemd services and their priorities.
+#
+# Example:
+# nextcloud_services_list_additional:
+#   - name: some-service.service
+#     priority: 1250
+#   - name: another-service.service
+#     priority: 3500
+nextcloud_services_list_additional: []
+
+# nextcloud_services_list contains a list of systemd services and their priorities.
+nextcloud_services_list: "{{ nextcloud_services_list_auto + nextcloud_services_list_additional }}"
+
+# nextcloud_services_autostart_enabled controls whether systemd services should auto-start when the system reboots
 nextcloud_services_autostart_enabled: true
 
 # The architecture that your server runs.
