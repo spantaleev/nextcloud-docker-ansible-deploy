@@ -35,7 +35,7 @@ nextcloud_playbook_goofys_installation_enabled: false
 
 ########################################################################
 #                                                                      #
-# base                                                                 #
+# com.devture.ansible.role.systemd_service_manager                                                                 #
 #                                                                      #
 ########################################################################
 
@@ -62,7 +62,7 @@ devture_systemd_service_manager_services_list_auto: |
 
 ########################################################################
 #                                                                      #
-# /base                                                                #
+# /com.devture.ansible.role.systemd_service_manager                                                                #
 #                                                                      #
 ########################################################################
 
