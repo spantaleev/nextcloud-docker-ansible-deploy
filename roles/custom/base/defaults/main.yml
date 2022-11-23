@@ -8,6 +8,7 @@ nextcloud_user_uid: 3991
 nextcloud_user_gid: 3991
 
 nextcloud_services_list: []
+nextcloud_services_autostart_enabled: true
 
 # The architecture that your server runs.
 # Recognized values by us are 'amd64', 'arm32' and 'arm64'.
