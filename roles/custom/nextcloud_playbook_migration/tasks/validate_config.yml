@@ -41,7 +41,7 @@
     - {'old': 'nextcloud_docker_image_tag', 'new': 'nextcloud_nextcloud_container_image_tag'}
     - {'old': 'nextcloud_container_image_customizations_dockerfile_body_custom', 'new': 'nextcloud_nextcloud_container_image_customizations_dockerfile_body_custom'}
     - {'old': 'nextcloud_version', 'new': 'nextcloud_nextcloud_version'}
-    - {'old': 'nextcloud_services_restart_cron_time_definition', 'new': '<not applicable anymore>'}
+    - {'old': 'nextcloud_systemd_services_restart_cron_time_definition', 'new': '<not applicable anymore>'}
     - {'old': 'nextcloud_config_additional_parameters', 'new': 'nextcloud_nextcloud_config_additional_parameters'}
     - {'old': 'nextcloud_config_parameters', 'new': 'nextcloud_nextcloud_config_parameters'}
     - {'old': 'nextcloud_config_default_parameters', 'new': 'nextcloud_nextcloud_config_default_parameters'}

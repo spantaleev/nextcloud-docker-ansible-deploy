@@ -8,11 +8,11 @@
   ansible.builtin.service:
     name: "{{ item.name }}"
     state: stopped
-  with_items: "{{ nextcloud_services_list | sort (attribute='priority', reverse=true) }}"
+  with_items: "{{ nextcloud_systemd_services_list | sort (attribute='priority', reverse=true) }}"
 
 - name: Ensure Nextcloud services started
   ansible.builtin.service:
     name: "{{ item.name }}"
     state: started
-    enabled: "{{ nextcloud_services_autostart_enabled }}"
-  with_items: "{{ nextcloud_services_list | sort (attribute='priority') }}"
+    enabled: "{{ nextcloud_systemd_services_autostart_enabled }}"
+  with_items: "{{ nextcloud_systemd_services_list | sort (attribute='priority') }}"
