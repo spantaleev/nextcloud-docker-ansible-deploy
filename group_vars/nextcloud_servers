@@ -39,7 +39,7 @@ nextcloud_playbook_goofys_installation_enabled: false
 #                                                                      #
 ########################################################################
 
-nextcloud_systemd_services_list_auto: |
+devture_systemd_service_manager_services_list_auto: |
   {{
     ([{'name': 'nextcloud-apache.service', 'priority': 1000}])
     +

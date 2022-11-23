@@ -61,6 +61,9 @@
 
     - {'old': 'nextcloud_playbook_timesync_installation_enabled', 'new': 'devture_timesync_installation_enabled'}
 
+    - {'old': 'nextcloud_systemd_services_list', 'new': 'devture_systemd_service_manager_services_list_auto'}
+    - {'old': 'nextcloud_systemd_services_autostart_enabled', 'new': 'devture_systemd_service_manager_services_autostart_enabled'}
+
 - name: Fail if required Nextcloud settings not defined
   ansible.builtin.fail:
     msg: >-
