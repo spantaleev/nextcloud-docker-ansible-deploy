@@ -1,17 +1,20 @@
 ---
 
-- ansible.builtin.import_tasks: tasks/setup_base.yml
+- block:
+    - ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_base.yml"
   tags:
     - setup-all
     - setup-nextcloud-nginx-proxy
 
-- ansible.builtin.import_tasks: tasks/setup_ssl.yml
+- block:
+    - ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_ssl.yml"
   tags:
     - setup-all
     - setup-nextcloud-nginx-proxy
     - setup-nextcloud-nginx-proxy-ssl
 
-- ansible.builtin.import_tasks: tasks/setup_nginx_proxy.yml
+- block:
+    - ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_nginx_proxy.yml"
   tags:
     - setup-all
     - setup-nextcloud-nginx-proxy

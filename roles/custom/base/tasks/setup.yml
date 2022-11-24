@@ -1,6 +1,5 @@
 ---
 
-
 - name: Ensure Nextcloud group is created
   ansible.builtin.group:
     name: "{{ nextcloud_user_username }}"

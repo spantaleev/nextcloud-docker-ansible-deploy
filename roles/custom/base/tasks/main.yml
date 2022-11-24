@@ -1,8 +1,12 @@
-- ansible.builtin.import_tasks: "{{ role_path }}/tasks/validate_config.yml"
-  tags:
-    - setup-nextcloud
-    - setup-all
+---
 
-- ansible.builtin.import_tasks: "{{ role_path }}/tasks/setup.yml"
+- block:
+    - ansible.builtin.include_tasks: "{{ role_path }}/tasks/validate_config.yml"
+  tags:
+    - setup-all
+    - setup-nextcloud
+
+- block:
+    - ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup.yml"
   tags:
     - setup-all

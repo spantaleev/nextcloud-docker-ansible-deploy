@@ -1,13 +1,11 @@
 ---
 
-- when: nextcloud_fail2ban_enabled | bool
-  ansible.builtin.import_tasks: "{{ role_path }}/tasks/setup_install.yml"
-  tags:
-    - setup-fail2ban
-    - setup-all
+- block:
+    - when: nextcloud_fail2ban_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_install.yml"
 
-- when: not nextcloud_fail2ban_enabled | bool
-  ansible.builtin.import_tasks: "{{ role_path }}/tasks/setup_uninstall.yml"
+    - when: not nextcloud_fail2ban_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_uninstall.yml"
   tags:
-    - setup-fail2ban
     - setup-all
+    - setup-fail2ban

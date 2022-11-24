@@ -1,11 +1,17 @@
 ---
 
-- ansible.builtin.import_tasks: tasks/setup_onlyoffice_document_server.yml
+- block:
+    - when: nextcloud_onlyoffice_document_server_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_onlyoffice_document_server_install.yml"
+
+    - when: not nextcloud_onlyoffice_document_server_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_onlyoffice_document_server_uninstall.yml"
   tags:
     - setup-all
     - setup-onlyoffice-document-server
 
 # This is meant to be executed subsequently, after Nextcloud is fully setup
-- ansible.builtin.import_tasks: tasks/setup_onlyoffice_app.yml
+- block:
+    - ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_onlyoffice_app_install.yml"
   tags:
     - setup-onlyoffice-app

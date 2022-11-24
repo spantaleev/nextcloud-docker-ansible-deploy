@@ -1,9 +1,5 @@
 ---
 
-#
-# Tasks related to setting up the OnlyOffice app
-#
-
 - name: Fail if OnlyOffice not enabled
   ansible.builtin.fail:
     msg: "Before installing and making use of the OnlyOffice app, you need to install the OnlyOffice services (see `nextcloud_onlyoffice_document_server_enabled`)"

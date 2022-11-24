@@ -1,0 +1,25 @@
+---
+
+- name: Check existence of nextcloud-onlyoffice-document-server service
+  ansible.builtin.stat:
+    path: "/etc/systemd/system/nextcloud-onlyoffice-document-server.service"
+  register: nextcloud_onlyoffice_service_stat
+
+- when: nextcloud_onlyoffice_service_stat.stat.exists | bool
+  block:
+    - name: Ensure nextcloud-onlyoffice-document-server is stopped
+      ansible.builtin.service:
+        name: nextcloud-onlyoffice-document-server
+        state: stopped
+        daemon_reload: true
+      register: stopping_result
+
+    - name: Ensure nextcloud-onlyoffice-document-server.service doesn't exist
+      ansible.builtin.file:
+        path: "/etc/systemd/system/nextcloud-onlyoffice-document-server.service"
+        state: absent
+
+    - name: Ensure OnlyOffice container image doesn't exist
+      community.docker.docker_image:
+        name: "{{ nextcloud_onlyoffice_document_server_container_image }}"
+        state: absent
