@@ -12,14 +12,8 @@
         name: nextcloud-onlyoffice-document-server
         state: stopped
         daemon_reload: true
-      register: stopping_result
 
     - name: Ensure nextcloud-onlyoffice-document-server.service doesn't exist
       ansible.builtin.file:
         path: "/etc/systemd/system/nextcloud-onlyoffice-document-server.service"
-        state: absent
-
-    - name: Ensure OnlyOffice container image doesn't exist
-      community.docker.docker_image:
-        name: "{{ nextcloud_onlyoffice_document_server_container_image }}"
         state: absent
