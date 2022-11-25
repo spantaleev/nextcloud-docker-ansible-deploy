@@ -23,7 +23,7 @@ ExecStart={{ devture_systemd_docker_base_host_command_docker }} run \
 			--cap-drop=ALL \
 			--read-only \
 			--tmpfs=/tmp:rw,noexec,nosuid,size={{ nextcloud_reverse_proxy_companion_tmp_directory_size_mb }}m \
-			--network={{ nextcloud_container_network }} \
+			--network={{ nextcloud_reverse_proxy_companion_container_network }} \
 			{% if nextcloud_reverse_proxy_companion_http_bind_port != '' %}
 			-p {{ nextcloud_reverse_proxy_companion_http_bind_port }}:3000 \
 			{% endif %}
@@ -31,6 +31,10 @@ ExecStart={{ devture_systemd_docker_base_host_command_docker }} run \
 			--mount type=bind,src={{nextcloud_reverse_proxy_companion_base_path }}/nginx.conf,dst=/etc/nginx/nginx.conf,ro \
 			--mount type=bind,src={{ nextcloud_reverse_proxy_companion_config_path }},dst=/etc/nginx/conf.d,ro \
 			{{ nextcloud_reverse_proxy_companion_container_image }}
+
+{% for network in nextcloud_reverse_proxy_companion_container_additional_networks %}
+ExecStartPost={{ devture_systemd_docker_base_host_command_sh }} -c 'container_name=nextcloud-reverse-proxy-companion; network_name={{ network }}; attempt=0; while [ $attempt -le 29 ]; do attempt=$(( $attempt + 1 )); if [ "`{{ devture_systemd_docker_base_host_command_docker }} inspect -f {{ '{{.State.Running}}' }} $container_name 2> /dev/null`" = "true" ]; then break; fi; sleep 1; done; {{ devture_systemd_docker_base_host_command_docker }} network connect $network_name $container_name'
+{% endfor %}
 
 ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-reverse-proxy-companion 2>/dev/null'
 ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-reverse-proxy-companion 2>/dev/null'

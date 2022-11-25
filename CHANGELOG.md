@@ -1,3 +1,22 @@
+# 2022-11-25
+
+# Traefik now runs in a separate container network from the rest of the Nextcloud services
+
+Until now, Traefik ran in the same container network (`nextcloud`) as all Nextcloud services so it could reverse-proxy to them easily.
+
+From now on:
+
+- Traefik runs in its own new `traefik` container network
+
+- Nextcloud services continue to run in the `nextcloud` container network
+
+- Nextcloud services which Traefik needs to reverse-proxy to (e.g. the `nextcloud-reverse-proxy-companion` container) are automatically connected to the `traefik` additional container network, thanks to a new `nextcloud_playbook_reverse_proxyable_services_additional_networks` variable controlling this behavior
+
+To **upgrade your setup**, consider first stopping all services (running the playbook with `--tags=stop`) and then installing (`--tags=setup-all,start`).
+
+If you're reverse-proxying via your own Traefik instance (not installed by this playbook), you may need to use this additional configuration: `nextcloud_playbook_reverse_proxyable_services_additional_networks: [traefik]` (for Traefik running in a container network named `traefik`).
+
+
 # 2022-10-31
 
 ## (Backward Compatibility Break) Major playbook changes which necessitate manual action

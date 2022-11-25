@@ -24,6 +24,10 @@ nextcloud_playbook_traefik_role_enabled: true
 # installed in another way.
 nextcloud_playbook_traefik_labels_enabled: true
 
+# nextcloud_playbook_reverse_proxyable_services_additional_networks contains a list of additional container networks,
+# to which to connect services/containers which you might wish to reverse-proxy to.
+nextcloud_playbook_reverse_proxyable_services_additional_networks: "{{ [devture_traefik_container_network] if devture_traefik_enabled and devture_traefik_container_network != nextcloud_container_network else [] }}"
+
 # Controls whether to install nextcloud-nginx-proxy or not
 # You may wish to enable this if you're not using Traefik.
 nextcloud_playbook_nginx_proxy_installation_enabled: false
@@ -110,6 +114,8 @@ nextcloud_nextcloud_database_password: "{{ '%s' | format(nextcloud_generic_secre
 
 nextcloud_reverse_proxy_companion_enabled: true
 
+nextcloud_reverse_proxy_companion_container_additional_networks: "{{ nextcloud_playbook_reverse_proxyable_services_additional_networks }}"
+
 nextcloud_reverse_proxy_companion_container_labels_traefik_enabled: "{{ nextcloud_playbook_traefik_labels_enabled }}"
 
 ########################################################################
@@ -194,8 +200,6 @@ devture_playbook_state_preserver_commit_hash_preservation_dst: "{{ nextcloud_bas
 # To completely disable the Traefik role from running, use `nextcloud_playbook_traefik_role_enabled: false`.
 # See the comment there for more details about why we have both `devture_traefik_enabled` and `nextcloud_playbook_traefik_role_enabled`.
 devture_traefik_enabled: "{{ nextcloud_playbook_traefik_role_enabled }}"
-
-devture_traefik_container_network: "{{ nextcloud_container_network }}"
 
 devture_traefik_uid: "{{ nextcloud_user_uid }}"
 devture_traefik_gid: "{{ nextcloud_user_gid }}"

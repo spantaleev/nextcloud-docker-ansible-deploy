@@ -32,6 +32,17 @@ nextcloud_reverse_proxy_companion_container_labels_traefik_tls_certResolver: def
 #   another.label="here"
 nextcloud_reverse_proxy_companion_container_labels_additional_labels: ''
 
+nextcloud_reverse_proxy_companion_container_network: "{{ nextcloud_container_network }}"
+
+# A list of additional container networks that the nextcloud-reverse-proxy-companion container would be connected to.
+# The playbook does not create these networks, so make sure they already exist.
+#
+# Use this to expose nextcloud-reverse-proxy-companion to another reverse proxy, which runs in a different container network,
+# without exposing all other Nextcloud services to that other reverse-proxy.
+#
+# For background, see: https://github.com/spantaleev/matrix-docker-ansible-deploy/issues/1498
+nextcloud_reverse_proxy_companion_container_additional_networks: []
+
 nextcloud_reverse_proxy_companion_client_max_body_size: "4G"
 
 nextcloud_reverse_proxy_companion_tmp_directory_size_mb: 512

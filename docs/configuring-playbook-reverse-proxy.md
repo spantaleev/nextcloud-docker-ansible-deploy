@@ -21,15 +21,20 @@ There are multiple variables in the playbook which control Traefik integration:
 
 - `nextcloud_playbook_traefik_labels_enabled` (default `true`) - controls whether Traefik container labels are attached to services. You may disable Traefik with the variables above, yet still keep attaching labels, so that a separately-installed Traefik instance can reverse-proxy to these services. Even if you're not using Traefik at all, flipping this to `false` is generally not necessary, since having a few labels on containers doesn't hurt
 
+- `nextcloud_playbook_reverse_proxyable_services_additional_networks` (default `[traefik]` when `devture_traefik_enabled`) - a list of container networks that reverse-proxyable services (like `nextcloud-reverse-proxy-companion`) should be attached to, so that a reverse-proxy (like Traefik) which lives on a separate network can reach them
+
 
 ## Using your own Traefik server (installed separately)
 
 If you'd like to avoid the playbook installing its own Traefik server and instead use your own, use this configuration:
 
 ```yaml
+# Disable the Traefik role completely
 nextcloud_playbook_traefik_role_enabled: false
 
-nextcloud_container_network: 'YOUR_TRAEFIK_NETWORK'
+# But still attach services to some network (e.g. traefik),
+# so that a Traefik instance running in that network can reach these services
+nextcloud_playbook_reverse_proxyable_services_additional_networks: [traefik]
 ```
 
 The `nextcloud-reverse-proxy-companion` container has container labels attached, so that a Traefik instance can reverse-proxy to it. See `roles/custom/nextcloud_reverse_proxy_companion/templates/labels.j2`.
@@ -128,6 +133,11 @@ nextcloud_playbook_traefik_role_enabled: false
 # If you're not using Traefik, you can also disable putting Traefik labels on services
 nextcloud_playbook_traefik_labels_enabled: false
 
+# Optionally, you can still attach services to some additinal network
+# so that your reverse-proxy (potentially running there) can reach these services
+nextcloud_playbook_reverse_proxyable_services_additional_networks: [network-name-of-the-other-reverse-proxy]
+
+# Alternatively:
 # Expose the nextcloud-reverse-proxy-companion container's webserver to port 37150 on the loopback network interface only.
 # You can reverse-proxy to it using a locally running webserver.
 nextcloud_reverse_proxy_companion_http_bind_port: '127.0.0.1:37150'
