@@ -5,8 +5,11 @@
   tags:
     - setup-all
     - setup-nextcloud
+    - install-all
+    - install-nextcloud
 
 - block:
     - ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup.yml"
   tags:
     - setup-all
+    - install-all

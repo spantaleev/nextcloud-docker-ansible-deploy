@@ -5,6 +5,8 @@
   tags:
     - setup-all
     - setup-nextcloud-nginx-proxy
+    - install-all
+    - install-nextcloud-nginx-proxy
 
 - block:
     - ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_ssl.yml"
@@ -12,9 +14,14 @@
     - setup-all
     - setup-nextcloud-nginx-proxy
     - setup-nextcloud-nginx-proxy-ssl
+    - install-all
+    - install-nextcloud-nginx-proxy
+    - install-nextcloud-nginx-proxy-ssl
 
 - block:
     - ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_nginx_proxy.yml"
   tags:
     - setup-all
     - setup-nextcloud-nginx-proxy
+    - install-all
+    - install-nextcloud-nginx-proxy

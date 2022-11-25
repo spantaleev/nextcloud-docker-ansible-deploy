@@ -3,7 +3,13 @@
 - block:
     - when: nextcloud_onlyoffice_document_server_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_onlyoffice_document_server_install.yml"
+  tags:
+    - setup-all
+    - setup-onlyoffice-document-server
+    - install-all
+    - install-onlyoffice-document-server
 
+- block:
     - when: not nextcloud_onlyoffice_document_server_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_onlyoffice_document_server_uninstall.yml"
   tags:

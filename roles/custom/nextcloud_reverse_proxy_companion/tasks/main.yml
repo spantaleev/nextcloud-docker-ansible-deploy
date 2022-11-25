@@ -3,7 +3,13 @@
 - block:
     - when: nextcloud_reverse_proxy_companion_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_install.yml"
+  tags:
+    - setup-all
+    - setup-nextcloud-reverse-proxy-companion
+    - install-all
+    - install-nextcloud-reverse-proxy-companion
 
+- block:
     - when: not nextcloud_reverse_proxy_companion_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_uninstall.yml"
   tags:
