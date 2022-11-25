@@ -144,7 +144,8 @@ devture_postgres_container_network: "{{ nextcloud_container_network }}"
 devture_postgres_uid: "{{ nextcloud_user_uid }}"
 devture_postgres_gid: "{{ nextcloud_user_gid }}"
 
-devture_postgres_vacuum_database: "nextcloud"
+devture_postgres_vacuum_default_databases_list:
+  - "{{ nextcloud_nextcloud_database_name }}"
 
 devture_postgres_systemd_services_to_stop_for_maintenance_list: |
   {{
