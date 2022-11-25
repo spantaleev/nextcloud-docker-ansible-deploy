@@ -21,7 +21,9 @@ There are multiple variables in the playbook which control Traefik integration:
 
 - `nextcloud_playbook_traefik_labels_enabled` (default `true`) - controls whether Traefik container labels are attached to services. You may disable Traefik with the variables above, yet still keep attaching labels, so that a separately-installed Traefik instance can reverse-proxy to these services. Even if you're not using Traefik at all, flipping this to `false` is generally not necessary, since having a few labels on containers doesn't hurt
 
-- `nextcloud_playbook_reverse_proxyable_services_additional_networks` (default `[traefik]` when `devture_traefik_enabled`) - a list of container networks that reverse-proxyable services (like `nextcloud-reverse-proxy-companion`) should be attached to, so that a reverse-proxy (like Traefik) which lives on a separate network can reach them
+- `nextcloud_playbook_reverse_proxyable_services_container_network` (default `traefik`) - controls the default container network for reverse-proxyable services (like `nextcloud-reverse-proxy-companion`). We default these to the `traefik` network, because Traefik needs to be able to reach them as soon as they start.
+
+- `nextcloud_playbook_reverse_proxyable_services_additional_networks` (default `[nextcloud]` when `devture_traefik_enabled`) - a list of container networks that reverse-proxyable services (like `nextcloud-reverse-proxy-companion`) should be attached to, so that they can do their job.
 
 
 ## Using your own Traefik server (installed separately)
@@ -32,9 +34,11 @@ If you'd like to avoid the playbook installing its own Traefik server and instea
 # Disable the Traefik role completely
 nextcloud_playbook_traefik_role_enabled: false
 
-# But still attach services to some network (e.g. traefik),
-# so that a Traefik instance running in that network can reach these services
-nextcloud_playbook_reverse_proxyable_services_additional_networks: [traefik]
+# But still attach services to some Traefik network by default (e.g. traefik)
+nextcloud_playbook_reverse_proxyable_services_container_network: traefik
+
+# And restore their connectivity to the Nextcloud network
+nextcloud_playbook_reverse_proxyable_services_additional_networks: [nextcloud]
 ```
 
 The `nextcloud-reverse-proxy-companion` container has container labels attached, so that a Traefik instance can reverse-proxy to it. See `roles/custom/nextcloud_reverse_proxy_companion/templates/labels.j2`.
@@ -133,7 +137,7 @@ nextcloud_playbook_traefik_role_enabled: false
 # If you're not using Traefik, you can also disable putting Traefik labels on services
 nextcloud_playbook_traefik_labels_enabled: false
 
-# Optionally, you can still attach services to some additinal network
+# Optionally, you can still attach services to some additional network
 # so that your reverse-proxy (potentially running there) can reach these services
 nextcloud_playbook_reverse_proxyable_services_additional_networks: [network-name-of-the-other-reverse-proxy]
 

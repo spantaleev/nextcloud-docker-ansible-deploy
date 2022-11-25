@@ -1,5 +1,8 @@
 {% if nextcloud_reverse_proxy_companion_container_labels_traefik_enabled %}
 traefik.enable=true
+{% if nextcloud_reverse_proxy_companion_container_labels_traefik_docker_network %}
+traefik.docker.network={{ nextcloud_reverse_proxy_companion_container_labels_traefik_docker_network }}
+{% endif %}
 traefik.http.routers.nextcloud-reverse-proxy-companion.rule={{ nextcloud_reverse_proxy_companion_container_labels_traefik_rule }}
 traefik.http.routers.nextcloud-reverse-proxy-companion.entrypoints={{ nextcloud_reverse_proxy_companion_container_labels_traefik_entrypoints }}
 traefik.http.routers.nextcloud-reverse-proxy-companion.tls.certResolver={{ nextcloud_reverse_proxy_companion_container_labels_traefik_tls_certResolver }}

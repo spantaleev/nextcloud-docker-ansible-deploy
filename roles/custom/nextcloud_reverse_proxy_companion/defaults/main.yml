@@ -19,6 +19,7 @@ nextcloud_reverse_proxy_companion_systemd_wanted_services_list: ['nextcloud-apac
 #
 # To inject your own other container labels, see `nextcloud_reverse_proxy_companion_container_labels_additional_labels`.
 nextcloud_reverse_proxy_companion_container_labels_traefik_enabled: false
+nextcloud_reverse_proxy_companion_container_labels_traefik_docker_network: "{{ nextcloud_reverse_proxy_companion_container_network }}"
 nextcloud_reverse_proxy_companion_container_labels_traefik_rule: 'Host(`{{ nextcloud_server_fqn_nextcloud }}`)'
 nextcloud_reverse_proxy_companion_container_labels_traefik_entrypoints: web-secure
 nextcloud_reverse_proxy_companion_container_labels_traefik_tls_certResolver: default  # noqa var-naming

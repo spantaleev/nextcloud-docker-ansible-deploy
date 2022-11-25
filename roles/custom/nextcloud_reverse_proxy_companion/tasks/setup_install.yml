@@ -35,14 +35,13 @@
     name: "{{ nextcloud_reverse_proxy_companion_container_image }}"
     source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
 
+- name: Ensure nextcloud-reverse-proxy-companion container network exists
+  community.docker.docker_network:
+    name: "{{ nextcloud_reverse_proxy_companion_container_network }}"
+
 - name: Ensure nextcloud-reverse-proxy-companion.service installed
   ansible.builtin.template:
     src: "{{ role_path }}/templates/systemd/nextcloud-reverse-proxy-companion.service.j2"
     dest: "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-reverse-proxy-companion.service"
     mode: 0640
   register: nextcloud_reverse_proxy_companion_systemd_service_result
-
-- name: Ensure systemd reloaded after nextcloud-reverse-proxy-companion.service installation
-  ansible.builtin.service:
-    daemon_reload: true
-  when: nextcloud_reverse_proxy_companion_systemd_service_result.changed

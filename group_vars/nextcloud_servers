@@ -24,9 +24,21 @@ nextcloud_playbook_traefik_role_enabled: true
 # installed in another way.
 nextcloud_playbook_traefik_labels_enabled: true
 
+# nextcloud_playbook_reverse_proxyable_services_container_network specifies the main container network for reverse-proxyable services.
+#
+# It may be tempting to make the main network the Nextcloud network. However, this means that the Traefik network needs to be additional.
+# Traefik does not work well with services which belong to another network and are connected to the Traefik network additionally (subsequently).
+# Traefik expects containers to be reachable as soon as they start.
+# Thus, the Traefik network needs to be the main one.
+nextcloud_playbook_reverse_proxyable_services_container_network: "{{ devture_traefik_container_network if devture_traefik_enabled else nextcloud_container_network }}"
+
 # nextcloud_playbook_reverse_proxyable_services_additional_networks contains a list of additional container networks,
 # to which to connect services/containers which you might wish to reverse-proxy to.
-nextcloud_playbook_reverse_proxyable_services_additional_networks: "{{ [devture_traefik_container_network] if devture_traefik_enabled and devture_traefik_container_network != nextcloud_container_network else [] }}"
+#
+# When Traefik is enabled, we put reverse-proxyable services on the Traefik network by default,
+# and we connect them to the Nextcloud network as an additional network.
+# See `nextcloud_playbook_reverse_proxyable_services_container_network`
+nextcloud_playbook_reverse_proxyable_services_additional_networks: "{{ [nextcloud_container_network] if devture_traefik_enabled and devture_traefik_container_network != nextcloud_container_network else [] }}"
 
 # Controls whether to install nextcloud-nginx-proxy or not
 # You may wish to enable this if you're not using Traefik.
@@ -113,6 +125,8 @@ nextcloud_nextcloud_database_password: "{{ '%s' | format(nextcloud_generic_secre
 ########################################################################
 
 nextcloud_reverse_proxy_companion_enabled: true
+
+nextcloud_reverse_proxy_companion_container_network: "{{ nextcloud_playbook_reverse_proxyable_services_container_network }}"
 
 nextcloud_reverse_proxy_companion_container_additional_networks: "{{ nextcloud_playbook_reverse_proxyable_services_additional_networks }}"
 
