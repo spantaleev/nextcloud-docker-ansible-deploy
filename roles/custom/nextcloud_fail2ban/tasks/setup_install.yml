@@ -10,7 +10,6 @@
     owner: root
     group: root
     force: true
-  when: nextcloud_fail2ban_enabled | bool
 
 - name: Copy jail file for fail2ban
   ansible.builtin.template:
@@ -18,18 +17,3 @@
     dest: "/etc/fail2ban/jail.d/nextcloud.local"
     mode: 0644
     force: true
-  when: nextcloud_fail2ban_enabled | bool
-
-- name: Restart and enable fail2ban service
-  ansible.builtin.service:
-    name: fail2ban
-    state: restarted
-    enabled: true
-  when: nextcloud_fail2ban_enabled | bool
-
-- name: Stop and disable fail2ban service (if not enabled)
-  ansible.builtin.service:
-    name: fail2ban
-    state: stopped
-    enabled: false
-  when: "not nextcloud_fail2ban_enabled"

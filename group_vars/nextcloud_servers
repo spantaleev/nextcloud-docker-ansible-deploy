@@ -64,6 +64,8 @@ devture_systemd_service_manager_services_list_auto: |
     ([{'name': 'nextcloud-nginx-proxy-ssl-certificate-renew.timer', 'priority': 4000, 'groups': ['nextcloud', 'reverse-proxies']}] if nextcloud_playbook_nginx_proxy_installation_enabled and nextcloud_nginx_proxy_ssl_retrieval_method == 'lets-encrypt' else [])
     +
     ([{'name': 'nextcloud-nginx-proxy-reload.timer', 'priority': 4000, 'groups': ['nextcloud', 'reverse-proxies']}] if nextcloud_playbook_nginx_proxy_installation_enabled and nextcloud_nginx_proxy_ssl_retrieval_method == 'lets-encrypt' else [])
+    +
+    ([{'name': 'fail2ban', 'priority': 5000, 'groups': ['nextcloud', 'fail2ban']}] if nextcloud_fail2ban_enabled else [])
   }}
 
 ########################################################################

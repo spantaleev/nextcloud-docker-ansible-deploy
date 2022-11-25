@@ -7,9 +7,3 @@
   with_items:
     - /etc/fail2ban/filter.d/nextcloud.conf
     - /etc/fail2ban/jail.d/nextcloud.local
-
-# We don't stop fail2ban in case it's not us who installed it.
-- name: Restart fail2ban service
-  ansible.builtin.service:
-    name: fail2ban
-    state: restarted
