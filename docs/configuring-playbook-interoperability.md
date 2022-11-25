@@ -16,12 +16,14 @@ Below, we offer some suggestions for how to make this playbook more interoperabl
 If you're installing [Traefik](https://traefik.io) on your server in another way, disable this component from the playbook:
 
 ```yaml
-nextcloud_playbook_traefik_installation_enabled: false
+nextcloud_playbook_traefik_role_enabled: false
 
 nextcloud_container_network: 'YOUR_TRAEFIK_NETWORK'
 ```
 
-The `nextcloud-reverse-proxy-companion` container has container labels attached, so that a Traefik instance can reverse-proxy to it. See `roles/custom/nextcloud_reverse_proxy_companion/templates/labels.j2`.
+All services (among which the `nextcloud-reverse-proxy-companion` container) have container labels attached, so that a Traefik instance can reverse-proxy to them. See `roles/custom/nextcloud_reverse_proxy_companion/templates/labels.j2` for an example.
+
+Whether services are labelled is controlled by the `nextcloud_playbook_traefik_labels_enabled` variable (see `group_vars/nextcloud_servers`). You can disable the Traefik role and still have services labelled, so that they're discoverable by a separately-installed Traefik service.
 
 Also, refer to the [configuring the reverse-proxy](configuring-playbook-reverse-proxy.md) documentation page for more information.
 

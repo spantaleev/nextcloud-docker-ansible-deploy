@@ -64,6 +64,8 @@
     - {'old': 'nextcloud_systemd_services_list', 'new': 'devture_systemd_service_manager_services_list_auto'}
     - {'old': 'nextcloud_systemd_services_autostart_enabled', 'new': 'devture_systemd_service_manager_services_autostart_enabled'}
 
+    - {'old': 'nextcloud_playbook_traefik_installation_enabled', 'new': 'nextcloud_playbook_traefik_role_enabled'}
+
 - name: Fail if required Nextcloud settings not defined
   ansible.builtin.fail:
     msg: >-

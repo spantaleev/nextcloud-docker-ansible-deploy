@@ -16,7 +16,13 @@ nextcloud_playbook_postgres_installation_enabled: true
 
 # Controls whether to install Traefik or not
 # See the `com.devture.ansible.role.traefik` section below for configuration.
-nextcloud_playbook_traefik_installation_enabled: true
+nextcloud_playbook_traefik_role_enabled: true
+
+# Controls whether to attach Traefik labels to services.
+# This is separate from `devture_traefik_enabled` and `nextcloud_playbook_traefik_role_enabled`,
+# because you may wish to disable Traefik installation by the playbook, yet still use Traefik
+# installed in another way.
+nextcloud_playbook_traefik_labels_enabled: true
 
 # Controls whether to install nextcloud-nginx-proxy or not
 # You may wish to enable this if you're not using Traefik.
@@ -47,7 +53,7 @@ devture_systemd_service_manager_services_list_auto: |
     +
     ([{'name': (devture_postgres_identifier + '.service'), 'priority': 500, 'groups': ['nextcloud', 'postgres']}] if nextcloud_playbook_postgres_installation_enabled else [])
     +
-    ([{'name': 'devture-traefik.service', 'priority': 3000, 'groups': ['nextcloud', 'traefik', 'reverse-proxies']}] if nextcloud_playbook_traefik_installation_enabled else [])
+    ([{'name': 'devture-traefik.service', 'priority': 3000, 'groups': ['nextcloud', 'traefik', 'reverse-proxies']}] if nextcloud_playbook_traefik_role_enabled else [])
     +
     ([{'name': 'nextcloud-onlyoffice-document-server.service', 'priority': 2000, 'groups': ['nextcloud', 'onlyoffice']}] if nextcloud_onlyoffice_document_server_enabled else [])
     +
@@ -102,7 +108,7 @@ nextcloud_nextcloud_database_password: "{{ '%s' | format(nextcloud_generic_secre
 
 nextcloud_reverse_proxy_companion_enabled: true
 
-nextcloud_reverse_proxy_companion_container_labels_traefik_enabled: true
+nextcloud_reverse_proxy_companion_container_labels_traefik_enabled: "{{ nextcloud_playbook_traefik_labels_enabled }}"
 
 ########################################################################
 #                                                                      #
@@ -183,7 +189,9 @@ devture_playbook_state_preserver_commit_hash_preservation_dst: "{{ nextcloud_bas
 #                                                                      #
 ########################################################################
 
-# To completely disable installing Traefik, use `nextcloud_playbook_traefik_installation_enabled: false`.
+# To completely disable the Traefik role from running, use `nextcloud_playbook_traefik_role_enabled: false`.
+# See the comment there for more details about why we have both `devture_traefik_enabled` and `nextcloud_playbook_traefik_role_enabled`.
+devture_traefik_enabled: "{{ nextcloud_playbook_traefik_role_enabled }}"
 
 devture_traefik_container_network: "{{ nextcloud_container_network }}"
 

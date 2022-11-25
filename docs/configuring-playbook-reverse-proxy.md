@@ -13,13 +13,21 @@ and you'd like to use your own webserver (be it your own Traefik installed in an
 
 Whichever reverse-proxy you decide on using, we recommend that you keep the last part the same (`nextcloud-reverse-proxy-companion` -> `nextcloud-apache`) the same.
 
+There are multiple variables in the playbook which control Traefik integration:
+
+- `devture_traefik_enabled` (same as `nextcloud_playbook_traefik_role_enabled` by default - `true`) - controls whether the Traefik role's functionality is enabled or not. If disabled, the role will try to uninstall Traefik, etc. Flipping this to `false` disables Traefik, but also potentially uninstalls and deletes data in `/devture-traefik`.
+
+- `nextcloud_playbook_traefik_role_enabled` (default `true`) - controls whether the Traefik role will execute or not. Setting this to `false` disables Traefik and doesn't touch `/devture-traefik` (which is potentially managed by another playbook)
+
+- `nextcloud_playbook_traefik_labels_enabled` (default `true`) - controls whether Traefik container labels are attached to services. You may disable Traefik with the variables above, yet still keep attaching labels, so that a separately-installed Traefik instance can reverse-proxy to these services. Even if you're not using Traefik at all, flipping this to `false` is generally not necessary, since having a few labels on containers doesn't hurt
+
 
 ## Using your own Traefik server (installed separately)
 
 If you'd like to avoid the playbook installing its own Traefik server and instead use your own, use this configuration:
 
 ```yaml
-nextcloud_playbook_traefik_installation_enabled: false
+nextcloud_playbook_traefik_role_enabled: false
 
 nextcloud_container_network: 'YOUR_TRAEFIK_NETWORK'
 ```
@@ -27,17 +35,16 @@ nextcloud_container_network: 'YOUR_TRAEFIK_NETWORK'
 The `nextcloud-reverse-proxy-companion` container has container labels attached, so that a Traefik instance can reverse-proxy to it. See `roles/custom/nextcloud_reverse_proxy_companion/templates/labels.j2`.
 
 
-# Disabling Traefik
+# Disabling Traefik completely
 
-To disable Traefik, use:
+To disable Traefik integration completely, use:
 
 ```yaml
 # Disable Traefik
-nextcloud_playbook_traefik_installation_enabled: false
+nextcloud_playbook_traefik_role_enabled: false
 
-# If you're not using Traefik, you can also avoid attaching container labels
-# to the `nextcloud-reverse-proxy-companion` container, although attaching labels won't hurt.
-nextcloud_reverse_proxy_companion_container_labels_traefik_enabled: false
+# If you're not using Traefik, you can also disable putting Traefik labels on services
+nextcloud_playbook_traefik_labels_enabled: false
 ```
 
 This disables traffic, but leaves `nextcloud-reverse-proxy-companion` installed. It doesn't expose `nextcloud-reverse-proxy-companion`'s ports though.
@@ -51,11 +58,10 @@ This disables traffic, but leaves `nextcloud-reverse-proxy-companion` installed.
 To disable Traefik and use `nextcloud-nginx-proxy` instead, use the following configuration:
 
 ```yaml
-nextcloud_playbook_traefik_installation_enabled: false
+nextcloud_playbook_traefik_role_enabled: false
 
-# If you're not using Traefik, you can also avoid attaching container labels
-# to the `nextcloud-reverse-proxy-companion` container, although attaching labels won't hurt.
-nextcloud_reverse_proxy_companion_container_labels_traefik_enabled: false
+# If you're not using Traefik, you can also disable putting Traefik labels on services
+nextcloud_playbook_traefik_labels_enabled: false
 
 nextcloud_playbook_nginx_proxy_installation_enabled: true
 ```
@@ -80,11 +86,10 @@ All it takes is:
 To do this, use the following configuration:
 
 ```yaml
-nextcloud_playbook_traefik_installation_enabled: false
+nextcloud_playbook_traefik_role_enabled: false
 
-# If you're not using Traefik, you can also avoid attaching container labels
-# to the `nextcloud-reverse-proxy-companion` container, although attaching labels won't hurt.
-nextcloud_reverse_proxy_companion_container_labels_traefik_enabled: false
+# If you're not using Traefik, you can also disable putting Traefik labels on services
+nextcloud_playbook_traefik_labels_enabled: false
 
 nextcloud_playbook_nginx_proxy_installation_enabled: true
 
@@ -118,11 +123,10 @@ nextcloud_reverse_proxy_companion_http_bind_port: 127.0.0.1:37150
 This method is about first [disabling Traefik](#disabling-traefik), which then allows you to reverse-proxy by yourself.
 
 ```yaml
-nextcloud_playbook_traefik_installation_enabled: false
+nextcloud_playbook_traefik_role_enabled: false
 
-# If you're not using Traefik, you can also avoid attaching container labels
-# to the `nextcloud-reverse-proxy-companion` container, although attaching labels won't hurt.
-nextcloud_reverse_proxy_companion_container_labels_traefik_enabled: false
+# If you're not using Traefik, you can also disable putting Traefik labels on services
+nextcloud_playbook_traefik_labels_enabled: false
 
 # Expose the nextcloud-reverse-proxy-companion container's webserver to port 37150 on the loopback network interface only.
 # You can reverse-proxy to it using a locally running webserver.

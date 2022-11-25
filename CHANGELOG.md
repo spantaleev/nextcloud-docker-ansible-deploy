@@ -54,7 +54,7 @@ If you were previously using Traefik as described in our docs, you can now proba
 Despite Traefik being the default reverse-proxy, you can still switch back to using `nginx` as a reverse-proxy with the following configuration:
 
 ```yaml
-nextcloud_playbook_traefik_installation_enabled: false
+nextcloud_playbook_traefik_role_enabled: false
 nextcloud_playbook_nginx_proxy_installation_enabled: true
 ```
 
