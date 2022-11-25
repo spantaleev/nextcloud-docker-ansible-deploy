@@ -96,7 +96,7 @@ nextcloud_nextcloud_systemd_required_services_list: |
 nextcloud_nextcloud_database_hostname: "{{ devture_postgres_identifier if nextcloud_playbook_postgres_installation_enabled else '' }}"
 nextcloud_nextcloud_database_port: "{{ '5432' if nextcloud_playbook_postgres_installation_enabled else '' }}"
 nextcloud_nextcloud_database_username: "nextcloud"
-nextcloud_nextcloud_database_password: "{{ '%s' | format(nextcloud_generic_secret_key) | password_hash('sha512', 'db.nextcloud') | to_uuid }}"
+nextcloud_nextcloud_database_password: "{{ '%s' | format(nextcloud_generic_secret_key) | password_hash('sha512', 'db.nextcloud', rounds=655555) | to_uuid }}"
 
 ########################################################################
 #                                                                      #
