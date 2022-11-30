@@ -163,7 +163,7 @@ devture_postgres_systemd_services_to_stop_for_maintenance_list: |
     (['nextcloud-apache.service'])
   }}
 
-devture_postgres_additional_databases: |
+devture_postgres_managed_databases_auto: |
   {{
     [{
       'name': nextcloud_nextcloud_database_name,
