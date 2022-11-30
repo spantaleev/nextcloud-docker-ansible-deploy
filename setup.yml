@@ -54,6 +54,8 @@
     - when: nextcloud_playbook_traefik_role_enabled | bool
       role: galaxy/com.devture.ansible.role.traefik
 
+    - role: galaxy/com.devture.ansible.role.postgres_backup
+
     - role: custom/nextcloud_fail2ban
 
     - when: devture_systemd_service_manager_enabled | bool

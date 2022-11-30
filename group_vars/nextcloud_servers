@@ -69,6 +69,8 @@ devture_systemd_service_manager_services_list_auto: |
     +
     ([{'name': (devture_postgres_identifier + '.service'), 'priority': 500, 'groups': ['nextcloud', 'postgres']}] if nextcloud_playbook_postgres_installation_enabled else [])
     +
+    ([{'name': (devture_postgres_backup_identifier + '.service'), 'priority': 5000, 'groups': ['nextcloud', 'backup', 'postgres-backup']}] if devture_postgres_backup_enabled else [])
+    +
     ([{'name': 'devture-traefik.service', 'priority': 3000, 'groups': ['nextcloud', 'traefik', 'reverse-proxies']}] if nextcloud_playbook_traefik_role_enabled else [])
     +
     ([{'name': 'nextcloud-onlyoffice-document-server.service', 'priority': 2000, 'groups': ['nextcloud', 'onlyoffice']}] if nextcloud_onlyoffice_document_server_enabled else [])
@@ -175,6 +177,49 @@ devture_postgres_managed_databases_auto: |
 ########################################################################
 #                                                                      #
 # /com.devture.ansible.role.postgres                                   #
+#                                                                      #
+########################################################################
+
+
+
+########################################################################
+#                                                                      #
+# com.devture.ansible.role.postgres_backup                             #
+#                                                                      #
+########################################################################
+
+devture_postgres_backup_enabled: false
+
+devture_postgres_backup_identifier: nextcloud-postgres-backup
+
+devture_postgres_backup_architecture: "{{ nextcloud_architecture }}"
+
+devture_postgres_backup_base_path: "{{ nextcloud_base_path }}/postgres-backup"
+
+devture_postgres_backup_systemd_required_services_list: |
+  {{
+    (['docker.service'])
+    +
+    ([(devture_postgres_identifier + '.service')] if devture_postgres_enabled else [])
+  }}
+
+devture_postgres_backup_container_network: "{{ nextcloud_container_network }}"
+
+devture_postgres_backup_uid: "{{ nextcloud_user_uid }}"
+devture_postgres_backup_gid: "{{ nextcloud_user_gid }}"
+
+devture_postgres_backup_connection_hostname: "{{ devture_postgres_connection_hostname if devture_postgres_enabled else '' }}"
+devture_postgres_backup_connection_port: "{{ devture_postgres_connection_port if devture_postgres_enabled else 5432 }}"
+devture_postgres_backup_connection_username: "{{ devture_postgres_connection_username if devture_postgres_enabled else '' }}"
+devture_postgres_backup_connection_password: "{{ devture_postgres_connection_password if devture_postgres_enabled else '' }}"
+
+devture_postgres_backup_postgres_data_path: "{{ devture_postgres_data_path if devture_postgres_enabled else '' }}"
+
+devture_postgres_backup_databases: "{{ devture_postgres_managed_databases | map(attribute='name') if devture_postgres_enabled else [] }}"
+
+########################################################################
+#                                                                      #
+# /com.devture.ansible.role.postgres_backup                            #
 #                                                                      #
 ########################################################################
 
