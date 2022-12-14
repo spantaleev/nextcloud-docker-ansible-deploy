@@ -1,3 +1,16 @@
+# 2022-12-14
+
+# Container networks have flipped around
+
+If you're using an externally-managed Traefik server or other reverse-proxy, you may need to adapt your `vars.yml` configuration.
+
+To ensure connectivity of Nextcloud (actually `nextcloud-reverse-proxy-companion`) to Traefik, we used to put `nextcloud-reverse-proxy-companion` in Traefik's network (as a main network), and then also connect the `nextcloud-reverse-proxy-companion` container to "additional networks" (the `nextcloud` network, etc.).
+
+While this worked, it was a little backwards. We now have a better way to do things - putting `nextcloud-reverse-proxy-companion` in its own `nextcloud` network as main, and connecting it to additional networks (e.g. `traefik`) after creating the container, but before starting it. This also seems to work well and is more straightforward.
+
+The playbook will warn you if you're using any variables that have been renamed or dropped.
+
+
 # 2022-11-25
 
 # Traefik now runs in a separate container network from the rest of the Nextcloud services

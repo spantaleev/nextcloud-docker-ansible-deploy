@@ -19,11 +19,8 @@ If you're installing [Traefik](https://traefik.io) on your server in another way
 # Disable Traefik installation by the playbook
 nextcloud_playbook_traefik_role_enabled: false
 
-# But still attach services to some Traefik network by default (e.g. traefik)
-nextcloud_playbook_reverse_proxyable_services_container_network: traefik
-
-# And restore their connectivity to the Nextcloud network
-nextcloud_playbook_reverse_proxyable_services_additional_networks: [nextcloud]
+# But still attach services which require reverse-proxying to some Traefik network by default (e.g. traefik)
+nextcloud_playbook_reverse_proxyable_services_additional_network: traefik
 ```
 
 All services (among which the `nextcloud-reverse-proxy-companion` container) have container labels attached, so that a Traefik instance can reverse-proxy to them. See `roles/custom/nextcloud_reverse_proxy_companion/templates/labels.j2` for an example.

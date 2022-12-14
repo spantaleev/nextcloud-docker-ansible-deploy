@@ -2,6 +2,9 @@
 
 - block:
     - when: nextcloud_reverse_proxy_companion_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/validate_config.yml"
+
+    - when: nextcloud_reverse_proxy_companion_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_install.yml"
   tags:
     - setup-all

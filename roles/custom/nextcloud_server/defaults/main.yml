@@ -121,6 +121,17 @@ nextcloud_nextcloud_container_additional_environment_variables: ''
 # - "type=bind|volume|tmpfs,source=/outside,target=/inside,readonly,bind-propagation=slave"
 nextcloud_nextcloud_container_additional_mounts: []
 
+nextcloud_nextcloud_container_network: "{{ nextcloud_container_network }}"
+
+# A list of additional container networks that the container would be connected to.
+# The playbook does not create these networks, so make sure they already exist.
+#
+# Use this to expose the container to another reverse proxy, which runs in a different container network,
+# without exposing all other container services to that other reverse-proxy.
+#
+# For background, see: https://github.com/spantaleev/matrix-docker-ansible-deploy/issues/1498
+nextcloud_nextcloud_container_additional_networks: []
+
 # nextcloud_nextcloud_cron_schedule contains a systemd OnCalendar definition which controls how often `nextcloud-cron.timer` runs
 # The default value means 'every 15 minutes'.
 # Learn more here: https://man.archlinux.org/man/systemd.time.7

@@ -1,0 +1,9 @@
+---
+
+- name: Fail if required nextcloud-reverse-proxy-companion + Traefik settings not defined
+  ansible.builtin.fail:
+    msg: >-
+      You need to define a required configuration setting (`{{ item }}`) when `nextcloud_reverse_proxy_companion_container_labels_traefik_enabled`.
+  when: "nextcloud_reverse_proxy_companion_container_labels_traefik_enabled | bool and vars[item] == ''"
+  with_items:
+    - nextcloud_reverse_proxy_companion_container_labels_traefik_docker_network

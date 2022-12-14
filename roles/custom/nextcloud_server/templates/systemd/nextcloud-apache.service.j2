@@ -12,11 +12,11 @@ Environment="HOME={{ devture_systemd_docker_base_systemd_unit_home_path }}"
 ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-apache 2>/dev/null'
 ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-apache 2>/dev/null'
 
-ExecStart={{ devture_systemd_docker_base_host_command_docker }} run \
+ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
 			--rm \
 			--name=nextcloud-apache \
 			--log-driver=none \
-			--network={{ nextcloud_container_network }} \
+			--network={{ nextcloud_nextcloud_container_network }} \
 			--user={{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} \
 			--cap-drop=ALL \
 			--read-only \
@@ -40,6 +40,12 @@ ExecStart={{ devture_systemd_docker_base_host_command_docker }} run \
 			{{ arg }} \
 			{% endfor %}
 			{{ nextcloud_nextcloud_container_image_final }}
+
+{% for network in nextcloud_nextcloud_container_additional_networks %}
+ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} network connect {{ network }} nextcloud-apache
+{% endfor %}
+
+ExecStart={{ devture_systemd_docker_base_host_command_docker }} start --attach nextcloud-apache
 
 ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-apache 2>/dev/null'
 ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-apache 2>/dev/null'
