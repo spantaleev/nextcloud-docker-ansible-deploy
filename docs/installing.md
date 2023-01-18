@@ -2,7 +2,7 @@
 
 After [configuring DNS](configuring-dns.md) and [configuring the playbook](configuring-playbook.md), you're ready to install.
 
-**Before installing** and each time you update the playbook in the future, you will need to update the Ansible roles in this playbook by running `just roles`. `just roles` is a shortcut (a `roles` target defined in [`justfile`](justfile) and executed by the [`just`](https://github.com/casey/just) utility) which ultimately runs [ansible-galaxy](https://docs.ansible.com/ansible/latest/cli/ansible-galaxy.html) to download Ansible roles. If you don't have `just`, you can also manually run the `roles` commands seen in the `justfile`.
+**Before installing** and each time you update the playbook in the future, you will need to update the Ansible roles in this playbook by running `just roles`. `just roles` is a shortcut (a `roles` target defined in [`justfile`](../justfile) and executed by the [`just`](https://github.com/casey/just) utility) which ultimately runs [ansible-galaxy](https://docs.ansible.com/ansible/latest/cli/ansible-galaxy.html) to download Ansible roles. If you don't have `just`, you can also manually run the `roles` commands seen in the `justfile`.
 
 
 ## Playbook tags introduction
