@@ -148,3 +148,10 @@ nextcloud_reverse_proxy_companion_http_bind_port: '127.0.0.1:37150'
 ```
 
 You can then reverse-proxy from your own webserver to the `nextcloud-reverse-proxy-companion` container on port `37150`.
+Make sure to add proxy headers appropriately. If you use nginx the following configuration should get you started.
+```
+proxy_set_header Host $host;
+proxy_set_header X-Forwarded-Proto $scheme;
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+```
