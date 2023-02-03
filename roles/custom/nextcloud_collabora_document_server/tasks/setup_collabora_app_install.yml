@@ -1,0 +1,29 @@
+---
+
+- name: Fail if Collabora not enabled
+  ansible.builtin.fail:
+    msg: "Before installing and making use of the OnlyOffice app, you need to install the OnlyOffice services (see `nextcloud_collabora_document_server_enabled`)"
+  when: not nextcloud_collabora_document_server_enabled
+
+- name: Ensure nextcloud-apache is started
+  ansible.builtin.service:
+    name: nextcloud-apache
+    state: started
+    daemon_reload: true
+  register: nextcloud_start
+
+- name: Wait a while, so that Nextcloud can manage to start
+  ansible.builtin.pause:
+    seconds: 7
+  when: nextcloud_start.changed | bool
+
+- name: Install Nextcloud office (Collabora app)
+  ansible.builtin.shell:
+    cmd: "docker exec --user={{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} nextcloud-apache php /var/www/html/occ --no-warnings app:install richdocuments"
+  failed_when: false
+  register: collabora_install_result
+
+- name: Fail if Nextcloud office (Collabora app) failed to install
+  ansible.builtin.fail:
+    msg: "Nextcloud Office failed to install. Full error: {{ collabora_install_result }}"
+  when: "collabora_install_result.rc != 0 and collabora_install_result.stdout != 'collabora already installed'"

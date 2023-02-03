@@ -1,0 +1,29 @@
+---
+
+- block:
+    - when: nextcloud_collabora_document_server_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_collabora_document_server_install.yml"
+  tags:
+    - setup-all
+    - setup-collabora-document-server
+    - install-all
+    - install-collabora-document-server
+
+- block:
+    - when: not nextcloud_collabora_document_server_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_collabora_document_server_uninstall.yml"
+  tags:
+    - setup-all
+    - setup-collabora-document-server
+
+# This is meant to be executed subsequently, after Nextcloud is fully setup
+- block:
+    - ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_collabora_app_install.yml"
+  tags:
+    - setup-collabora-app
+
+- block:
+    - ansible.builtin.include_tasks: "{{ role_path }}/tasks/configure_collabora_app.yml"
+  tags:
+    - setup-collabora-app
+    - configure-collabora-app

@@ -1,0 +1,33 @@
+[Unit]
+Description=Nextcloud Collabora Online Development Edition Document Server
+{% for service in nextcloud_collabora_document_server_systemd_required_services_list %}
+Requires={{ service }}
+After={{ service }}
+{% endfor %}
+DefaultDependencies=no
+
+[Service]
+Type=simple
+Environment="HOME={{ devture_systemd_docker_base_systemd_unit_home_path }}"
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-collabora-document-server 2>/dev/null'
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-collabora-document-server 2>/dev/null'
+
+ExecStart={{ devture_systemd_docker_base_host_command_docker }} run \
+			--rm \
+			--name=nextcloud-collabora-document-server \
+			--log-driver=none \
+			-p 127.0.0.1:9980:9980 \
+			-e "aliasgroup1=https://{{ nextcloud_server_fqn_nextcloud |replace(".", "\\\\.") }}:443" \
+			-e "username=admin" \
+			-e "password="{{ nextcloud_collabora_document_server_password }}" \
+			-e "extra_params=--o:ssl.enable=true" \
+			{{ nextcloud_collabora_document_server_container_image }}
+
+ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-collabora-document-server 2>/dev/null'
+ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-collabora-document-server 2>/dev/null'
+Restart=always
+RestartSec=30
+SyslogIdentifier=nextcloud-collabora-document-server
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,12 @@
+---
+
+- name: Ensure Collabora container image is pulled
+  community.docker.docker_image:
+    name: "{{ nextcloud_collabora_document_server_container_image }}"
+    source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
+
+- name: Ensure nextcloud-collabora-document-server.service installed
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/systemd/nextcloud-collabora-document-server.service.j2"
+    dest: "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-collabora-document-server.service"
+    mode: 0644
