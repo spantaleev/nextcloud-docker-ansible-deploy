@@ -7,3 +7,8 @@ nextcloud_collabora_document_server_domain: "collabora.{{ nextcloud_server_fqn_n
 nextcloud_collabora_document_server_container_image: "docker.io/collabora/code:22.05.10.1.1"
 
 nextcloud_collabora_document_server_systemd_required_services_list: ['docker.service']
+
+# Controls whether the collabora container exposes its HTTP port (tcp/9980 in the container).
+#
+# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:9980), or empty string to not expose.
+nextcloud_collabora_document_server_container_http_host_bind_port: ""

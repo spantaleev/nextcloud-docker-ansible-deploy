@@ -50,6 +50,14 @@ For security reasons you should set the `Allow list for WOPI requests` to match 
 
 ## Reverse Proxy Configuration
 
+If you want to use an external reverse proxy (not managed by this playbook) you should set the `nextcloud_collabora_document_server_container_http_host_bind_port` variable in your `vars.yml`
+
+```
+# Controls whether the collabora container exposes its HTTP port (tcp/9980 in the container).
+# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:9980), or empty string to not expose.
+nextcloud_collabora_document_server_container_http_host_bind_port: "127.0.0.1:9980"
+```
+
 If you use an external reverse proxy you have to configure it correctly. Here is an example of a working nginx configuration.
 
 ```
