@@ -17,10 +17,7 @@ ExecStart={{ devture_systemd_docker_base_host_command_docker }} run \
 			--name=nextcloud-collabora-document-server \
 			--log-driver=none \
 			-p {{ nextcloud_collabora_document_server_container_http_host_bind_port }}:9980 \
-			-e "{{ nextcloud_collabora_document_server_aliasgroup }}" \
-			-e "username=admin" \
-			-e "password="{{ nextcloud_collabora_document_server_password }}" \
-			-e "extra_params=--o:ssl.enable=true" \
+			--env-file={{ nextcloud_collabora_document_server_config_path }}/env \
 			{{ nextcloud_collabora_document_server_container_image }}
 
 ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-collabora-document-server 2>/dev/null'
