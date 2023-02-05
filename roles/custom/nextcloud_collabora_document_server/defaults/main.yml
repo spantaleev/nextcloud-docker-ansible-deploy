@@ -12,3 +12,7 @@ nextcloud_collabora_document_server_systemd_required_services_list: ['docker.ser
 #
 # Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:9980), or empty string to not expose.
 nextcloud_collabora_document_server_container_http_host_bind_port: ""
+
+# This variable defines an aliasgroup of hosts (Details: https://sdk.collaboraonline.com/docs/installation/Configuration.html?highlight=alias#multihost-configuration)
+# You might want to adjust this if you use multiple hosts (which is not the scope of this playbook)
+nextcloud_collabora_document_server_aliasgroup: "aliasgroup1=https://{{ nextcloud_server_fqn_nextcloud |replace('.', '\\\\.') }}:443"
