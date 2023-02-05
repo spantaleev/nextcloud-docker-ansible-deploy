@@ -16,7 +16,9 @@ ExecStart={{ devture_systemd_docker_base_host_command_docker }} run \
 			--rm \
 			--name=nextcloud-collabora-document-server \
 			--log-driver=none \
+			{% if nextcloud_collabora_document_server_container_http_host_bind_port %}
 			-p {{ nextcloud_collabora_document_server_container_http_host_bind_port }}:9980 \
+			{% endif %}
 			--env-file={{ nextcloud_collabora_document_server_config_path }}/env \
 			{{ nextcloud_collabora_document_server_container_image }}
 
