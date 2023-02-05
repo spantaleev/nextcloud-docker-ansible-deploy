@@ -2,8 +2,8 @@
 
 - name: Fail if Collabora not enabled
   ansible.builtin.fail:
-    msg: "Before installing and making use of the OnlyOffice app, you need to install the OnlyOffice services (see `nextcloud_collabora_document_server_enabled`)"
-  when: not nextcloud_collabora_document_server_enabled
+    msg: "Before installing and making use of the OnlyOffice app, you need to install the OnlyOffice services (see `nextcloud_collabora_online_enabled`)"
+  when: not nextcloud_collabora_online_enabled
 
 - name: Ensure nextcloud-apache is started
   ansible.builtin.service:

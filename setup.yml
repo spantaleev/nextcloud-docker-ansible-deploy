@@ -53,7 +53,7 @@
     # This role exposes various tags (setup-onlyoffice-document-server, setup-onlyoffice-app, setup-all, etc.) so we don't tag it here.
     - role: custom/nextcloud_onlyoffice_document_server
 
-    - role: custom/nextcloud_collabora_document_server
+    - role: custom/nextcloud_collabora_online
 
     - role: custom/nextcloud_reverse_proxy_companion
 

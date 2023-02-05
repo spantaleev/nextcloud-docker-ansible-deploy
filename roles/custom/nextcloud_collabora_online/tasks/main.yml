@@ -1,8 +1,8 @@
 ---
 
 - block:
-    - when: nextcloud_collabora_document_server_enabled | bool
-      ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_collabora_document_server_install.yml"
+    - when: nextcloud_collabora_online_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_collabora_online_install.yml"
   tags:
     - setup-all
     - setup-collabora-document-server
@@ -10,8 +10,8 @@
     - install-collabora-document-server
 
 - block:
-    - when: not nextcloud_collabora_document_server_enabled | bool
-      ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_collabora_document_server_uninstall.yml"
+    - when: not nextcloud_collabora_online_enabled | bool
+      ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_collabora_online_uninstall.yml"
   tags:
     - setup-all
     - setup-collabora-document-server

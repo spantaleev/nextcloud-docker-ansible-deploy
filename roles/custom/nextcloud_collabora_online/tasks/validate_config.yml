@@ -6,4 +6,4 @@
       You need to define a required configuration setting (`{{ item }}`) for using this role.
   when: "vars[item] == ''"
   with_items:
-    - nextcloud_collabora_document_server_env_variable_password
+    - nextcloud_collabora_online_env_variable_password
