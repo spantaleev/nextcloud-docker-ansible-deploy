@@ -1,19 +1,19 @@
 ---
 
-- name: Check existence of nextcloud-collabora-document-server service
+- name: Check existence of nextcloud-collabora-online service
   ansible.builtin.stat:
-    path: "/etc/systemd/system/nextcloud-collabora-document-server.service"
+    path: "/etc/systemd/system/nextcloud-collabora-online.service"
   register: nextcloud_collabora_service_stat
 
 - when: nextcloud_collabora_service_stat.stat.exists | bool
   block:
-    - name: Ensure nextcloud-collabora-document-server is stopped
+    - name: Ensure nextcloud-collabora-online is stopped
       ansible.builtin.service:
         name: nextcloud-collabora-document-server
         state: stopped
         daemon_reload: true
 
-    - name: Ensure nextcloud-collabora-document-server.service doesn't exist
+    - name: Ensure nextcloud-collabora-online.service doesn't exist
       ansible.builtin.file:
-        path: "/etc/systemd/system/nextcloud-collabora-document-server.service"
+        path: "/etc/systemd/system/nextcloud-collabora-online.service"
         state: absent

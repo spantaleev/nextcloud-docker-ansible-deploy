@@ -25,8 +25,8 @@
     name: "{{ nextcloud_collabora_online_container_image }}"
     source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
 
-- name: Ensure nextcloud-collabora-document-server.service installed
+- name: Ensure nextcloud-collabora-online.service installed
   ansible.builtin.template:
-    src: "{{ role_path }}/templates/systemd/nextcloud-collabora-document-server.service.j2"
-    dest: "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-collabora-document-server.service"
+    src: "{{ role_path }}/templates/systemd/nextcloud-collabora-online.service.j2"
+    dest: "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-collabora-online.service"
     mode: 0644
