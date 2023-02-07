@@ -7,3 +7,4 @@
   when: "vars[item] == ''"
   with_items:
     - nextcloud_collabora_online_env_variable_password
+    - nextcloud_collabora_online_domain
