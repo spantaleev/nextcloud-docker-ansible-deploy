@@ -8,6 +8,25 @@ nextcloud_collabora_online_container_image: "docker.io/collabora/code:22.05.10.1
 
 nextcloud_collabora_online_systemd_required_services_list: ['docker.service']
 
+# nextcloud_collabora_online_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
+# See `roles/custom/nextcloud_collabora_online/templates/labels.j2` for details.
+#
+# To inject your own other container labels, see `nextcloud_collabora_online_container_labels_additional_labels`.
+nextcloud_collabora_online_container_labels_traefik_enabled: false
+nextcloud_collabora_online_container_labels_traefik_docker_network: ''
+nextcloud_collabora_online_container_labels_traefik_rule: 'Host(`{{ nextcloud_collabora_online_domain }}`)'
+nextcloud_collabora_online_container_labels_traefik_entrypoints: web-secure
+nextcloud_collabora_online_container_labels_traefik_tls_certResolver: default  # noqa var-naming
+
+# nextcloud_collabora_online_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
+# See `roles/custom/collabora_online/templates/labels.j2` for details.
+#
+# Example:
+# nextcloud_collabora_online_container_labels_additional_labels: |
+#   my.label=1
+#   another.label="here"
+nextcloud_collabora_online_container_labels_additional_labels: ''
+
 # Controls whether the collabora container exposes its HTTP port (tcp/9980 in the container).
 #
 # Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:9980), or empty string to not expose.

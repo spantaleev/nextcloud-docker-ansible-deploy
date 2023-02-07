@@ -1,0 +1,12 @@
+{% if nextcloud_collabora_online_container_labels_traefik_enabled %}
+traefik.enable=true
+{% if nextcloud_collabora_online_container_labels_traefik_docker_network %}
+traefik.docker.network={{ nextcloud_collabora_online_container_labels_traefik_docker_network }}
+{% endif %}
+traefik.http.routers.collabora-online.rule={{ nextcloud_collabora_online_container_labels_traefik_rule }}
+traefik.http.routers.collabora-online.entrypoints={{ nextcloud_collabora_online_container_labels_traefik_entrypoints }}
+traefik.http.routers.collabora-online.tls.certResolver={{ nextcloud_collabora_online_container_labels_traefik_tls_certResolver }}
+traefik.http.services.collabora-online.loadbalancer.server.port=9980
+{% endif %}
+
+{{ nextcloud_collabora_online_container_labels_additional_labels }}
