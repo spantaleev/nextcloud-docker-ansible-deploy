@@ -8,15 +8,6 @@ edit office documents online. This version is more performant than the [CODE App
 
 The document server will run under a different domain than your Nextcloud.
 
-## DNS
-
-Make sure to have set the following DNS record as the document server will run under a seperate domain
-
-
-| Type  | Host        | Priority | Weight | Port | Target                     |
-|-------|-------------|----------|--------|------|----------------------------|
-| CNAME | `collabora` | -        | -      | -    | `nextcloud.yourdomain.org` |
-
 ## `vars.yml` configuration
 
 Enable the server like this in your configuration file (`inventory/host_vars/<your-domain>/vars.yml`) and set a password
@@ -26,8 +17,6 @@ for the admin interface.
 nextcloud_collabora_document_server_enabled: true
 nextcloud_collabora_document_server_password: 'lHAbqkYapmelxLWFqjrYS3v9RQtIzQbWrvs'
 ```
-
-You probably should also adjust the domain name to match the DNS record (the default value is `collabora.{{ nextcloud_server_fqn_nextcloud }}`)
 
 ```yaml
 nextcloud_collabora_document_server_domain: "collabora.yourdomain.org"
