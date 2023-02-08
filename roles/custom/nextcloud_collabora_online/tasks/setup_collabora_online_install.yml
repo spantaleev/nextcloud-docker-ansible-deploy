@@ -19,6 +19,8 @@
   with_items:
     - src: "{{ role_path }}/templates/env.j2"
       dest: "{{ nextcloud_collabora_online_config_path }}/env"
+    - src: "{{ role_path }}/templates/labels.j2"
+      dest: "{{ nextcloud_collabora_online_base_path }}/labels"
 
 - name: Ensure Collabora container image is pulled
   community.docker.docker_image:

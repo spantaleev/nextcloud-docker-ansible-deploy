@@ -19,6 +19,7 @@ ExecStart={{ devture_systemd_docker_base_host_command_docker }} run \
 			{% if nextcloud_collabora_online_container_http_host_bind_port %}
 			-p {{ nextcloud_collabora_online_container_http_host_bind_port }}:9980 \
 			{% endif %}
+			--label-file={{ nextcloud_collabora_online_base_path }}/labels \
 			--env-file={{ nextcloud_collabora_online_config_path }}/env \
 			{{ nextcloud_collabora_online_container_image }}
 
