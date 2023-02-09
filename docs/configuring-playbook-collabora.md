@@ -1,6 +1,6 @@
 # Setting up Collabora integration
 
-**WARNING**: Work in progress - Currently only external reverse proxy supportet.
+**WARNING**: Work in progress - Currently only external reverse proxy supported.
 
 The following configuration enables you to install the [Collabora Online Development Edition (CODE)](https://www.collaboraoffice.com/) document server.
 You will have a fully functioning [WOIP server]() that (together with the [Nextcloud Office App](https://apps.nextcloud.com/apps/richdocuments)) enables you to
@@ -15,12 +15,19 @@ for the admin interface.
 
 ```yaml
 nextcloud_collabora_online_enabled: true
+nextcloud_collabora_document_server_domain: collabora.yourdomain.org
 nextcloud_collabora_online_env_variable_password: 'lHAbqkYapmelxLWFqjrYS3v9RQtIzQbWrvs'
 ```
 
-```yaml
-nextcloud_collabora_document_server_domain: "collabora.yourdomain.org"
-```
+
+## DNS configuration
+
+You'd need to create a DNS record for the Collabora domain defined in `nextcloud_collabora_document_server_domain`.
+
+You can make it a `CNAME` record pointing to your Nextcloud domain.
+
+
+## Installing
 
 If you had already installed Nextcloud, you'll need to re-run the [installation](installing.md) procedure and restart the services.
 
@@ -54,7 +61,7 @@ server {
     if ($scheme = http) {
             return 301 https://$server_name$request_uri;
     }
-    
+
     listen 443 ssl;
     listen [::]:443 ssl;
     ssl_certificate /etc/letsencrypt/live/collabora.example.com/fullchain.pem; # managed by Certbot
@@ -66,19 +73,19 @@ server {
     add_header X-Clacks-Overhead "GNU Terry Pratchett";
 
     server_name collabora.example.com;
-    
+
     # static files
     location ^~ /browser {
         proxy_pass https://127.0.0.1:9980;
         proxy_set_header Host $http_host;
     }
-    
+
     # WOPI discovery URL
     location ^~ /hosting/discovery {
         proxy_pass https://127.0.0.1:9980;
         proxy_set_header Host $http_host;
     }
-    
+
     # Capabilities
     location ^~ /hosting/capabilities {
         proxy_pass https://127.0.0.1:9980;
