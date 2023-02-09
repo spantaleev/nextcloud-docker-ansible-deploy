@@ -62,6 +62,8 @@ devture_systemd_service_manager_services_list_auto: |
     +
     ([{'name': 'nextcloud-onlyoffice-document-server.service', 'priority': 2000, 'groups': ['nextcloud', 'onlyoffice']}] if nextcloud_onlyoffice_document_server_enabled else [])
     +
+    ([{'name': 'nextcloud-collabora-online.service', 'priority': 2000, 'groups': ['nextcloud', 'collabora-online']}] if nextcloud_collabora_online_enabled else [])
+    +
     ([{'name': 'nextcloud-reverse-proxy-companion.service', 'priority': 1500, 'groups': ['nextcloud', 'nextcloud-server', 'reverse-proxies']}] if nextcloud_reverse_proxy_companion_enabled else [])
     +
     ([{'name': 'nextcloud-nginx-proxy.service', 'priority': 3000, 'groups': ['nextcloud', 'reverse-proxies']}] if nextcloud_playbook_nginx_proxy_installation_enabled else [])
