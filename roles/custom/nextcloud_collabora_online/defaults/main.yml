@@ -32,6 +32,13 @@ nextcloud_collabora_online_container_labels_traefik_rule: 'Host(`{{ nextcloud_co
 nextcloud_collabora_online_container_labels_traefik_entrypoints: web-secure
 nextcloud_collabora_online_container_labels_traefik_tls_certResolver: default  # noqa var-naming
 
+# Controls the `ssl.enable` option.
+# See: https://sdk.collaboraonline.com/docs/installation/Configuration.html#ssl-configuration
+nextcloud_collabora_online_ssl_enable: false
+# Controls the `ssl.termination` option
+# See: https://sdk.collaboraonline.com/docs/installation/Configuration.html#ssl-configuration
+nextcloud_collabora_online_ssl_termination: true
+
 # nextcloud_collabora_online_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
 # See `roles/custom/collabora_online/templates/labels.j2` for details.
 #
@@ -52,4 +59,4 @@ nextcloud_collabora_online_aliasgroup: "https://{{ nextcloud_server_fqn_nextclou
 
 nextcloud_collabora_online_env_variable_username: "admin"
 nextcloud_collabora_online_env_variable_password: ""
-nextcloud_collabora_online_env_variable_extra_params: "--o:ssl.enable=false"
+nextcloud_collabora_online_env_variable_extra_params: "--o:ssl.enable={{ nextcloud_collabora_online_ssl_enable }} --o:ssl.termination={{ nextcloud_collabora_online_ssl_termination }}"
