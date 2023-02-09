@@ -9,7 +9,9 @@ nextcloud_collabora_online_config_path: "{{ nextcloud_collabora_online_base_path
 
 nextcloud_collabora_online_systemd_required_services_list: ['docker.service']
 
-nextcloud_collabora_online_container_image: "docker.io/collabora/code:22.05.10.1.1"
+nextcloud_collabora_online_version: 22.05.10.1.1
+
+nextcloud_collabora_online_container_image: "docker.io/collabora/code:{{ nextcloud_collabora_online_version }}"
 
 nextcloud_collabora_online_container_network: ''
 
