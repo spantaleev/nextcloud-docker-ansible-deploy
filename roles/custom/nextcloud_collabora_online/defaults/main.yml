@@ -10,6 +10,13 @@ nextcloud_collabora_online_systemd_required_services_list: ['docker.service']
 
 nextcloud_collabora_online_container_network: ''
 
+# A list of additional container networks that the container would be connected to.
+# The playbook does not create these networks, so make sure they already exist.
+#
+# Use this to expose this container to another reverse proxy, which runs in a different container network,
+# without exposing all other container services to that other reverse-proxy.
+nextcloud_collabora_online_container_additional_networks: []
+
 # nextcloud_collabora_online_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
 # See `roles/custom/nextcloud_collabora_online/templates/labels.j2` for details.
 #

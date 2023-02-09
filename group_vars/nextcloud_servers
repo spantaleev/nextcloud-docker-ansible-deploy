@@ -140,6 +140,8 @@ nextcloud_collabora_online_enabled: false
 
 nextcloud_collabora_online_container_network: "{{ nextcloud_container_network }}"
 
+nextcloud_collabora_online_container_additional_networks: "{{ [nextcloud_playbook_reverse_proxyable_services_additional_network] if nextcloud_playbook_reverse_proxyable_services_additional_network else [] }}"
+
 nextcloud_collabora_online_container_labels_traefik_enabled: "{{ nextcloud_playbook_traefik_labels_enabled }}"
 nextcloud_collabora_online_container_labels_traefik_docker_network: "{{ nextcloud_playbook_reverse_proxyable_services_additional_network }}"
 
