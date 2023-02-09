@@ -15,14 +15,14 @@ for the admin interface.
 
 ```yaml
 nextcloud_collabora_online_enabled: true
-nextcloud_collabora_document_server_domain: collabora.yourdomain.org
+nextcloud_collabora_online_domain: collabora.yourdomain.org
 nextcloud_collabora_online_env_variable_password: 'lHAbqkYapmelxLWFqjrYS3v9RQtIzQbWrvs'
 ```
 
 
 ## DNS configuration
 
-You'd need to create a DNS record for the Collabora domain defined in `nextcloud_collabora_document_server_domain`.
+You'd need to create a DNS record for the Collabora domain defined in `nextcloud_collabora_online_domain`.
 
 You can make it a `CNAME` record pointing to your Nextcloud domain.
 

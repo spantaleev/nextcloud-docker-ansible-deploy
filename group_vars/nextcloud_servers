@@ -135,7 +135,6 @@ nextcloud_reverse_proxy_companion_container_labels_traefik_docker_network: "{{ n
 ########################################################################
 
 nextcloud_collabora_online_enabled: false
-nextcloud_collabora_online_domain: "collabora.{{ nextcloud_server_fqn_nextcloud }}"
 nextcloud_collabora_online_container_labels_traefik_enabled: "{{ nextcloud_playbook_traefik_labels_enabled }}"
 nextcloud_collabora_online_container_labels_traefik_docker_network: "{{ nextcloud_playbook_reverse_proxyable_services_additional_network }}"
 
