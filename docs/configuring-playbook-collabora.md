@@ -14,8 +14,8 @@ Enable the server like this in your configuration file (`inventory/host_vars/<yo
 for the admin interface.
 
 ```yaml
-nextcloud_collabora_document_server_enabled: true
-nextcloud_collabora_document_server_password: 'lHAbqkYapmelxLWFqjrYS3v9RQtIzQbWrvs'
+nextcloud_collabora_online_enabled: true
+nextcloud_collabora_online_env_variable_password: 'lHAbqkYapmelxLWFqjrYS3v9RQtIzQbWrvs'
 ```
 
 ```yaml
