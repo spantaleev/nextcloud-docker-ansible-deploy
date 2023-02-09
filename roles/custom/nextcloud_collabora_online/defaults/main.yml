@@ -8,6 +8,8 @@ nextcloud_collabora_online_container_image: "docker.io/collabora/code:22.05.10.1
 
 nextcloud_collabora_online_systemd_required_services_list: ['docker.service']
 
+nextcloud_collabora_online_container_network: ''
+
 # nextcloud_collabora_online_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
 # See `roles/custom/nextcloud_collabora_online/templates/labels.j2` for details.
 #

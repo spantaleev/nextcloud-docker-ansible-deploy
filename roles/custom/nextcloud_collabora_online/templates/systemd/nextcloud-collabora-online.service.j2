@@ -9,6 +9,7 @@ DefaultDependencies=no
 [Service]
 Type=simple
 Environment="HOME={{ devture_systemd_docker_base_systemd_unit_home_path }}"
+
 ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-collabora-online 2>/dev/null'
 ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-collabora-online 2>/dev/null'
 
@@ -16,6 +17,7 @@ ExecStart={{ devture_systemd_docker_base_host_command_docker }} run \
 			--rm \
 			--name=nextcloud-collabora-online \
 			--log-driver=none \
+			--network={{ nextcloud_collabora_online_container_network }} \
 			{% if nextcloud_collabora_online_container_http_host_bind_port %}
 			-p {{ nextcloud_collabora_online_container_http_host_bind_port }}:9980 \
 			{% endif %}
@@ -25,6 +27,7 @@ ExecStart={{ devture_systemd_docker_base_host_command_docker }} run \
 
 ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-collabora-online 2>/dev/null'
 ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-collabora-online 2>/dev/null'
+
 Restart=always
 RestartSec=30
 SyslogIdentifier=nextcloud-collabora-online

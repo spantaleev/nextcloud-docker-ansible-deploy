@@ -8,3 +8,4 @@
   with_items:
     - nextcloud_collabora_online_env_variable_password
     - nextcloud_collabora_online_domain
+    - nextcloud_collabora_online_container_network

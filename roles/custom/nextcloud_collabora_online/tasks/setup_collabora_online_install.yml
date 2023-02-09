@@ -27,6 +27,11 @@
     name: "{{ nextcloud_collabora_online_container_image }}"
     source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
 
+- name: Ensure Collabora container network is created
+  community.general.docker_network:
+    name: "{{ nextcloud_collabora_online_container_network }}"
+    driver: bridge
+
 - name: Ensure nextcloud-collabora-online.service installed
   ansible.builtin.template:
     src: "{{ role_path }}/templates/systemd/nextcloud-collabora-online.service.j2"
