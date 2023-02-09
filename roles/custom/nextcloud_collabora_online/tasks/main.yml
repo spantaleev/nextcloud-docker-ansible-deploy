@@ -5,16 +5,16 @@
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_collabora_online_install.yml"
   tags:
     - setup-all
-    - setup-collabora-document-server
+    - setup-collabora-online
     - install-all
-    - install-collabora-document-server
+    - install-collabora-online
 
 - block:
     - when: not nextcloud_collabora_online_enabled | bool
       ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_collabora_online_uninstall.yml"
   tags:
     - setup-all
-    - setup-collabora-document-server
+    - setup-collabora-online
 
 # This is meant to be executed subsequently, after Nextcloud is fully setup
 - block:
