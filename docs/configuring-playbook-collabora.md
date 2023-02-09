@@ -38,10 +38,10 @@ you can also install and configure the [Nextcloud Office app](https://apps.nextc
 ansible-playbook -i inventory/hosts setup.yml --tags=setup-collabora-app
 ```
 
-The above only does basic configuration, hooking your Collabora document server with Nextcloud.
-The Nextcloud office app supports additional options, which you can configure manually from: **Administration Settings** -> **Office**.
+After installing the application, you connect Nextcloud to your Collabora Online server by going to **Administration Settings** -> **Nextcloud Office** and setting:
 
-For security reasons you should set the `Allow list for WOPI requests` to match the IP of your server. Read more under [here](https://docs.nextcloud.com/server/latest/admin_manual/office/configuration.html#wopi-settings)
+- **Use your own server** and specifying the address (e.g. `https://collabora.yourdomain.org`). Refer to your `nextcloud_collabora_online_domain` variable
+- Setting **Allow list for WOPI requests** to the container network's address range (e.g. `172.19.0.0/16`). To find your container network's range, SSH into the server and run this command: `docker network inspect nextcloud --format '{{ (index .IPAM.Config 0).Subnet }}'`. This is done for security reasons described [here](https://docs.nextcloud.com/server/latest/admin_manual/office/configuration.html#wopi-settings)
 
 
 ## Reverse Proxy Configuration
