@@ -151,6 +151,29 @@ nextcloud_collabora_online_container_labels_traefik_docker_network: "{{ nextclou
 #                                                                      #
 ########################################################################
 
+
+########################################################################
+#                                                                      #
+# nextcloud_nginx_proxy                                                #
+#                                                                      #
+########################################################################
+
+nextcloud_nginx_proxy_ssl_domains_to_obtain_certificates_for: |
+  {{
+    ([nextcloud_server_fqn_nextcloud])
+    +
+    ([nextcloud_collabora_online_domain] if nextcloud_collabora_online_enabled else [])
+    +
+    nextcloud_nginx_proxy_ssl_additional_domains_to_obtain_certificates_for
+  }}
+
+########################################################################
+#                                                                      #
+# /nextcloud_nginx_proxy                                               #
+#                                                                      #
+########################################################################
+
+
 ########################################################################
 #                                                                      #
 # com.devture.ansible.role.postgres                                    #

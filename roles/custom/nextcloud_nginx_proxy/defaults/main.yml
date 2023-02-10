@@ -86,13 +86,7 @@ nextcloud_nginx_proxy_ssl_retrieval_method: "lets-encrypt"
 # The full list of domains that this role will obtain certificates for.
 # This variable is likely redefined outside of the role, to include the domains that are necessary (depending on the services that are enabled).
 # To add additional domain names, consider using `nextcloud_nginx_proxy_ssl_additional_domains_to_obtain_certificates_for` instead.
-
-nextcloud_nginx_proxy_ssl_domains_to_obtain_certificates_for: |
-  {{
-    ([nextcloud_server_fqn_nextcloud])
-    +
-    nextcloud_nginx_proxy_ssl_additional_domains_to_obtain_certificates_for
-  }}
+nextcloud_nginx_proxy_ssl_domains_to_obtain_certificates_for: "{{ nextcloud_nginx_proxy_ssl_additional_domains_to_obtain_certificates_for }}"
 
 # A list of additional domain names to obtain certificates for.
 nextcloud_nginx_proxy_ssl_additional_domains_to_obtain_certificates_for: []
