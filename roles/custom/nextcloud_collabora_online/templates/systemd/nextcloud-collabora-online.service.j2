@@ -10,8 +10,8 @@ DefaultDependencies=no
 Type=simple
 Environment="HOME={{ devture_systemd_docker_base_systemd_unit_home_path }}"
 
-ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-collabora-online 2>/dev/null'
-ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-collabora-online 2>/dev/null'
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-collabora-online 2>/dev/null || true'
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-collabora-online 2>/dev/null || true'
 
 ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
 			--rm \
@@ -31,8 +31,8 @@ ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} network conne
 
 ExecStart={{ devture_systemd_docker_base_host_command_docker }} start --attach nextcloud-collabora-online
 
-ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-collabora-online 2>/dev/null'
-ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-collabora-online 2>/dev/null'
+ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-collabora-online 2>/dev/null || true'
+ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-collabora-online 2>/dev/null || true'
 
 Restart=always
 RestartSec=30
