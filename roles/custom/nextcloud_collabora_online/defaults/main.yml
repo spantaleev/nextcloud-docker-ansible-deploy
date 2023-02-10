@@ -1,0 +1,62 @@
+---
+
+nextcloud_collabora_online_enabled: true
+
+nextcloud_collabora_online_domain: ""
+
+nextcloud_collabora_online_base_path: "{{ nextcloud_base_path }}/collabora-online"
+nextcloud_collabora_online_config_path: "{{ nextcloud_collabora_online_base_path }}/config"
+
+nextcloud_collabora_online_systemd_required_services_list: ['docker.service']
+
+nextcloud_collabora_online_version: 22.05.10.1.1
+
+nextcloud_collabora_online_container_image: "docker.io/collabora/code:{{ nextcloud_collabora_online_version }}"
+
+nextcloud_collabora_online_container_network: ''
+
+# A list of additional container networks that the container would be connected to.
+# The playbook does not create these networks, so make sure they already exist.
+#
+# Use this to expose this container to another reverse proxy, which runs in a different container network,
+# without exposing all other container services to that other reverse-proxy.
+nextcloud_collabora_online_container_additional_networks: []
+
+# nextcloud_collabora_online_container_labels_traefik_enabled controls whether labels to assist a Traefik reverse-proxy will be attached to the container.
+# See `roles/custom/nextcloud_collabora_online/templates/labels.j2` for details.
+#
+# To inject your own other container labels, see `nextcloud_collabora_online_container_labels_additional_labels`.
+nextcloud_collabora_online_container_labels_traefik_enabled: false
+nextcloud_collabora_online_container_labels_traefik_docker_network: ''
+nextcloud_collabora_online_container_labels_traefik_rule: 'Host(`{{ nextcloud_collabora_online_domain }}`)'
+nextcloud_collabora_online_container_labels_traefik_entrypoints: web-secure
+nextcloud_collabora_online_container_labels_traefik_tls_certResolver: default  # noqa var-naming
+
+# Controls the `ssl.enable` option.
+# See: https://sdk.collaboraonline.com/docs/installation/Configuration.html#ssl-configuration
+nextcloud_collabora_online_ssl_enable: false
+# Controls the `ssl.termination` option
+# See: https://sdk.collaboraonline.com/docs/installation/Configuration.html#ssl-configuration
+nextcloud_collabora_online_ssl_termination: true
+
+# nextcloud_collabora_online_container_labels_additional_labels contains a multiline string with additional labels to add to the container label file.
+# See `roles/custom/collabora_online/templates/labels.j2` for details.
+#
+# Example:
+# nextcloud_collabora_online_container_labels_additional_labels: |
+#   my.label=1
+#   another.label="here"
+nextcloud_collabora_online_container_labels_additional_labels: ''
+
+# Controls whether the collabora container exposes its HTTP port (tcp/9980 in the container).
+#
+# Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:9980), or empty string to not expose.
+nextcloud_collabora_online_container_http_host_bind_port: ""
+
+# This variable defines an aliasgroup of hosts (Details: https://sdk.collaboraonline.com/docs/installation/Configuration.html?highlight=alias#multihost-configuration)
+# You might want to adjust this if you use multiple hosts (which is not the scope of this playbook)
+nextcloud_collabora_online_aliasgroup: "https://{{ nextcloud_server_fqn_nextcloud |replace('.', '\\.') }}:443"
+
+nextcloud_collabora_online_env_variable_username: "admin"
+nextcloud_collabora_online_env_variable_password: ""
+nextcloud_collabora_online_env_variable_extra_params: "--o:ssl.enable={{ nextcloud_collabora_online_ssl_enable }} --o:ssl.termination={{ nextcloud_collabora_online_ssl_termination }}"

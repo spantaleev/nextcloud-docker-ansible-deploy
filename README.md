@@ -29,6 +29,8 @@ Using this playbook, you can get the following services configured on your serve
 
 - (optional) [OnlyOffice](https://www.onlyoffice.com/) integration - for online document editing/previewing
 
+- (optional) [Collabora Online](https://www.collaboraoffice.com/) integration - for online document editing/previewing
+
 Basically, this playbook aims to get you up-and-running with all the basic necessities around Nextcloud.
 
 

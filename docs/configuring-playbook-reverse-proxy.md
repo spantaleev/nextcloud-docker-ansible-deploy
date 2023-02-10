@@ -79,7 +79,7 @@ If you'd like to provide your own certifiates, consider tweaking `nextcloud_ngin
 
 #### Using nextcloud-nginx-proxy to generate configuration for your own, other, nginx proxy
 
-You can also make use of the the `nextcloud-nginx-proxy` role to retrieve SSL certificates and generate *some* configuration, which you later plug into your own nginx server running on the host.
+You can also make use of the `nextcloud-nginx-proxy` role to retrieve SSL certificates and generate *some* configuration, which you later plug into your own nginx server running on the host.
 
 All it takes is:
 

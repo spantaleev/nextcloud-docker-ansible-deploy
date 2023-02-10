@@ -1,0 +1,42 @@
+[Unit]
+Description=Nextcloud Collabora Online Development Edition
+{% for service in nextcloud_collabora_online_systemd_required_services_list %}
+Requires={{ service }}
+After={{ service }}
+{% endfor %}
+DefaultDependencies=no
+
+[Service]
+Type=simple
+Environment="HOME={{ devture_systemd_docker_base_systemd_unit_home_path }}"
+
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-collabora-online 2>/dev/null || true'
+ExecStartPre=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-collabora-online 2>/dev/null || true'
+
+ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} create \
+			--rm \
+			--name=nextcloud-collabora-online \
+			--log-driver=none \
+			--network={{ nextcloud_collabora_online_container_network }} \
+			{% if nextcloud_collabora_online_container_http_host_bind_port %}
+			-p {{ nextcloud_collabora_online_container_http_host_bind_port }}:9980 \
+			{% endif %}
+			--label-file={{ nextcloud_collabora_online_base_path }}/labels \
+			--env-file={{ nextcloud_collabora_online_config_path }}/env \
+			{{ nextcloud_collabora_online_container_image }}
+
+{% for network in nextcloud_collabora_online_container_additional_networks %}
+ExecStartPre={{ devture_systemd_docker_base_host_command_docker }} network connect {{ network }} nextcloud-collabora-online
+{% endfor %}
+
+ExecStart={{ devture_systemd_docker_base_host_command_docker }} start --attach nextcloud-collabora-online
+
+ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} kill nextcloud-collabora-online 2>/dev/null || true'
+ExecStop=-{{ devture_systemd_docker_base_host_command_sh }} -c '{{ devture_systemd_docker_base_host_command_docker }} rm nextcloud-collabora-online 2>/dev/null || true'
+
+Restart=always
+RestartSec=30
+SyslogIdentifier=nextcloud-collabora-online
+
+[Install]
+WantedBy=multi-user.target

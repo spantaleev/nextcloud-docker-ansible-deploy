@@ -8,6 +8,7 @@
     mode: 0644
   with_items:
     - "nextcloud-apache.conf"
+    - "nextcloud-collabora-online.conf"
 
 - name: Ensure nginx-proxy container image is pulled
   community.docker.docker_image:

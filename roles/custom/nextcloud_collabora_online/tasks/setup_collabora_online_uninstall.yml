@@ -1,0 +1,24 @@
+---
+
+- name: Check existence of nextcloud-collabora-online service
+  ansible.builtin.stat:
+    path: "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-collabora-online.service"
+  register: nextcloud_collabora_service_stat
+
+- when: nextcloud_collabora_service_stat.stat.exists | bool
+  block:
+    - name: Ensure nextcloud-collabora-online is stopped
+      ansible.builtin.service:
+        name: nextcloud-collabora-online
+        state: stopped
+        daemon_reload: true
+
+    - name: Ensure nextcloud-collabora-online.service doesn't exist
+      ansible.builtin.file:
+        path: "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-collabora-online.service"
+        state: absent
+
+    - name: Ensure nextcloud-collabora-online files deleted
+      ansible.builtin.file:
+        path: "{{ nextcloud_collabora_online_base_path }}"
+        state: absent

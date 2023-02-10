@@ -62,6 +62,8 @@ devture_systemd_service_manager_services_list_auto: |
     +
     ([{'name': 'nextcloud-onlyoffice-document-server.service', 'priority': 2000, 'groups': ['nextcloud', 'onlyoffice']}] if nextcloud_onlyoffice_document_server_enabled else [])
     +
+    ([{'name': 'nextcloud-collabora-online.service', 'priority': 2000, 'groups': ['nextcloud', 'collabora-online']}] if nextcloud_collabora_online_enabled else [])
+    +
     ([{'name': 'nextcloud-reverse-proxy-companion.service', 'priority': 1500, 'groups': ['nextcloud', 'nextcloud-server', 'reverse-proxies']}] if nextcloud_reverse_proxy_companion_enabled else [])
     +
     ([{'name': 'nextcloud-nginx-proxy.service', 'priority': 3000, 'groups': ['nextcloud', 'reverse-proxies']}] if nextcloud_playbook_nginx_proxy_installation_enabled else [])
@@ -128,6 +130,26 @@ nextcloud_reverse_proxy_companion_container_labels_traefik_docker_network: "{{ n
 #                                                                      #
 ########################################################################
 
+########################################################################
+#                                                                      #
+# nextcloud_collabora_online                                           #
+#                                                                      #
+########################################################################
+
+nextcloud_collabora_online_enabled: false
+
+nextcloud_collabora_online_container_network: "{{ nextcloud_container_network }}"
+
+nextcloud_collabora_online_container_additional_networks: "{{ [nextcloud_playbook_reverse_proxyable_services_additional_network] if nextcloud_playbook_reverse_proxyable_services_additional_network else [] }}"
+
+nextcloud_collabora_online_container_labels_traefik_enabled: "{{ nextcloud_playbook_traefik_labels_enabled }}"
+nextcloud_collabora_online_container_labels_traefik_docker_network: "{{ nextcloud_playbook_reverse_proxyable_services_additional_network }}"
+
+########################################################################
+#                                                                      #
+# /nextcloud_collabora_online                                          #
+#                                                                      #
+########################################################################
 
 ########################################################################
 #                                                                      #

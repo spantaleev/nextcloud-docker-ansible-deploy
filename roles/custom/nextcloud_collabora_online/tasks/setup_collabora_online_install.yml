@@ -1,0 +1,39 @@
+---
+
+- name: Ensure Collabora path exists
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: 0700
+    owner: "{{ nextcloud_user_uid }}"
+    group: "{{ nextcloud_user_gid }}"
+  with_items:
+    - {path: "{{ nextcloud_collabora_online_base_path }}", when: true}
+    - {path: "{{ nextcloud_collabora_online_config_path }}", when: true}
+
+- name: Ensure Collabora support files installed
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: 0640
+  with_items:
+    - src: "{{ role_path }}/templates/env.j2"
+      dest: "{{ nextcloud_collabora_online_config_path }}/env"
+    - src: "{{ role_path }}/templates/labels.j2"
+      dest: "{{ nextcloud_collabora_online_base_path }}/labels"
+
+- name: Ensure Collabora container image is pulled
+  community.docker.docker_image:
+    name: "{{ nextcloud_collabora_online_container_image }}"
+    source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
+
+- name: Ensure Collabora container network is created
+  community.general.docker_network:
+    name: "{{ nextcloud_collabora_online_container_network }}"
+    driver: bridge
+
+- name: Ensure nextcloud-collabora-online.service installed
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/systemd/nextcloud-collabora-online.service.j2"
+    dest: "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-collabora-online.service"
+    mode: 0644

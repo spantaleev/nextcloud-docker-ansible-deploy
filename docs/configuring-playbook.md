@@ -31,6 +31,8 @@ However, you may wish to tweak a few other things before installing (or any time
 
 - [Setting up OnlyOffice integration](configuring-playbook-onlyoffice.md) (optional)
 
+- [Setting up Collabora Online (Office) integration](configuring-playbook-collabora-online.md) (optional)
+
 You may also take a look at the various `defaults/main.yml` files in `roles/` and see if there's anything you'd like to copy over and override in your `vars.yml` configuration file.
 
 

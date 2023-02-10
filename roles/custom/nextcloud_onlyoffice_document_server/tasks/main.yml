@@ -21,3 +21,4 @@
     - ansible.builtin.include_tasks: "{{ role_path }}/tasks/setup_onlyoffice_app_install.yml"
   tags:
     - setup-onlyoffice-app
+    - install-onlyoffice-app

@@ -1,0 +1,100 @@
+server {
+	{% if nextcloud_nginx_proxy_service_reach_mode == 'container' %}
+	listen 8080;
+	{% else %}
+	listen 80;
+	{% endif %}
+	server_name {{ nextcloud_collabora_online_domain }};
+
+	location /.well-known/acme-challenge {
+		{% if nextcloud_nginx_proxy_service_reach_mode == 'container' %}
+		{# Use the embedded DNS resolver in Docker containers to discover the service #}
+		resolver 127.0.0.11 valid=5s;
+		set $backend "nextcloud-collabora-online:8080";
+		proxy_pass http://$backend;
+		{% else %}
+		{# Generic configuration for use outside of our container setup #}
+		proxy_pass http://127.0.0.1:{{ nextcloud_nginx_proxy_ssl_certbot_standalone_http_port }};
+		{% endif %}
+	}
+
+	location / {
+		return 301 https://$http_host$request_uri;
+	}
+}
+
+server {
+	{% if nextcloud_nginx_proxy_service_reach_mode == 'container' %}
+	listen 8443 ssl http2;
+	listen [::]:8443 ssl http2;
+	{% else %}
+	listen 443 ssl http2;
+	listen [::]:443 ssl http2;
+	{% endif %}
+	server_name {{ nextcloud_collabora_online_domain }};
+
+	root /dev/null;
+
+	ssl_certificate {{ nextcloud_nginx_proxy_ssl_config_dir_path }}/live/{{ nextcloud_collabora_online_domain }}/fullchain.pem;
+	ssl_certificate_key {{ nextcloud_nginx_proxy_ssl_config_dir_path }}/live/{{ nextcloud_collabora_online_domain }}/privkey.pem;
+	ssl_protocols {{ nextcloud_nginx_proxy_ssl_protocols }};
+	ssl_prefer_server_ciphers on;
+	ssl_ciphers "EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH";
+
+	if ($scheme = http) {
+		return 301 https://$server_name$request_uri;
+	}
+
+	{% if nextcloud_nginx_proxy_service_reach_mode == 'container' %}
+	{# Use the embedded DNS resolver in Docker containers to discover the service #}
+	resolver 127.0.0.11 valid=5s;
+	set $backend "nextcloud-collabora-online:9980";
+	{% else %}
+	{# Generic configuration for people to use outside of our container setup #}
+	set $backend "127.0.0.1:9980";
+	{% endif %}
+
+	add_header X-Clacks-Overhead "GNU Terry Pratchett";
+
+	# static files
+	location ^~ /browser {
+		proxy_pass http://$backend;
+		proxy_set_header Host $http_host;
+	}
+
+	# WOPI discovery URL
+	location ^~ /hosting/discovery {
+		proxy_pass http://$backend;
+		proxy_set_header Host $http_host;
+	}
+
+	# Capabilities
+	location ^~ /hosting/capabilities {
+		proxy_pass http://$backend;
+		proxy_set_header Host $http_host;
+	}
+
+	# main websocket
+	location ~ ^/cool/(.*)/ws$ {
+		proxy_pass http://$backend;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "Upgrade";
+		proxy_set_header Host $http_host;
+		proxy_read_timeout 36000s;
+	}
+
+	# download, presentation and image upload
+	location ~ ^/(c|l)ool {
+		proxy_pass http://$backend;
+		proxy_set_header Host $http_host;
+	}
+
+	# Admin Console websocket
+	location ^~ /cool/adminws {
+		proxy_pass http://$backend;
+		proxy_set_header Upgrade $http_upgrade;
+		proxy_set_header Connection "Upgrade";
+		proxy_set_header Host $http_host;
+		proxy_read_timeout 36000s;
+	}
+}
