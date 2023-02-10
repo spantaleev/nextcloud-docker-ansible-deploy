@@ -48,39 +48,33 @@ server {
 	{% if nextcloud_nginx_proxy_service_reach_mode == 'container' %}
 	{# Use the embedded DNS resolver in Docker containers to discover the service #}
 	resolver 127.0.0.11 valid=5s;
-	set $backend "nextcloud-reverse-proxy-companion:3000";
+	set $backend "nextcloud-collabora-online:9980";
 	{% else %}
 	{# Generic configuration for people to use outside of our container setup #}
-	set $backend "127.0.0.1:{{ nextcloud_nginx_proxy_service_reach_local_port }}";
+	set $backend "127.0.0.1:9980";
 	{% endif %}
 
-
 	add_header X-Clacks-Overhead "GNU Terry Pratchett";
-# static files
+
+	# static files
 	location ^~ /browser {
 		proxy_pass http://$backend;
 		proxy_set_header Host $http_host;
 	}
 
-
-
-# WOPI discovery URL
+	# WOPI discovery URL
 	location ^~ /hosting/discovery {
 		proxy_pass http://$backend;
 		proxy_set_header Host $http_host;
 	}
 
-
-
-# Capabilities
+	# Capabilities
 	location ^~ /hosting/capabilities {
 		proxy_pass http://$backend;
 		proxy_set_header Host $http_host;
 	}
 
-
-
-# main websocket
+	# main websocket
 	location ~ ^/cool/(.*)/ws$ {
 		proxy_pass http://$backend;
 		proxy_set_header Upgrade $http_upgrade;
@@ -89,25 +83,18 @@ server {
 		proxy_read_timeout 36000s;
 	}
 
-
-
-# download, presentation and image upload
+	# download, presentation and image upload
 	location ~ ^/(c|l)ool {
 		proxy_pass http://$backend;
 		proxy_set_header Host $http_host;
 	}
 
-
-
-# Admin Console websocket
+	# Admin Console websocket
 	location ^~ /cool/adminws {
 		proxy_pass http://$backend;
 		proxy_set_header Upgrade $http_upgrade;
 		proxy_set_header Connection "Upgrade";
 		proxy_set_header Host $http_host;
 		proxy_read_timeout 36000s;
-
 	}
-
-
 }
