@@ -1,3 +1,12 @@
+# 2023-02-10
+
+## Collabora Online support
+
+Thanks to [Julian-Samuel Gebühr (@moan0s)](https://github.com/moan0s), the playbook can now set up [Collabora Online Development Edition (CODE)](https://www.collaboraoffice.com/) - Your Private Office Suite In The Cloud.
+
+See our [Setting up Collabora Online (Office) integration](docs/configuring-playbook-collabora-online.md) documentation to get started.
+
+
 # 2023-01-13
 
 ## Support for running commands via just
