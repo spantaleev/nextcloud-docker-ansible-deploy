@@ -1,21 +1,22 @@
-# Setting up Collabora integration
+# Setting up Collabora Online integration
 
-**WARNING**: Work in progress - Currently only external reverse proxy supported.
+The following configuration enables you to install the [Collabora Online Development Edition (CODE)](https://www.collaboraoffice.com/) office suite.
 
-The following configuration enables you to install the [Collabora Online Development Edition (CODE)](https://www.collaboraoffice.com/) document server.
-You will have a fully functioning [WOIP server]() that (together with the [Nextcloud Office App](https://apps.nextcloud.com/apps/richdocuments)) enables you to
-edit office documents online. This version is more performant than the [CODE App](https://apps.nextcloud.com/apps/richdocumentscode).
+Together with the [Nextcloud Office App](https://apps.nextcloud.com/apps/richdocuments), it enables you to edit office documents online. This version is more performant than the [CODE App](https://apps.nextcloud.com/apps/richdocumentscode).
 
 The document server will run under a different domain than your Nextcloud.
 
-## `vars.yml` configuration
 
-Enable the server like this in your configuration file (`inventory/host_vars/<your-domain>/vars.yml`) and set a password
-for the admin interface.
+## Configuring the playbook
+
+Enable Collabora Online like this in your configuration file (`inventory/host_vars/<your-domain>/vars.yml`):
 
 ```yaml
 nextcloud_collabora_online_enabled: true
+
 nextcloud_collabora_online_domain: collabora.yourdomain.org
+
+# A password for the admin interface, available at: https://COLLABORA_ONLINE_DOMAIN/browser/dist/admin/admin.html
 nextcloud_collabora_online_env_variable_password: 'lHAbqkYapmelxLWFqjrYS3v9RQtIzQbWrvs'
 ```
 
@@ -43,15 +44,33 @@ After installing the application, you connect Nextcloud to your Collabora Online
 - **Use your own server** and specifying the address (e.g. `https://collabora.yourdomain.org`). Refer to your `nextcloud_collabora_online_domain` variable
 - Setting **Allow list for WOPI requests** to the container network's address range (e.g. `172.19.0.0/16`). To find your container network's range, SSH into the server and run this command: `docker network inspect nextcloud --format '{{ (index .IPAM.Config 0).Subnet }}'`. This is done for security reasons described [here](https://docs.nextcloud.com/server/latest/admin_manual/office/configuration.html#wopi-settings)
 
+## Usage
+
+Open any document (`.doc`, `.odt`, etc.) in Nextcloud Files and it should automatically open a Collabora Online editor.
+
+You can also create new documents via the "plus" button.
+
+
+## Admin Interface
+
+There's an admin interface with various statistics and information at: `https://COLLABORA_ONLINE_DOMAIN/browser/dist/admin/admin.html`
+
+Use your admin credentials for logging in:
+
+- the default username is `admin`, as specified in `nextcloud_collabora_online_env_variable_username`
+- the password is the one you've specified in `nextcloud_collabora_online_env_variable_password`
+
 
 ## Reverse Proxy Configuration
 
-If you want to use an external reverse proxy (not managed by this playbook) you should set the `nextcloud_collabora_document_server_container_http_host_bind_port` variable in your `vars.yml`
+If you're using the Traefik or nginx reverse proxies integrated with this playbook (by default, you are), you don't need do read this section.
+
+If you want to **use an external reverse proxy** (not managed by this playbook) you should set the `nextcloud_collabora_online_container_http_host_bind_port` variable in your `vars.yml`
 
 ```
 # Controls whether the collabora container exposes its HTTP port (tcp/9980 in the container).
 # Takes an "<ip>:<port>" or "<port>" value (e.g. "127.0.0.1:9980), or empty string to not expose.
-nextcloud_collabora_document_server_container_http_host_bind_port: "127.0.0.1:9980"
+nextcloud_collabora_online_container_http_host_bind_port: "127.0.0.1:9980"
 ```
 
 If you use an external reverse proxy you have to configure it correctly. Here is an example of a working nginx configuration.
