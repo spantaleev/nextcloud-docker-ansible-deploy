@@ -56,7 +56,6 @@ nextcloud_collabora_online_container_http_host_bind_port: ""
 # This variable defines an aliasgroup of hosts (Details: https://sdk.collaboraonline.com/docs/installation/Configuration.html?highlight=alias#multihost-configuration)
 # You might want to adjust this if you use multiple hosts (which is not the scope of this playbook)
 nextcloud_collabora_online_aliasgroup: "https://{{ nextcloud_server_fqn_nextcloud |replace('.', '\\.') }}:443"
-nextcloud_collabora_online_woip_allowlist: "172.18.0.0/16"
 
 nextcloud_collabora_online_env_variable_username: "admin"
 nextcloud_collabora_online_env_variable_password: ""

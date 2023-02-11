@@ -39,12 +39,6 @@ you can also install and configure the [Nextcloud Office app](https://apps.nextc
 ansible-playbook -i inventory/hosts setup.yml --tags=setup-collabora-app
 ```
 
-If you later need to change a setting (e.g. `nextcloud_collabora_online_woip_allowlist`) run 
-
-```bash
-ansible-playbook -i inventory/hosts setup.yml --tags=configure-collabora-app
-```
-
 You could also install the app manually via the Apps menu (search for **Nextcloud Office**). After installing the
 application, you connect Nextcloud to your Collabora Online server by going to
 **Administration Settings** -> **Nextcloud Office** and setting:
