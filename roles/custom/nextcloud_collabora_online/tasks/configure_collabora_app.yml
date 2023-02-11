@@ -17,6 +17,12 @@
     seconds: 7
   when: nextcloud_start.changed | bool
 
+- name: Check existence of Nextcloud network in Docker
+  ansible.builtin.command:
+    cmd: "docker network inspect {{ nextcloud_container_network }} --format {%raw%}'{{ (index .IPAM.Config 0).Subnet }}'{%endraw%}"
+  register: nextcloud_result_docker_network_subnet
+  changed_when: false
+
 - name: Configure Collabora app
   ansible.builtin.shell:
     cmd: "docker exec --user={{ nextcloud_user_uid }}:{{ nextcloud_user_gid }} nextcloud-apache php /var/www/html/occ --no-warnings config:app:set richdocuments {{ item.key }} --value=\"{{ item.value }}\""
@@ -26,4 +32,4 @@
       value: "https://{{ nextcloud_collabora_online_domain }}"
     -
       key: wopi_allowlist
-      value: "{{ nextcloud_collabora_online_woip_allowlist }}"
+      value: "{{ nextcloud_result_docker_network_subnet.stdout }}"

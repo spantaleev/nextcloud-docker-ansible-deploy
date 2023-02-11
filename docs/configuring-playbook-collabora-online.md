@@ -18,13 +18,6 @@ nextcloud_collabora_online_domain: collabora.yourdomain.org
 
 # A password for the admin interface, available at: https://COLLABORA_ONLINE_DOMAIN/browser/dist/admin/admin.html
 nextcloud_collabora_online_env_variable_password: 'verystrongpassword'
-
-# It is highly recommended to restrict WOPI requests to the IP addresses of the container network's address range that
-# is expected to request files from the Nextcloud installation. 
-# To find your container network's range, SSH into the server and run this command: 
-# `docker network inspect nextcloud --format '{{ (index .IPAM.Config 0).Subnet }}'`.
-# This is done for security reasons described in https://docs.nextcloud.com/server/latest/admin_manual/office/configuration.html#wopi-settings
-nextcloud_collabora_online_woip_allowlist: "172.19.0.0/16"
 ```
 
 
