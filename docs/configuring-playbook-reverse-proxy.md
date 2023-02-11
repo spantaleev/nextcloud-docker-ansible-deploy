@@ -107,6 +107,10 @@ nextcloud_nginx_proxy_service_reach_local_port: 37150
 
 # Expose nextcloud-reverse-proxy-companion locally, on port 37150
 nextcloud_reverse_proxy_companion_http_bind_port: 127.0.0.1:37150
+
+# If you use Collabora Online also uncomment the following variable that
+# exposes nextcloud-collabora-online, on port 9980
+# nextcloud_collabora_online_container_http_host_bind_port: 127.0.0.1:9980
 ```
 
 **Note**: even if you do this, in order [to install](installing.md), this playbook still expects port 80 to be available. **Please manually stop your other webserver while installing**. You can start it back again afterwards.
