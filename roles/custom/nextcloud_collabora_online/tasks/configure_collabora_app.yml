@@ -19,7 +19,7 @@
 
 - name: Check existence of Nextcloud network in Docker
   ansible.builtin.command:
-    cmd: "docker network inspect {{ nextcloud_container_network }} --format {%raw%}'{{ (index .IPAM.Config 0).Subnet }}'{%endraw%}"
+    cmd: "{{ devture_systemd_docker_base_host_command_docker }} network inspect {{ nextcloud_container_network }} --format {%raw%}'{{ (index .IPAM.Config 0).Subnet }}'{%endraw%}"
   register: nextcloud_result_docker_network_subnet
   changed_when: false
 
