@@ -24,3 +24,6 @@
     -
       key: wopi_url
       value: "https://{{ nextcloud_collabora_online_domain }}"
+    -
+      key: wopi_allowlist
+      value: "{{ nextcloud_collabora_online_woip_allowlist }}"
