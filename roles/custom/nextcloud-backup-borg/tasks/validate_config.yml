@@ -1,0 +1,16 @@
+---
+- name: Fail if required backup-borg settings not defined
+  ansible.builtin.fail:
+    msg: >-
+      You need to define a required configuration setting (`{{ item.name }}`).
+  when: "item.when | bool and vars[item.name] == ''"
+  with_items:
+    - {'name': 'nextcloud_backup_borg_ssh_key_private', when: true}
+    - {'name': 'nextcloud_backup_borg_location_repositories', when: true}
+    - {'name': 'nextcloud_backup_borg_postgresql_databases_hostname', when: "{{ nextcloud_backup_borg_postgresql_enabled }}"}
+
+- name: Fail if encryption passphrase is undefined unless repository is unencrypted
+  ansible.builtin.fail:
+    msg: >-
+      You need to define a required passphrase using the `nextcloud_backup_borg_storage_encryption_passphrase` variable.
+  when: "nextcloud_backup_borg_storage_encryption_passphrase == '' and nextcloud_backup_borg_encryption != 'none'"

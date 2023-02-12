@@ -1,0 +1,10 @@
+[Unit]
+Description=Nextcloud Borg Backup timer
+
+[Timer]
+Unit=nextcloud-backup-borg.service
+OnCalendar={{ nextcloud_backup_borg_schedule }}
+RandomizedDelaySec={{ nextcloud_backup_borg_schedule_randomized_delay_sec }}
+
+[Install]
+WantedBy=timers.target

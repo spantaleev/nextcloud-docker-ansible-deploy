@@ -1,0 +1,107 @@
+---
+
+- when: nextcloud_backup_borg_postgresql_enabled | bool and nextcloud_backup_borg_version == ''
+  block:
+    - name: Fail with nextcloud_backup_borg_version advice if Postgres not enabled
+      ansible.builtin.fail:
+        msg: >-
+          You are not running a built-in Postgres server (`devture_postgres_enabled: false`), so auto-detecting its version and setting `nextcloud_backup_borg_version` automatically based on that cannot happen.
+          Consider setting `nextcloud_backup_borg_version` to your Postgres version manually.
+      when: not devture_postgres_enabled
+
+    - ansible.builtin.include_role:
+        name: galaxy/com.devture.ansible.role.postgres
+        tasks_from: detect_existing_postgres_version
+
+    - name: Fail if detected Postgres version is unsupported
+      ansible.builtin.fail:
+        msg: "You cannot use borg backup with such an old version ({{ devture_postgres_detected_version }}) of Postgres. Consider upgrading - link to docs for upgrading Postgres: docs/maintenance-postgres.md#upgrading-postgresql"
+      when: "devture_postgres_detected_version not in nextcloud_backup_borg_supported_postgres_versions"
+
+    - name: Set the correct borg backup version to use
+      ansible.builtin.set_fact:
+        nextcloud_backup_borg_version: "{{ devture_postgres_detected_version }}-{{ nextcloud_backup_borg_borg_version }}-{{ nextcloud_backup_borg_borgmatic_version }}"
+
+- name: Ensure borg paths exist
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: directory
+    mode: 0750
+    owner: "{{ nextcloud_user_username }}"
+    group: "{{ nextcloud_user_username }}"
+  with_items:
+    - {path: "{{ nextcloud_backup_borg_config_path }}", when: true}
+    - {path: "{{ nextcloud_backup_borg_docker_src_files_path }}", when: true}
+  when: "item.when | bool"
+
+- name: Ensure borgmatic config is created
+  ansible.builtin.copy:
+    content: "{{ nextcloud_backup_borg_configuration | to_nice_yaml(indent=2, width=999999) }}"
+    dest: "{{ nextcloud_backup_borg_config_path }}/config.yaml"
+    owner: "{{ nextcloud_user_username }}"
+    group: "{{ nextcloud_user_username }}"
+    mode: 0640
+
+- name: Ensure borg passwd is created
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/passwd.j2"
+    dest: "{{ nextcloud_backup_borg_config_path }}/passwd"
+    owner: "{{ nextcloud_user_username }}"
+    group: "{{ nextcloud_user_username }}"
+    mode: 0640
+
+- name: Ensure borg ssh key is created
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/sshkey.j2"
+    dest: "{{ nextcloud_backup_borg_config_path }}/sshkey"
+    owner: "{{ nextcloud_user_username }}"
+    group: "{{ nextcloud_user_username }}"
+    mode: 0600
+
+- name: Ensure borg image is pulled
+  community.docker.docker_image:
+    name: "{{ nextcloud_backup_borg_docker_image }}"
+    source: "{{ 'pull' if ansible_version.major > 2 or ansible_version.minor > 7 else omit }}"
+    force_source: "{{ nextcloud_backup_borg_docker_image_force_pull if ansible_version.major > 2 or ansible_version.minor >= 8 else omit }}"
+    force: "{{ omit if ansible_version.major > 2 or ansible_version.minor >= 8 else nextcloud_backup_borg_docker_image_force_pull }}"
+  when: "not nextcloud_backup_borg_container_image_self_build | bool"
+  register: result
+  retries: "{{ devture_playbook_help_container_retries_count }}"
+  delay: "{{ devture_playbook_help_container_retries_delay }}"
+  until: result is not failed
+
+- name: Ensure borg repository is present on self-build
+  ansible.builtin.git:
+    repo: "{{ nextcloud_backup_borg_docker_repo }}"
+    version: "{{ nextcloud_backup_borg_docker_repo_version }}"
+    dest: "{{ nextcloud_backup_borg_docker_src_files_path }}"
+    force: "yes"
+  become: true
+  become_user: "{{ nextcloud_user_username }}"
+  register: nextcloud_backup_borg_git_pull_results
+  when: "nextcloud_backup_borg_container_image_self_build | bool"
+
+- name: Ensure borg image is built
+  community.docker.docker_image:
+    name: "{{ nextcloud_backup_borg_docker_image }}"
+    source: build
+    force_source: "{{ nextcloud_backup_borg_git_pull_results.changed if ansible_version.major > 2 or ansible_version.minor >= 8 else omit }}"
+    force: "{{ omit if ansible_version.major > 2 or ansible_version.minor >= 8 else nextcloud_mailer_git_pull_results.changed }}"
+    build:
+      dockerfile: Dockerfile
+      path: "{{ nextcloud_backup_borg_docker_src_files_path }}"
+      pull: true
+  when: "nextcloud_backup_borg_container_image_self_build | bool"
+
+- name: Ensure nextcloud-backup-borg.service installed
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/systemd/nextcloud-backup-borg.service.j2"
+    dest: "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-backup-borg.service"
+    mode: 0644
+  register: nextcloud_backup_borg_systemd_service_result
+
+- name: Ensure nextcloud-backup-borg.timer installed
+  ansible.builtin.template:
+    src: "{{ role_path }}/templates/systemd/nextcloud-backup-borg.timer.j2"
+    dest: "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-backup-borg.timer"
+    mode: 0644

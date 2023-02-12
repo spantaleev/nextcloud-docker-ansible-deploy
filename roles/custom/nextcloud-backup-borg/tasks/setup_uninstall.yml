@@ -1,0 +1,25 @@
+---
+
+- name: Check existence of nextcloud-backup-borg service
+  ansible.builtin.stat:
+    path: "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-backup-borg.service"
+  register: nextcloud_backup_borg_service_stat
+
+- when: nextcloud_backup_borg_service_stat.stat.exists | bool
+  block:
+    - name: Ensure nextcloud-backup-borg is stopped
+      ansible.builtin.service:
+        name: nextcloud-backup-borg
+        state: stopped
+        enabled: false
+        daemon_reload: true
+
+    - name: Ensure nextcloud-backup-borg.service doesn't exist
+      ansible.builtin.file:
+        path: "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-backup-borg.service"
+        state: absent
+
+    - name: Ensure nextcloud-backup-borg.timer doesn't exist
+      ansible.builtin.file:
+        path: "{{ devture_systemd_docker_base_systemd_path }}/nextcloud-backup-borg.timer"
+        state: absent
