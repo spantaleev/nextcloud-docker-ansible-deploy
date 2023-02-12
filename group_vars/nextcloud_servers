@@ -16,20 +16,20 @@ nextcloud_playbook_postgres_installation_enabled: true
 
 # Controls whether to install Traefik or not
 # See the `com.devture.ansible.role.traefik` section below for configuration.
-nextcloud_playbook_traefik_role_enabled: true
+nextcloud_playbook_traefik_role_enabled: "{{ nextcloud_playbook_reverse_proxy_type != 'other-traefik-container' }}"
 
 # Controls whether to attach Traefik labels to services.
 # This is separate from `devture_traefik_enabled` and `nextcloud_playbook_traefik_role_enabled`,
 # because you may wish to disable Traefik installation by the playbook, yet still use Traefik
 # installed in another way.
-nextcloud_playbook_traefik_labels_enabled: true
+nextcloud_playbook_traefik_labels_enabled: "{{ nextcloud_playbook_reverse_proxy_type in ['playbook-managed-traefik', 'other-traefik-container'] }}"
 
 # Controls the additional network that reverse-proxyable services will be connected to.
 nextcloud_playbook_reverse_proxyable_services_additional_network: "{{ devture_traefik_container_network if devture_traefik_enabled else '' }}"
 
 # Controls whether to install nextcloud-nginx-proxy or not
 # You may wish to enable this if you're not using Traefik.
-nextcloud_playbook_nginx_proxy_installation_enabled: false
+nextcloud_playbook_nginx_proxy_installation_enabled: "{{ nextcloud_playbook_reverse_proxy_type == 'playbook-managed-nginx' }}"
 
 # Controls whether to install nextcloud-goofys or not
 nextcloud_playbook_goofys_installation_enabled: false
@@ -95,7 +95,6 @@ nextcloud_nextcloud_systemd_required_services_list: |
     +
     ([devture_postgres_identifier ~ '.service'] if nextcloud_playbook_postgres_installation_enabled else [])
   }}
-
 nextcloud_nextcloud_database_hostname: "{{ devture_postgres_identifier if nextcloud_playbook_postgres_installation_enabled else '' }}"
 nextcloud_nextcloud_database_port: "{{ '5432' if nextcloud_playbook_postgres_installation_enabled else '' }}"
 nextcloud_nextcloud_database_username: "nextcloud"
@@ -116,6 +115,8 @@ nextcloud_nextcloud_database_password: "{{ '%s' | format(nextcloud_generic_secre
 ########################################################################
 
 nextcloud_reverse_proxy_companion_enabled: true
+
+nextcloud_reverse_proxy_companion_http_bind_port: "{{ '127.0.0.1:37150' if nextcloud_playbook_reverse_proxy_type == 'other-nginx-non-container' else '' }}"
 
 nextcloud_reverse_proxy_companion_container_network: "{{ nextcloud_container_network }}"
 
@@ -138,6 +139,8 @@ nextcloud_reverse_proxy_companion_container_labels_traefik_docker_network: "{{ n
 
 nextcloud_collabora_online_enabled: false
 
+nextcloud_collabora_online_container_http_host_bind_port: "{{ '127.0.0.1:9980' if nextcloud_playbook_reverse_proxy_type == 'other-nginx-non-container' else '' }}"
+
 nextcloud_collabora_online_container_network: "{{ nextcloud_container_network }}"
 
 nextcloud_collabora_online_container_additional_networks: "{{ [nextcloud_playbook_reverse_proxyable_services_additional_network] if nextcloud_playbook_reverse_proxyable_services_additional_network else [] }}"
@@ -157,6 +160,10 @@ nextcloud_collabora_online_container_labels_traefik_docker_network: "{{ nextclou
 # nextcloud_nginx_proxy                                                #
 #                                                                      #
 ########################################################################
+
+nextcloud_nginx_proxy_service_reach_mode: "{{ 'container' if nextcloud_playbook_reverse_proxy_type == 'playbook-managed-nginx' else 'local' }}"
+
+nextcloud_nginx_proxy_service_reach_local_port: "{{ '0' if nextcloud_playbook_reverse_proxy_type == 'playbook-managed-nginx' else '37150' }}"
 
 nextcloud_nginx_proxy_ssl_domains_to_obtain_certificates_for: |
   {{
@@ -289,7 +296,7 @@ devture_playbook_state_preserver_commit_hash_preservation_dst: "{{ nextcloud_bas
 
 # To completely disable the Traefik role from running, use `nextcloud_playbook_traefik_role_enabled: false`.
 # See the comment there for more details about why we have both `devture_traefik_enabled` and `nextcloud_playbook_traefik_role_enabled`.
-devture_traefik_enabled: "{{ nextcloud_playbook_traefik_role_enabled }}"
+devture_traefik_enabled: "{{ nextcloud_playbook_reverse_proxy_type == 'playbook-managed-traefik' }}"
 
 devture_traefik_uid: "{{ nextcloud_user_uid }}"
 devture_traefik_gid: "{{ nextcloud_user_gid }}"

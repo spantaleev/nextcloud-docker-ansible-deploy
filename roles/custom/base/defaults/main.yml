@@ -15,3 +15,38 @@ nextcloud_architecture: "{{ 'amd64' if ansible_architecture == 'x86_64' else ('a
 # A secret used as a base, for generating various other secrets.
 # You can put any string here, but generating a strong one is preferred (e.g. `pwgen -s 64 1`).
 nextcloud_generic_secret_key: ''
+
+# Specifies the type of reverse-proxy used by the playbook.
+#
+# Changing this has an effect on whether a reverse-proxy is installed at all and what its type is,
+# as well as how all other services are configured.
+#
+# Valid options and a description of their behavior:
+#
+# - `playbook-managed-traefik`
+#     - the playbook will install devture-traefik
+#     - Traefik will do SSL termination, unless you disable it (e.g. `devture_traefik_config_entrypoint_web_secure_enabled: false`)
+#     - if SSL termination is enabled (as it is by default), you need to populate: `devture_traefik_ssl_email_address`
+#
+# - `playbook-managed-nginx`
+#     - the playbook will install nextcloud-nginx-proxy
+#     - nextcloud-nginx-proxy will do SSL termination with Certbot, unless you change that (see `nextcloud_nginx_proxy_ssl_retrieval_method`)
+#     - if SSL termination is enabled (as it is by default), you need to populate: `nextcloud_nginx_proxy_ssl_support_email`
+#
+# - `other-traefik-container`
+#     - this playbook will not install Traefik
+#     - nevertheless, the playbook expects that you would install Traefik yourself via other means
+#     - you should make sure your Traefik configuration is compatible with what the playbook would have configured (web, web-secure entrypoints, etc.)
+#     - you need to set `nextcloud_playbook_reverse_proxyable_services_additional_network` to the name of your Traefik network
+#
+# - `other-nginx-non-container`
+#     - the playbook will not install nextcloud-nginx-proxy
+#     - however, it will still dump some nginx configuration in /nextcloud/nginx/conf.d
+#     - these configs are meant to be included into a locally-installed (without a container) nginx server
+#     - all container services are exposed locally (e.g. `-p 127.0.0.1:8080:8080`)
+#
+# - `none`
+#     - no reverse-proxy will be installed
+#     - no port exposure will be done for any of the container services
+#     - it's up to you to expose the ports you want, etc.
+nextcloud_playbook_reverse_proxy_type: playbook-managed-traefik

@@ -7,3 +7,4 @@
   when: "vars[item] == ''"
   with_items:
     - nextcloud_nginx_proxy_ssl_support_email
+    - nextcloud_nginx_proxy_service_reach_mode
