@@ -222,25 +222,38 @@ devture_postgres_managed_databases_auto: |
 
 ######################################################################
 #
-# nextcloud-backup-borg
+# backup-borg
 #
 ######################################################################
 
-nextcloud_backup_borg_enabled: false
+backup_borg_enabled: false
 
-nextcloud_backup_borg_container_image_self_build: "{{ nextcloud_architecture not in ['amd64', 'arm32', 'arm64'] }}"
+backup_borg_identifier: nextcloud-backup-borg
 
-nextcloud_backup_borg_postgresql_enabled: "{{ devture_postgres_enabled }}"
-nextcloud_backup_borg_postgresql_databases_hostname: "{{ devture_postgres_connection_hostname if devture_postgres_enabled else '' }}"
-nextcloud_backup_borg_postgresql_databases_username: "{{ devture_postgres_connection_username if devture_postgres_enabled else '' }}"
-nextcloud_backup_borg_postgresql_databases_password: "{{ devture_postgres_connection_password if devture_postgres_enabled else '' }}"
-nextcloud_backup_borg_postgresql_databases_port: "{{ devture_postgres_connection_port if devture_postgres_enabled else 5432 }}"
-nextcloud_backup_borg_postgresql_databases: "{{ devture_postgres_managed_databases | map(attribute='name') if devture_postgres_enabled else [] }}"
+backup_borg_base_path: "{{ nextcloud_base_path }}/backup_borg"
 
-nextcloud_backup_borg_location_source_directories:
+backup_borg_username: "{{ nextcloud_user_username }}"
+backup_borg_uid: "{{ nextcloud_user_uid }}"
+backup_borg_gid: "{{ nextcloud_user_gid }}"
+
+backup_borg_retention_prefix: nextcloud-
+backup_borg_storage_archive_name_format: nextcloud-{now:%Y-%m-%d-%H%M%S}
+
+backup_borg_container_network: "{{ nextcloud_container_network }}"
+
+backup_borg_container_image_self_build: "{{ nextcloud_architecture not in ['amd64', 'arm32', 'arm64'] }}"
+
+backup_borg_postgresql_enabled: "{{ devture_postgres_enabled }}"
+backup_borg_postgresql_databases_hostname: "{{ devture_postgres_connection_hostname if devture_postgres_enabled else '' }}"
+backup_borg_postgresql_databases_username: "{{ devture_postgres_connection_username if devture_postgres_enabled else '' }}"
+backup_borg_postgresql_databases_password: "{{ devture_postgres_connection_password if devture_postgres_enabled else '' }}"
+backup_borg_postgresql_databases_port: "{{ devture_postgres_connection_port if devture_postgres_enabled else 5432 }}"
+backup_borg_postgresql_databases: "{{ devture_postgres_managed_databases | map(attribute='name') if devture_postgres_enabled else [] }}"
+
+backup_borg_location_source_directories:
   - "{{ nextcloud_nextcloud_data_path }}"
 
-nextcloud_backup_borg_systemd_required_services_list: |
+backup_borg_systemd_required_services_list: |
   {{
     ['docker.service']
     +
@@ -249,7 +262,7 @@ nextcloud_backup_borg_systemd_required_services_list: |
 
 ######################################################################
 #
-# /nextcloud-backup-borg
+# /backup-borg
 #
 ######################################################################
 
