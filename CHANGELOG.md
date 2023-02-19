@@ -167,7 +167,7 @@ nextcloud_server_fqn_nextcloud: nextcloud.DOMAIN
 nextcloud_generic_secret_key: ''
 
 # The email address to provide to Traefik (which is then provided to Let's Encrypt) for obtaining SSL certificates
-devture_traefik_ssl_email_address: ''
+devture_traefik_config_certificatesResolvers_acme_email: ''
 # or (if you're disabling Traefik) and using `nextcloud-nginx-proxy`:
 # nextcloud_nginx_proxy_ssl_support_email: ''
 

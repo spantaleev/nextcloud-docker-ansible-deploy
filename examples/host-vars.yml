@@ -7,7 +7,7 @@ nextcloud_server_fqn_nextcloud: YOUR_DOMAIN_NAME_HERE
 # You can put any string here, but generating a strong one is preferred (e.g. `pwgen -s 64 1`).
 nextcloud_generic_secret_key: ''
 
-devture_traefik_ssl_email_address: ''
+devture_traefik_config_certificatesResolvers_acme_email: ''
 
 # A Postgres password to use for the superuser Postgres user (called `root` by default).
 #
