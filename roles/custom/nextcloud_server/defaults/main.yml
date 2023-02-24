@@ -40,7 +40,7 @@ nextcloud_nextcloud_container_image_customizations_enabled: "{{ nextcloud_nextcl
 #  RUN echo 'You do NOT need to include a FROM clause yourself.'
 nextcloud_nextcloud_container_image_customizations_dockerfile_body_custom: ''
 
-nextcloud_nextcloud_version: "25.0.3-apache"
+nextcloud_nextcloud_version: "25.0.4-apache"
 nextcloud_nextcloud_container_image_tag: "{{ nextcloud_nextcloud_version }}"
 nextcloud_nextcloud_container_image: "docker.io/nextcloud:{{ nextcloud_nextcloud_container_image_tag }}"
 nextcloud_nextcloud_container_image_force_pull: "{{ nextcloud_nextcloud_container_image.endswith(':latest') }}"
