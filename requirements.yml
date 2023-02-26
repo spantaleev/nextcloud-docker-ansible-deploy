@@ -25,7 +25,7 @@
   version: 77b1f9ae1aafa31c9078178c1036bf744c99d08b
 
 - src: git+https://github.com/devture/com.devture.ansible.role.traefik.git
-  version: 5e3248cd4d17db9ff3ba90904e7330150dab599e
+  version: 2c949e88261c4398533ad16017475a1c75391487
 
 - src: git+https://github.com/devture/com.devture.ansible.role.systemd_service_manager.git
   version: 6ccb88ac5fc27e1e70afcd48278ade4b564a9096
