@@ -8,10 +8,6 @@ However, if you've installed this on some server where you have other stuff you 
 
 - delete the Nextcloud-related systemd .service files (`rm -f /etc/systemd/system/nextcloud*`)
 
-- stop and disable Traefik (`systemctl disable --now devture-traefik`)
-
-- delete the `devture-traefik` systemd service (`rm -f /etc/systemd/system/devture-traefik.service`)
-
 - reload systemd (`systemctl daemon-reload`)
 
 - delete some cached container images (or just delete them all: `docker rmi $(docker images -aq)`

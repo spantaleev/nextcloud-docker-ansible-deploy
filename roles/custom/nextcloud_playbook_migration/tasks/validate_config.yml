@@ -64,10 +64,11 @@
     - {'old': 'nextcloud_systemd_services_list', 'new': 'devture_systemd_service_manager_services_list_auto'}
     - {'old': 'nextcloud_systemd_services_autostart_enabled', 'new': 'devture_systemd_service_manager_services_autostart_enabled'}
 
-    - {'old': 'nextcloud_playbook_traefik_installation_enabled', 'new': 'nextcloud_playbook_traefik_role_enabled'}
+    - {'old': 'nextcloud_playbook_traefik_installation_enabled', 'new': 'devture_traefik_enabled'}
 
     - {'old': 'nextcloud_playbook_reverse_proxyable_services_container_network', 'new': '<superseded by nextcloud_playbook_reverse_proxyable_services_additional_network>'}
     - {'old': 'nextcloud_playbook_reverse_proxyable_services_additional_networks', 'new': '<superseded by nextcloud_playbook_reverse_proxyable_services_additional_network>'}
+    - {'old': 'nextcloud_playbook_traefik_role_enabled', 'new': 'devture_traefik_enabled'}
 
 - name: Fail if required Nextcloud settings not defined
   ansible.builtin.fail:

@@ -28,9 +28,7 @@ Learn more about these values and their behavior from [roles/custom/base/default
 
 The variables below are **automatically set** based on the reverse-proxy type (`nextcloud_playbook_reverse_proxy_type`). Nevertheless, you may find them useful if you need to do something more advanced.
 
-- `devture_traefik_enabled` (same as `nextcloud_playbook_traefik_role_enabled` by default - `true`) - controls whether the Traefik role's functionality is enabled or not. If disabled, the role will try to uninstall Traefik, etc. Flipping this to `false` disables Traefik, but also potentially uninstalls and deletes data in `/devture-traefik`.
-
-- `nextcloud_playbook_traefik_role_enabled` (default `true`) - controls whether the Traefik role will execute or not. Setting this to `false` disables Traefik and doesn't touch `/devture-traefik` (which is potentially managed by another playbook)
+- `devture_traefik_enabled` (default `true`) - controls whether the Traefik role's functionality is enabled or not.
 
 - `nextcloud_playbook_traefik_labels_enabled` (default `true`) - controls whether Traefik container labels are attached to services. You may disable Traefik with the variables above, yet still keep attaching labels, so that a separately-installed Traefik instance can reverse-proxy to these services. If you're not using Traefik at all, flip this to `false`
 

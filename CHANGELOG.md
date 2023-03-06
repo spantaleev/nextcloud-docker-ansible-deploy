@@ -117,8 +117,7 @@ If you were previously using Traefik as described in our docs, you can now proba
 Despite Traefik being the default reverse-proxy, you can still switch back to using `nginx` as a reverse-proxy with the following configuration:
 
 ```yaml
-nextcloud_playbook_traefik_role_enabled: false
-nextcloud_playbook_nginx_proxy_installation_enabled: true
+nextcloud_playbook_reverse_proxy_type: playbook-managed-nginx
 ```
 
 You will also need to relocate your SSL certificate files from `/nextcloud/ssl` to `/nextcloud/nginx-proxy/ssl`. We tell you how to do this below, in [Restore your SSL certificates (if you will be using nextcloud-nginx-proxy)](#restore-your-ssl-certificates-if-you-will-be-using-nextcloud-nginx-proxy).

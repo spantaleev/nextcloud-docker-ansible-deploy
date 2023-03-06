@@ -14,14 +14,9 @@ nextcloud_playbook_docker_installation_enabled: true
 # See the `com.devture.ansible.role.postgres` section below for configuration.
 nextcloud_playbook_postgres_installation_enabled: true
 
-# Controls whether to install Traefik or not
-# See the `com.devture.ansible.role.traefik` section below for configuration.
-nextcloud_playbook_traefik_role_enabled: "{{ nextcloud_playbook_reverse_proxy_type != 'other-traefik-container' }}"
-
 # Controls whether to attach Traefik labels to services.
-# This is separate from `devture_traefik_enabled` and `nextcloud_playbook_traefik_role_enabled`,
-# because you may wish to disable Traefik installation by the playbook, yet still use Traefik
-# installed in another way.
+# This is separate from `devture_traefik_enabled`, because you may wish to disable Traefik installation by the playbook,
+# yet still use Traefik installed in another way.
 nextcloud_playbook_traefik_labels_enabled: "{{ nextcloud_playbook_reverse_proxy_type in ['playbook-managed-traefik', 'other-traefik-container'] }}"
 
 # Controls the additional network that reverse-proxyable services will be connected to.
@@ -58,7 +53,9 @@ devture_systemd_service_manager_services_list_auto: |
     +
     ([{'name': (devture_postgres_backup_identifier + '.service'), 'priority': 5000, 'groups': ['nextcloud', 'backup', 'postgres-backup']}] if devture_postgres_backup_enabled else [])
     +
-    ([{'name': 'devture-traefik.service', 'priority': 3000, 'groups': ['nextcloud', 'traefik', 'reverse-proxies']}] if devture_traefik_enabled else [])
+    ([{'name': (devture_container_socket_proxy_identifier + '.service'), 'priority': 2900, 'groups': ['nextcloud', 'reverse-proxies', 'container-socket-proxy']}] if devture_container_socket_proxy_enabled else [])
+    +
+    ([{'name': (devture_traefik_identifier + '.service'), 'priority': 3000, 'groups': ['nextcloud', 'traefik', 'reverse-proxies']}] if devture_traefik_enabled else [])
     +
     ([{'name': 'nextcloud-onlyoffice-document-server.service', 'priority': 2000, 'groups': ['nextcloud', 'onlyoffice']}] if nextcloud_onlyoffice_document_server_enabled else [])
     +
@@ -290,16 +287,58 @@ devture_playbook_state_preserver_commit_hash_preservation_dst: "{{ nextcloud_bas
 
 ########################################################################
 #                                                                      #
+# com.devture.ansible.role.container_socket_proxy                      #
+#                                                                      #
+########################################################################
+
+devture_container_socket_proxy_enabled: "{{ nextcloud_playbook_reverse_proxy_type == 'playbook-managed-traefik' }}"
+
+devture_container_socket_proxy_identifier: nextcloud-container-socket-proxy
+
+devture_container_socket_proxy_base_path: "{{ nextcloud_base_path }}/container-socket-proxy"
+
+devture_container_socket_proxy_uid: "{{ nextcloud_user_uid }}"
+devture_container_socket_proxy_gid: "{{ nextcloud_user_gid }}"
+
+# Traefik requires read access to the containers APIs to do its job
+devture_container_socket_proxy_api_containers_enabled: true
+
+########################################################################
+#                                                                      #
+# /com.devture.ansible.role.container_socket_proxy                     #
+#                                                                      #
+########################################################################
+
+
+
+########################################################################
+#                                                                      #
 # com.devture.ansible.role.traefik                                     #
 #                                                                      #
 ########################################################################
 
-# To completely disable the Traefik role from running, use `nextcloud_playbook_traefik_role_enabled: false`.
-# See the comment there for more details about why we have both `devture_traefik_enabled` and `nextcloud_playbook_traefik_role_enabled`.
 devture_traefik_enabled: "{{ nextcloud_playbook_reverse_proxy_type == 'playbook-managed-traefik' }}"
+
+devture_traefik_identifier: nextcloud-traefik
+
+devture_traefik_base_path: "{{ nextcloud_base_path }}/traefik"
 
 devture_traefik_uid: "{{ nextcloud_user_uid }}"
 devture_traefik_gid: "{{ nextcloud_user_gid }}"
+
+devture_traefik_config_providers_docker_endpoint: "{{ devture_container_socket_proxy_endpoint if devture_container_socket_proxy_enabled else 'unix:///var/run/docker.sock' }}"
+
+devture_traefik_container_additional_networks: |
+  {{
+    ([devture_container_socket_proxy_container_network] if devture_container_socket_proxy_enabled else [])
+  }}
+
+devture_traefik_systemd_required_services_list: |
+  {{
+    (['docker.service'])
+    +
+    ([devture_container_socket_proxy_identifier + '.service'] if devture_container_socket_proxy_enabled else [])
+  }}
 
 ########################################################################
 #                                                                      #

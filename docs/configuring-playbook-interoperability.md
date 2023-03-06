@@ -17,7 +17,7 @@ If you're installing [Traefik](https://traefik.io) on your server in another way
 
 ```yaml
 # Tell the playbook you're using Traefik installed in another way.
-# It won't bother installing Traefik or touching /devture-traefik (potentially managed by another playbook).
+# It won't bother installing Traefik.
 nextcloud_playbook_reverse_proxy_type: other-traefik-container
 
 # Tell the playbook to attach services which require reverse-proxying to an additional network by default (e.g. traefik)

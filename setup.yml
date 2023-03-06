@@ -60,8 +60,9 @@
     - when: nextcloud_playbook_nginx_proxy_installation_enabled | bool
       role: custom/nextcloud_nginx_proxy
 
-    - when: nextcloud_playbook_traefik_role_enabled | bool
-      role: galaxy/com.devture.ansible.role.traefik
+    - role: galaxy/com.devture.ansible.role.container_socket_proxy
+
+    - role: galaxy/com.devture.ansible.role.traefik
 
     - role: galaxy/com.devture.ansible.role.postgres_backup
 

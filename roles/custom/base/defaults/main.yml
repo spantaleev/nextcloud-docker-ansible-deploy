@@ -24,7 +24,7 @@ nextcloud_generic_secret_key: ''
 # Valid options and a description of their behavior:
 #
 # - `playbook-managed-traefik`
-#     - the playbook will install devture-traefik
+#     - the playbook will run a managed Traefik instance (nextcloud-traefik)
 #     - Traefik will do SSL termination, unless you disable it (e.g. `devture_traefik_config_entrypoint_web_secure_enabled: false`)
 #     - if SSL termination is enabled (as it is by default), you need to populate: `devture_traefik_config_certificatesResolvers_acme_email`
 #

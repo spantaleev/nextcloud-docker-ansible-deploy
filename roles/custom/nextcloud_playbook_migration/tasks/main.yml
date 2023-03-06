@@ -7,3 +7,12 @@
     - setup-nextcloud
     - install-all
     - install-nextcloud
+
+- when: devture_traefik_enabled | bool
+  block:
+    - ansible.builtin.include_tasks: "{{ role_path }}/tasks/devture_traefik_to_nextcloud_traefik.yml"
+  tags:
+    - setup-all
+    - install-all
+    - setup-traefik
+    - install-traefik
