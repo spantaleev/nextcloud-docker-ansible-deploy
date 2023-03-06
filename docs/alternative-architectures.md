@@ -2,7 +2,7 @@
 
 As stated in the [Prerequisites](prerequisites.md), currently only `amd64` (`x86_64`) is fully supported.
 
-The playbook automatically determines the target server's architecture (the `matrix_architecture` variable) to be one of the following:
+The playbook automatically determines the target server's architecture (the `nextcloud_architecture` variable) to be one of the following:
 
 - `amd64` (`x86_64`)
 - `arm32`
