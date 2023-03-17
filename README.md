@@ -1,5 +1,11 @@
 [![Support room on Matrix](https://img.shields.io/matrix/nextcloud-docker-ansible-deploy:devture.com.svg?label=%23nextcloud-docker-ansible-deploy%3Adevture.com&logo=matrix&style=for-the-badge&server_fqdn=matrix.devture.com)](https://matrix.to/#/#nextcloud-docker-ansible-deploy:devture.com) [![donate](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/s.pantaleev/donate)
 
+-------
+
+**WARNING**: this playbook has been **made obsolete** by the [MASH playbook](https://github.com/mother-of-all-self-hosting/mash-playbook), which also supports installing the [Nextcloud](https://github.com/mother-of-all-self-hosting/mash-playbook/blob/main/docs/services/nextcloud.md) and [Collabora Online](https://github.com/mother-of-all-self-hosting/mash-playbook/blob/main/docs/services/collabora-online.md) services.
+
+-------
+
 # Nextcloud (A safe home for all your data) server setup using Ansible and Docker
 
 This [Ansible](https://www.ansible.com/) playbook can help you set your own [Nextcloud](https://nextcloud.com/) server:

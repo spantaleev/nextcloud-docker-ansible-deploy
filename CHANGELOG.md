@@ -1,3 +1,69 @@
+# 2023-03-17
+
+## This playbook has been absorbed into the MASH playbook
+
+To avoid maintaining too many similarly-looking playbooks, I've decided to merge this playbook into the newly-created [MASH playbook](https://github.com/mother-of-all-self-hosting/mash-playbook). For more details about this, see the [Why create such a mega playbook?](https://github.com/mother-of-all-self-hosting/mash-playbook/tree/main#why-create-such-a-mega-playbook) section of the new playbook's README file.
+
+**This `nextcloud-docker-ansible-deploy` playbook will not receive additional updates**.
+
+Steps to migrate from `nextcloud-docker-ansible-deploy` to hosting Nextcloud using the MASH playbook:
+
+1. Get started with the [MASH playbook](https://github.com/mother-of-all-self-hosting/mash-playbook). Do an initial installation which contains Postgres, Traefik, etc. Enabling the Nextcloud service is done below in step 2.
+
+2. Configure the [Nextcloud service](https://github.com/mother-of-all-self-hosting/mash-playbook/blob/main/docs/services/nextcloud.md) with the MASH playbook. You can reuse your `vars.yml` file with these changes:
+
+- **renaming** `nextcloud_nextcloud_` to `nextcloud_` in all variable names
+- **renaming** `nextcloud_apache_` to `nextcloud_` in all variable names
+- **renaming** `nextcloud_docker_container_` to `nextcloud_container_` in all variable names
+- **renaming** `nextcloud_server_fqn_nextcloud` to `nextcloud_hostname` in all variable names
+- **renaming** `nextcloud_collabora_online` to `collabora_online` in all variable names
+- **renaming** `collabora_online_domain` to `collabora_online_hostname`
+- the **addition** of `nextcloud_enabled: true`
+- the **removal** of various `nextcloud_playbook_` variables. You may need to replace them with `mosh_playbook_` variables
+- the **removal** of `nextcloud_generic_secret_key`. This has been superseded by `mash_playbook_generic_secret_key`
+- the **removal** of any other variables you had in your old `vars.yml` file (`devture_postgres_connection_password`, etc.). Your new `vars.yml` file likely already defines some of these variables, so there's no need to define them twice.
+
+3. If you were using the [Collabora Online](https://github.com/mother-of-all-self-hosting/mash-playbook/blob/main/docs/services/collabora-online.md) service (agent or server), configure it as well.
+
+4. Do an initial installation by running the following command **in the MASH playbook's directory**: `just run-tags install-all`. NOTE: there's a difference between `just run-tags install-all` and `just install-all`; we use the former here, because we don't want to start the Nextcloud service just yet
+
+5. Get the new `nextcloud` database credentials by running the following command **in the MASH playbook's directory** `just run-tags print-nextcloud-db-credentials`
+
+6. SSH into the server and do the following:
+
+    - Create a database dump by running: `/nextcloud/postgres/bin/dump-all /nextcloud`. This will create the `/nextcloud/latest-dump.sql.gz` file
+
+    - Stop and disable all old Nextcloud services by running: `cd /etc/systemd/system && systemctl disable --now nextcloud*` (note the `*` at the end)
+
+    - Sync the Nextcloud data by running: `rsync -avr /nextcloud/nextcloud/. /mash/nextcloud/.`
+
+    - Fix permissions for the Nextcloud data: `chown -R mash:mash /mash/nextcloud`
+
+    - Adjust the database credentials in the `/mash/nextcloud/data/config/config.php` file using the information you got from the step above (step 5)
+      - `dbhost` should be set to `mash-postgres:5432`
+      - `dbpassword` should be set to the password you got from step 5
+
+7. Import the Nextcloud database dump into the Postgres instance by running the following command **in the MASH playbook's directory**: `just run-tags import-postgres --extra-vars=server_path_postgres_dump=/nextcloud/latest-dump.sql.gz --extra-vars=postgres_default_import_database=nextcloud`
+
+8.  Re-run the MASH playbook and start all services by running the following command **in the MASH playbook's directory**:
+
+    - `just run-tags install-all,start`
+
+    - `just run-tags adjust-nextcloud-config`
+
+    - (optional) if you're using Collabora Online:
+      - add `nextcloud_collabora_app_wopi_url: "{{ collabora_online_url }}"` to your configuration
+      - run `just run-tags install-nextcloud-app-collabora`
+
+9. Verify that your new Nextcloud installation works
+
+10. Clean up by SSH-ing into the server and doing the following:
+
+    - `rm /etc/systemd/system/nextcloud*`
+    - `rm -rf /nextcloud`
+    - getting rid of this playbook
+
+
 # 2023-02-10
 
 ## Collabora Online support
