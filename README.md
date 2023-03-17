@@ -2,7 +2,7 @@
 
 -------
 
-**WARNING**: this playbook has been **made obsolete** by the [MASH playbook](https://github.com/mother-of-all-self-hosting/mash-playbook), which also supports installing the [Nextcloud](https://github.com/mother-of-all-self-hosting/mash-playbook/blob/main/docs/services/nextcloud.md) and [Collabora Online](https://github.com/mother-of-all-self-hosting/mash-playbook/blob/main/docs/services/collabora-online.md) services.
+**WARNING**: this playbook has been **made obsolete** by the [MASH playbook](https://github.com/mother-of-all-self-hosting/mash-playbook), which also supports installing the [Nextcloud](https://github.com/mother-of-all-self-hosting/mash-playbook/blob/main/docs/services/nextcloud.md) and [Collabora Online](https://github.com/mother-of-all-self-hosting/mash-playbook/blob/main/docs/services/collabora-online.md) services. There's a [migration guide](CHANGELOG.md#this-playbook-has-been-absorbed-into-the-mash-playbook) in the changelog.
 
 -------
 
