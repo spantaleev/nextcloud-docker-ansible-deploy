@@ -33,7 +33,11 @@ Steps to migrate from `nextcloud-docker-ansible-deploy` to hosting Nextcloud usi
 
     - Stop and disable all old Nextcloud services by running: `cd /etc/systemd/system && systemctl disable --now nextcloud*` (note the `*` at the end)
 
+    - Start the database back up: `systemctl start nextcloud-postgres`
+
     - Create a database dump by running: `/nextcloud/postgres/bin/dump-all /nextcloud`. This will create the `/nextcloud/latest-dump.sql.gz` file
+
+    - Stop the database: `systemctl stop nextcloud-postgres`
 
     - Sync the Nextcloud data by running: `rsync -avr /nextcloud/nextcloud/. /mash/nextcloud/.`
 
